@@ -10,7 +10,7 @@ namespace ZermeloCheckers
     {
         public int X;
         public int Y;
-        public FigureType Type;
+        public string Type;
 
         public delegate void FigureMovedHandler(object sender, FigureViewModel figure);
         public event FigureMovedHandler FigureMoved;

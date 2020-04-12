@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using Game.PublicInterfaces;
 
-namespace CheckersRules
+namespace Checkers
 {
-    public class CheckersRules : IGameRules
+    internal class CheckersRules : IGameRules
     {
         public List<IFigure> CreateInitialPosition(int size, bool changedSides)
         {
@@ -17,7 +17,7 @@ namespace CheckersRules
 
             // positioning pieces
             var firstColor = changedSides ? PieceTypes.Black : PieceTypes.White;
-            for (var y = size; y > size / 2 - 1; y++)
+            for (var y = size - 1; y > size / 2; y--)
             {
                 var startX = 1 - y % 2;
                 for (var x = startX; x < size; x += 2)
@@ -32,7 +32,7 @@ namespace CheckersRules
                 var startX = 1 - y % 2;
                 for (var x = startX; x < size; x += 2)
                 {
-                    figures.Add(new Piece(x, y, firstColor));
+                    figures.Add(new Piece(x, y, secondColor));
                 }
             }
 

@@ -20,4 +20,9 @@
     <Folder Include="Models\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\CheckersRules\Checkers.csproj" />
+    <ProjectReference Include="..\Game\Game.csproj" />
+  </ItemGroup>
+
 </Project>

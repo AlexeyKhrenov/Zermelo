@@ -24,13 +24,6 @@ namespace ZermeloCheckers
         {
             InitializeComponent();
             gameBoard.Initialize(8);
-
-            var viewModel = new BoardViewModel()
-            {
-                Size = 8
-            };
-
-            DataContext = viewModel;
         }
     }
 }

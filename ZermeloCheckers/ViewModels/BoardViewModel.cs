@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Game.PublicInterfaces;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Drawing;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Windows.Documents;
@@ -14,7 +16,16 @@ namespace ZermeloCheckers
         // TODO - remove hard-coded value
         public int Size = 8;
 
-        ObservableCollection<FigureViewModel> _figures;
+        private ObservableCollection<FigureViewModel> _figures;
+
+        private IGameFactory GameFactory;
+
+        private IGame Game;
+
+        public BoardViewModel()
+        {
+             
+        }
 
         public ObservableCollection<FigureViewModel> Figures
         {
@@ -41,23 +52,13 @@ namespace ZermeloCheckers
             }
         }
 
-        public BoardViewModel()
+        public BoardViewModel(IGameFactory gameFactory)
         {
-            _figures = new ObservableCollection<FigureViewModel>()
-            {
-                new FigureViewModel()
-                {
-                    Y = 0,
-                    X = 0,
-                    Type = FigureType.Pawn
-                },
-                new FigureViewModel()
-                {
-                    Y = 1,
-                    X = 1,
-                    Type = FigureType.Pawn
-                },
-            };
+            GameFactory = gameFactory;
+
+            // move size of the game to the config
+            Game = GameFactory.CreateGame(8, false);
+            _figures = new ObservableCollection<FigureViewModel>(Game.Figures.Select(x => x.ToViewModel()).ToList());
 
             foreach (var figure in _figures)
             {

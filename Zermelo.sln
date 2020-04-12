@@ -5,9 +5,9 @@ VisualStudioVersion = 16.0.29806.167
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZermeloCheckers", "ZermeloCheckers\ZermeloCheckers.csproj", "{6E723B02-4EE6-4E58-946D-8712C2E66B7C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Game", "Game\Game.csproj", "{C77A514A-4827-4585-BE57-397DA9FD407D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Game", "Game\Game.csproj", "{C77A514A-4827-4585-BE57-397DA9FD407D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CheckersRules", "CheckersRules\CheckersRules.csproj", "{394F7B25-29D1-4823-A061-D0D00E80279F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Checkers", "CheckersRules\Checkers.csproj", "{394F7B25-29D1-4823-A061-D0D00E80279F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

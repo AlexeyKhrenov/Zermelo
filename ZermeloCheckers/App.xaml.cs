@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Checkers;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -13,5 +14,14 @@ namespace ZermeloCheckers
     /// </summary>
     public partial class App : Application
     {
+        public void AppStartup(object sender, StartupEventArgs e)
+        {
+            var factory = new CheckersFactory();
+            var viewModel = new BoardViewModel(factory);
+
+            MainWindow mainWindow = new MainWindow();
+            mainWindow.DataContext = viewModel;
+            mainWindow.Show();
+        }
     }
 }

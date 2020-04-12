@@ -16,6 +16,6 @@ namespace Game.PublicInterfaces
 
         Point[] AvailableMoves { get; set; }
 
-        int Color { get; set; }
+        string Type { get; }
     }
 }

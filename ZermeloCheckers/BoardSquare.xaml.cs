@@ -41,6 +41,7 @@ namespace ZermeloCheckers
         public void AddFigure(UIElement figure)
         {
             SquareButton.Content = figure;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Content"));
         }
 
         public void RemoveFigure()

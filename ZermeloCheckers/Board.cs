@@ -75,7 +75,7 @@ namespace ZermeloCheckers
 
             foreach (var item in newValue)
             {
-                var figure = ToUIElement(item);
+                var figure = item.ToUIElement();
 
                 //remove this check or inverse control flow
                 board.squares?[item.X, item.Y].AddFigure(figure);
@@ -123,18 +123,6 @@ namespace ZermeloCheckers
             }
         }
 
-        private static UIElement ToUIElement(FigureViewModel viewModel)
-        {
-            return new Rectangle()
-            {
-                Height = 20,
-                Width = 20,
-                Fill = Brushes.Green,
-                Stroke = Brushes.Red,
-                StrokeThickness = 2,
-            };
-        }
-
         private bool TryMoveFigure(FigureViewModel figure, int targetX, int targetY)
         {
             var selectedSquare = squares[figure.X, figure.Y];
@@ -142,7 +130,7 @@ namespace ZermeloCheckers
             if (figure.TryMoveFigure(targetX, targetY))
             {
                 selectedSquare.RemoveFigure();
-                squares[targetX, targetY].AddFigure(ToUIElement(figure));
+                squares[targetX, targetY].AddFigure(figure.ToUIElement());
                 return true;
             }
 

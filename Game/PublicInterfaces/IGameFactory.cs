@@ -4,10 +4,8 @@ using System.Text;
 
 namespace Game.PublicInterfaces
 {
-    public interface IGame
+    public interface IGameFactory
     {
-        int Size { get; set; }
-
-        IList<IFigure> Figures { get; }
+        IGame CreateGame(int size, bool revertedSides);
     }
 }

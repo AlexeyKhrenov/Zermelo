@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace CheckersRules
+namespace Checkers
 {
     public enum PieceTypes
     {

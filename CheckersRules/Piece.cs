@@ -5,7 +5,7 @@ using System.Text;
 
 using Game.PublicInterfaces;
 
-namespace CheckersRules
+namespace Checkers
 {
     internal class Piece : IFigure
     {
@@ -17,13 +17,15 @@ namespace CheckersRules
 
         public Point[] AvailableMoves { get; set; }
 
-        public int Color { get; set; }
+        public PieceTypes _type;
+
+        public string Type => _type.ToString();
 
         public Piece(int x, int y, PieceTypes type)
         {
             X = x;
             Y = y;
-            Color = (int)type;
+            _type = type;
         }
     }
 }

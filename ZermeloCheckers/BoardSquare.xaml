@@ -7,14 +7,14 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
         <Style x:Key="BlackBoardSquareColor_Style" TargetType="Button">
-            <Setter Property="Background" Value="White"/>
+            <Setter Property="Background" Value="#eacedf"/>
             <Style.Triggers>
                 <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorLevel=1,AncestorType=UserControl}, Path=IsSelected}" Value="true">
                     <Setter Property="BorderBrush" Value="GreenYellow"/>
                     <Setter Property="BorderThickness" Value="2"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorLevel=1,AncestorType=UserControl}, Path=IsBlack}" Value="true">
-                    <Setter Property="Background" Value="Black"/>
+                    <Setter Property="Background" Value="#6c2858"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorLevel=1,AncestorType=UserControl}, Path=IsAllowedMove}" Value="true">
                     <Setter Property="BorderBrush" Value="Yellow"/>
