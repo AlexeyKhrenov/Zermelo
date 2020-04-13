@@ -21,5 +21,15 @@ namespace Game
             Rules = rules;
             Figures = rules.CreateInitialPosition(Size, revertedSides);
         }
+
+        public void Move(int x0, int y0, int x1, int y1)
+        {
+            Rules.MakeMove(this, x0, y0, x1, y1);
+        }
+
+        public void Undo()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

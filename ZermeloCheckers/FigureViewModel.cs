@@ -12,7 +12,7 @@ namespace ZermeloCheckers
         public int Y;
         public string Type;
 
-        public delegate void FigureMovedHandler(object sender, FigureViewModel figure);
+        public delegate void FigureMovedHandler(object sender, int x0, int y0, int x1, int y1);
         public event FigureMovedHandler FigureMoved;
 
         public delegate void FigureTypeChangedHandler(object sender, FigureViewModel figure);
@@ -25,13 +25,16 @@ namespace ZermeloCheckers
             return X == x && Y == y;
         }
 
-        public bool TryMoveFigure(int x, int y)
+        public bool TryMoveFigure(int x1, int y1)
         {
-            if (IsMoveAllowed(x, y))
+            if (IsMoveAllowed(x1, y1))
             {
-                X = x;
-                Y = y;
-                FigureMoved(null, this);
+                var x0 = X;
+                var y0 = Y;
+
+                X = x1;
+                Y = y1;
+                FigureMoved(null, x0, y0, x1, y1);
                 return true;
             }
 

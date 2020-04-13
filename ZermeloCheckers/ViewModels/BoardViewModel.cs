@@ -40,15 +40,27 @@ namespace ZermeloCheckers
             }
         }
 
-        public void OnFigureMoved(object sender, FigureViewModel obj)
+        public void OnFigureMoved(object sender, int x0, int y0, int x1, int y1)
         {
-            // TODO - consider implementing another pattern here
-            if (sender as BoardViewModel == null)
+            Game.Move(x0, y0, x1, y1);
+
+            var toBeRemoved = new List<FigureViewModel>();
+
+            foreach (var figure in Figures)
             {
-                foreach (var figure in Figures)
+                var source = Game.Figures.FirstOrDefault(f => f.X == figure.X && f.Y == figure.Y);
+                if (source == null)
                 {
-                    EvaluateAllowedMoves(figure);
+                    toBeRemoved.Add(figure);
                 }
+                else
+                {
+                    figure.AllowedMoves = source.AvailableMoves;
+                }
+            }
+
+            foreach (var r in toBeRemoved){
+                Figures.Remove(r);
             }
         }
 
@@ -63,33 +75,11 @@ namespace ZermeloCheckers
             foreach (var figure in _figures)
             {
                 figure.FigureMoved += OnFigureMoved;
-                EvaluateAllowedMoves(figure);
             }
         }
 
         // WARNING - business logic
-        public void EvaluateAllowedMoves(FigureViewModel figure)
-        {
-            var allowedMoves = new List<Point>();
-            allowedMoves.Add(new Point(figure.X + 1, figure.Y + 1));
-            allowedMoves.Add(new Point(figure.X - 1, figure.Y - 1));
-            allowedMoves.Add(new Point(figure.X + 1, figure.Y - 1));
-            allowedMoves.Add(new Point(figure.X - 1, figure.Y + 1));
-
-            allowedMoves.Add(new Point(figure.X + 1, figure.Y));
-            allowedMoves.Add(new Point(figure.X - 1, figure.Y));
-            allowedMoves.Add(new Point(figure.X, figure.Y + 1));
-            allowedMoves.Add(new Point(figure.X, figure.Y - 1));
-
-            allowedMoves.RemoveAll(x => x.X < 0 || x.Y < 0 || x.X >= Size || x.Y >= Size);
-
-            foreach (var neigh in Figures)
-            {
-                allowedMoves.RemoveAll(x => x.X == neigh.X && x.Y == neigh.Y);
-            }
-
-            figure.AllowedMoves = allowedMoves.ToArray();
-        }
+        
 
         public event PropertyChangedEventHandler PropertyChanged;
         

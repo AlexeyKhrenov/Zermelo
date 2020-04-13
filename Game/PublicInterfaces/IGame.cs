@@ -9,5 +9,9 @@ namespace Game.PublicInterfaces
         int Size { get; set; }
 
         IList<IFigure> Figures { get; }
+
+        void Move(int x0, int y0, int x1, int y1);
+
+        void Undo(); 
     }
 }
