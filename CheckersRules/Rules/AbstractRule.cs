@@ -1,13 +1,12 @@
 ﻿using Game.PublicInterfaces;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Checkers.Rules
 {
-    public abstract class AbstractRule
+    internal abstract class AbstractRule
     {
-        public abstract void ApplyRule(IGame game);
+        public abstract string Name { get; }
+
+        public abstract void ApplyRule(IGame game, Piece[,] pieces);
 
         private AbstractRule NextRule;
 
@@ -16,9 +15,9 @@ namespace Checkers.Rules
             NextRule = next;
         }
 
-        protected void PassControlToNext(IGame game)
+        protected void PassControlToNext(IGame game, Piece[,] pieces)
         {
-            NextRule?.ApplyRule(game);
+            NextRule?.ApplyRule(game, pieces);
         }
     }
 }

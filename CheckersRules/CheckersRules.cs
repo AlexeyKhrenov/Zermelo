@@ -2,49 +2,33 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using Checkers.Rules;
 using Game.PublicInterfaces;
 
 namespace Checkers
 {
+    // todo - checkers rules appender or host or assembler
     internal class CheckersRules : IGameRules
     {
-        public int Size { get; set; }
+        private int _size;
 
-        public List<IFigure> CreateInitialPosition(int size, bool changedSides)
+        //todo - create several chains of responsibility for different situations
+        private AbstractRule HeadOfChainOfRules;
+        private AbstractRule HeadOfInitialPositionRules;
+
+        public CheckersRules(int Size)
         {
-            Size = size;
+            _size = Size;
+            HeadOfChainOfRules = new NeedToCaptureRule();
+            HeadOfChainOfRules.AddNextRuleInChain(new DetectAvailableMovesRule());
 
-            var figures = new List<IFigure>();
+            HeadOfInitialPositionRules = new InitialPositionRule();
+            HeadOfInitialPositionRules.AddNextRuleInChain(new DetectAvailableMovesRule());
+        }
 
-            if (size < 4)
-            {
-                throw new NotImplementedException("Game size smaller than 4");
-            }
-
-            // positioning pieces
-            var firstColor = changedSides ? PieceTypes.Black : PieceTypes.White;
-            for (var y = size - 1; y > size / 2; y--)
-            {
-                var startX = 1 - y % 2;
-                for (var x = startX; x < size; x += 2)
-                {
-                    figures.Add(new Piece(x, y, firstColor));
-                }
-            }
-
-            var secondColor = changedSides ? PieceTypes.White : PieceTypes.Black;
-            for (var y = 0; y < size / 2 - 1; y++)
-            {
-                var startX = 1 - y % 2;
-                for (var x = startX; x < size; x += 2)
-                {
-                    figures.Add(new Piece(x, y, secondColor));
-                }
-            }
-
-            EvaluateAllowedMoves(figures, size);
-
-            return figures;
+        public void CreateInitialPosition(IGame game)
+        {
+            HeadOfInitialPositionRules.ApplyRule(game, null);
         }
 
         public void MakeMove(IGame game, int x0, int y0, int x1, int y1)
@@ -58,39 +42,12 @@ namespace Checkers
             requiredFigure.X = x1;
             requiredFigure.Y = y1;
 
-            EvaluateAllowedMoves(game.Figures, game.Size);
+            HeadOfChainOfRules.ApplyRule(game, game.Figures.ToPieceMatrix(game.Size));
         }
 
         public void Undo()
         {
             throw new NotImplementedException();
-        }
-
-        private static void EvaluateAllowedMoves(IList<IFigure> figures, int size)
-        {
-            foreach (var figure in figures)
-            {
-                var allowedMoves = new List<Point>();
-
-                allowedMoves.Add(new Point(figure.X + 1, figure.Y + 1));
-                allowedMoves.Add(new Point(figure.X - 1, figure.Y - 1));
-                allowedMoves.Add(new Point(figure.X + 1, figure.Y - 1));
-                allowedMoves.Add(new Point(figure.X - 1, figure.Y + 1));
-
-                allowedMoves.Add(new Point(figure.X + 1, figure.Y));
-                allowedMoves.Add(new Point(figure.X - 1, figure.Y));
-                allowedMoves.Add(new Point(figure.X, figure.Y + 1));
-                allowedMoves.Add(new Point(figure.X, figure.Y - 1));
-
-                allowedMoves.RemoveAll(x => x.X < 0 || x.Y < 0 || x.X >= size || x.Y >= size);
-
-                foreach (var neigh in figures)
-                {
-                    allowedMoves.RemoveAll(x => x.X == neigh.X && x.Y == neigh.Y);
-                }
-
-                figure.AvailableMoves = allowedMoves.ToArray();
-            }
         }
     }
 }

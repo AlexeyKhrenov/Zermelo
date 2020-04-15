@@ -12,9 +12,7 @@ namespace Game.PublicInterfaces
 
         int Y { get; set; }
 
-        int FigureType { get; set; }
-
-        Point[] AvailableMoves { get; set; }
+        List<Point> AvailableMoves { get; set; }
 
         string Type { get; }
     }

@@ -9,6 +9,6 @@ namespace Checkers
         White,
         Black,
         WhiteQueen,
-        BlackQueene
+        BlackQueen
     }
 }

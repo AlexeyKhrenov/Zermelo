@@ -18,13 +18,13 @@ namespace ZermeloCheckers
         public delegate void FigureTypeChangedHandler(object sender, FigureViewModel figure);
         public event FigureTypeChangedHandler FigureTypeChanged;
 
-        public Point[] AllowedMoves;
+        public List<Point> AllowedMoves;
 
         public bool HasCoordinates(int x, int y)
         {
             return X == x && Y == y;
         }
-
+         
         public bool TryMoveFigure(int x1, int y1)
         {
             if (IsMoveAllowed(x1, y1))

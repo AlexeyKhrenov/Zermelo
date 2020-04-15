@@ -13,13 +13,19 @@ namespace Game
 
         private IGameRules Rules { get; set; }
 
-        public IList<IFigure> Figures { get; private set; }
+        private bool _isRevertedBoard { get; set; }
+        public bool IsRevertedBoard => _isRevertedBoard;
+
+
+        public IList<IFigure> Figures { get; set; }
 
         public Game(IGameRules rules, int size, bool revertedSides)
         {
+            Figures = new List<IFigure>();
             Size = size;
             Rules = rules;
-            Figures = rules.CreateInitialPosition(Size, revertedSides);
+            _isRevertedBoard = revertedSides;
+            rules.CreateInitialPosition(this);
         }
 
         public void Move(int x0, int y0, int x1, int y1)
@@ -28,6 +34,11 @@ namespace Game
         }
 
         public void Undo()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SwitchPlayersTurn()
         {
             throw new NotImplementedException();
         }

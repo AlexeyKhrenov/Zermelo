@@ -13,19 +13,54 @@ namespace Checkers
 
         public int Y { get; set; }
 
-        public int FigureType { get; set; }
+        public List<Point> AvailableMoves { get; set; }
 
-        public Point[] AvailableMoves { get; set; }
+        // todo - convert to smart properties
+        public bool CanGoUp { get; set; }
 
-        public PieceTypes _type;
+        // todo - convert to smart properties
+        public bool CanGoDown { get; set; }
 
-        public string Type => _type.ToString();
+        public bool IsWhite { get; set; }
 
-        public Piece(int x, int y, PieceTypes type)
+        public bool IsQueen { get; set; }
+
+        public string Type {
+            get
+            {
+                if (IsWhite)
+                {
+                    if (IsQueen)
+                    {
+                        return PieceTypes.BlackQueen.ToString();
+                    }
+                    else
+                    {
+                        return PieceTypes.Black.ToString();
+                    }
+                }
+                else
+                {
+                    if (IsQueen)
+                    {
+                        return PieceTypes.WhiteQueen.ToString();
+                    }
+                    else
+                    {
+                        return PieceTypes.White.ToString();
+                    }
+                }
+            }
+        }
+
+        public Piece(int x, int y, bool isWhite, bool canGoUp, bool canGoDown)
         {
             X = x;
             Y = y;
-            _type = type;
+            IsWhite = isWhite;
+            CanGoDown = canGoDown;
+            CanGoUp = canGoUp;
+            AvailableMoves = new List<Point>();
         }
     }
 }

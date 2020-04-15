@@ -8,10 +8,15 @@ namespace Game.PublicInterfaces
     {
         int Size { get; set; }
 
-        IList<IFigure> Figures { get; }
+        IList<IFigure> Figures { get; set; }
 
         void Move(int x0, int y0, int x1, int y1);
 
-        void Undo(); 
+        void Undo();
+
+        // think of renaming this method
+        void SwitchPlayersTurn();
+
+        bool IsRevertedBoard { get; }
     }
 }
