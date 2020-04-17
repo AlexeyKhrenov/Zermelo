@@ -15,9 +15,6 @@ namespace ZermeloCheckers
         public delegate void FigureMovedHandler(object sender, int x0, int y0, int x1, int y1);
         public event FigureMovedHandler FigureMoved;
 
-        public delegate void FigureTypeChangedHandler(object sender, FigureViewModel figure);
-        public event FigureTypeChangedHandler FigureTypeChanged;
-
         public List<Point> AllowedMoves;
 
         public bool HasCoordinates(int x, int y)

@@ -163,14 +163,7 @@ namespace ZermeloCheckers
 
         private bool TryMoveFigure(FigureViewModel figure, int targetX, int targetY)
         {
-            var selectedSquare = squares[figure.X, figure.Y];
-
-            if (figure.TryMoveFigure(targetX, targetY))
-            {
-                return true;
-            }
-
-            return false;
+            return figure.TryMoveFigure(targetX, targetY);
         }
 
         private void TrySelectFigure(BoardSquare square)
