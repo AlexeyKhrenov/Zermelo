@@ -13,36 +13,32 @@ namespace Checkers
         private int _size;
 
         //todo - create several chains of responsibility for different situations
-        private AbstractRule HeadOfChainOfRules;
-        private AbstractRule HeadOfInitialPositionRules;
+        private AbstractRule ChainOfRules;
+        private AbstractRule InitialPositionRules;
 
         public CheckersRules(int Size)
         {
             _size = Size;
-            HeadOfChainOfRules = new NeedToCaptureRule();
-            HeadOfChainOfRules.AddNextRuleInChain(new DetectAvailableMovesRule());
+            ChainOfRules = new AppendMoveRule();
+            ChainOfRules.AddNext(new RemoveCapturedPieceRule());
+            ChainOfRules.AddNext(new ChangePieceTypeRule());
+            ChainOfRules.AddNext(new NeedToContinueCaptureRule());
+            ChainOfRules.AddNext(new SwitchPlayerRule());
+            ChainOfRules.AddNext(new NeedToCaptureRule());
+            ChainOfRules.AddNext(new DetectAvailableMovesRule());
 
-            HeadOfInitialPositionRules = new InitialPositionRule();
-            HeadOfInitialPositionRules.AddNextRuleInChain(new DetectAvailableMovesRule());
+            InitialPositionRules = new InitialPositionRule();
+            InitialPositionRules.AddNext(new DetectAvailableMovesRule());
         }
 
         public void CreateInitialPosition(IGame game)
         {
-            HeadOfInitialPositionRules.ApplyRule(game, null);
+            InitialPositionRules.ApplyRule(game, game.Figures.ToPieceMatrix(game.Size), null);
         }
 
-        public void MakeMove(IGame game, int x0, int y0, int x1, int y1)
+        public void MakeMove(IGame game, IHistoryItem move)
         {
-            var requiredFigure = game.Figures.FirstOrDefault(f => f.X == x0 && f.Y == y0);
-            if (requiredFigure == null)
-            {
-                throw new InvalidOperationException();
-            }
-
-            requiredFigure.X = x1;
-            requiredFigure.Y = y1;
-
-            HeadOfChainOfRules.ApplyRule(game, game.Figures.ToPieceMatrix(game.Size));
+            ChainOfRules.ApplyRule(game, game.Figures.ToPieceMatrix(game.Size), move);
         }
 
         public void Undo()

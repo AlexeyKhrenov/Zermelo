@@ -11,7 +11,7 @@ namespace Checkers.Rules
     {
         public override string Name => nameof(DetectAvailableMovesRule);
 
-        public override void ApplyRule(IGame game, Piece[,] pieces)
+        public override void ApplyRule(IGame game, Piece[,] pieces, IHistoryItem latestMove)
         {
             foreach (var figure in game.Figures)
             {
@@ -48,6 +48,7 @@ namespace Checkers.Rules
                     }
                 }
             }
+            Next(game, pieces, latestMove);
         }
 
         public void Check(Piece piece, Piece[,] pieces, int directionDown, int directionRight)

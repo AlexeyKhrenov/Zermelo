@@ -9,7 +9,7 @@ namespace Checkers.Rules
     {
         public override string Name => nameof(InitialPositionRule);
 
-        public override void ApplyRule(IGame game, Piece[,] pieces)
+        public override void ApplyRule(IGame game, Piece[,] pieces, IHistoryItem latestMove)
         {
             var size = game.Size;
             var changedSides = game.IsRevertedBoard;
@@ -42,7 +42,7 @@ namespace Checkers.Rules
 
             game.Figures = figures;
 
-            PassControlToNext(game, figures.ToPieceMatrix(size));
+            Next(game, figures.ToPieceMatrix(size), latestMove);
         }
     }
 }

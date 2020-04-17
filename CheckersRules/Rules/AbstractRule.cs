@@ -6,18 +6,25 @@ namespace Checkers.Rules
     {
         public abstract string Name { get; }
 
-        public abstract void ApplyRule(IGame game, Piece[,] pieces);
+        public abstract void ApplyRule(IGame game, Piece[,] pieces, IHistoryItem latestMove);
 
         private AbstractRule NextRule;
 
-        public void AddNextRuleInChain(AbstractRule next)
+        public void AddNext(AbstractRule next)
         {
-            NextRule = next;
+            if (NextRule != null)
+            {
+                NextRule.AddNext(next);
+            }
+            else
+            {
+                NextRule = next;
+            }
         }
 
-        protected void PassControlToNext(IGame game, Piece[,] pieces)
+        protected void Next(IGame game, Piece[,] pieces, IHistoryItem latestMove)
         {
-            NextRule?.ApplyRule(game, pieces);
+            NextRule?.ApplyRule(game, pieces, latestMove);
         }
     }
 }

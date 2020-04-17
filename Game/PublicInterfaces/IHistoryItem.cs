@@ -11,7 +11,7 @@ namespace Game.PublicInterfaces
 
         bool IsPieceChangeType { get; set; }
 
-        bool IsKill { get; }
+        bool IsKill { get; set; }
 
         Point From { get; }
 

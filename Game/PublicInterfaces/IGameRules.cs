@@ -8,7 +8,7 @@ namespace Game.PublicInterfaces
     {
         void CreateInitialPosition(IGame game);
 
-        void MakeMove(IGame game, int x0, int y0, int x1, int y1);
+        void MakeMove(IGame game, IHistoryItem latestMove);
 
         void Undo();
     }

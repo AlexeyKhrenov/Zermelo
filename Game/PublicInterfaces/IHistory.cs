@@ -5,9 +5,10 @@ using System.Text;
 
 namespace Game.PublicInterfaces
 {
+    // todo - consider deleting this interface
     public interface IHistory
     {
-        void Push(IPlayer player, Point from, Point to);
+        void Push(IHistoryItem historyItem);
 
         IHistoryItem Pop();
     }

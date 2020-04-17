@@ -10,7 +10,7 @@ namespace Checkers.Rules
     {
         public override string Name => nameof(NeedToCaptureRule);
 
-        public override void ApplyRule(IGame game, Piece[,] pieces)
+        public override void ApplyRule(IGame game, Piece[,] pieces, IHistoryItem latestMove)
         {
             var needToPassControl = true;
 
@@ -22,12 +22,12 @@ namespace Checkers.Rules
 
             if (needToPassControl)
             {
-                PassControlToNext(game, pieces);
+                Next(game, pieces, latestMove);
             }
         }
 
         // returns true if a piece to capture was detected
-        private bool Check(IFigure figure, Piece[,] pieces)
+        public static bool Check(IFigure figure, Piece[,] pieces)
         {
             var result = false;
 
@@ -64,7 +64,7 @@ namespace Checkers.Rules
             return result;
         }
 
-        private bool CheckDirection(Piece piece, Piece[,] pieces, int directionRight, int directionDown)
+        private static bool CheckDirection(Piece piece, Piece[,] pieces, int directionRight, int directionDown)
         {
             var target = pieces[piece.X + directionRight, piece.Y + directionDown];
             if (target != null && target.IsWhite != piece.IsWhite)

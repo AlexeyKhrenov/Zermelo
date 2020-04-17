@@ -20,9 +20,8 @@ namespace Game.Implementations
             return _stack.Pop();
         }
 
-        public void Push(IPlayer player, Point from, Point to)
+        public void Push(IHistoryItem item)
         {
-            var item = new HistoryItem(player, from, to);
             _stack.Push(item);
         }
     }

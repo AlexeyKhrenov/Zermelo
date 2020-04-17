@@ -16,15 +16,21 @@ namespace Game.Implementations
 
         public bool IsPieceChangeType { get; set; }
 
-        public bool IsKill => From.X - To.X > 1 || From.X - To.X < -1;
+        public bool IsKill { get; set; }
 
         public HistoryItem(IPlayer player, Point from, Point to)
         {
             IsPieceChangeType = false;
+            IsKill = false;
 
             Player = player;
             From = from;
             To = to;
+        }
+
+        public override string ToString()
+        {
+            return $"{From.X}, {From.Y} -> {To.X}, {To.Y}";
         }
     }
 }
