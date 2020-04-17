@@ -15,10 +15,8 @@ namespace Checkers
 
         public List<Point> AvailableMoves { get; set; }
 
-        // todo - convert to smart properties
         public bool CanGoUp { get; set; }
-
-        // todo - convert to smart properties
+        
         public bool CanGoDown { get; set; }
 
         public bool IsWhite { get; set; }

@@ -32,8 +32,6 @@ namespace ZermeloCheckers
                 var x0 = X;
                 var y0 = Y;
 
-                X = x1;
-                Y = y1;
                 FigureMoved(null, x0, y0, x1, y1);
                 return true;
             }

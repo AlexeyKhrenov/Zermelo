@@ -45,22 +45,39 @@ namespace ZermeloCheckers
             Game.Move(x0, y0, x1, y1);
 
             var toBeRemoved = new List<FigureViewModel>();
+            var toBeInserted = new List<FigureViewModel>();
 
-            foreach (var figure in Figures)
+            foreach (var uiFigure in Figures)
             {
-                var source = Game.Figures.FirstOrDefault(f => f.X == figure.X && f.Y == figure.Y);
+                var source = Game.Figures.FirstOrDefault(f => f.X == uiFigure.X && f.Y == uiFigure.Y && f.Type == uiFigure.Type);
                 if (source == null)
                 {
-                    toBeRemoved.Add(figure);
+                    toBeRemoved.Add(uiFigure);
                 }
                 else
                 {
-                    figure.AllowedMoves = source.AvailableMoves;
+                    uiFigure.AllowedMoves = source.AvailableMoves;
                 }
             }
 
             foreach (var r in toBeRemoved){
                 Figures.Remove(r);
+            }
+
+            foreach (var figure in Game.Figures)
+            {
+                var source = Figures.FirstOrDefault(f => f.X == figure.X && f.Y == figure.Y && f.Type == figure.Type);
+                if (source == null)
+                {
+                    var newUiFigure = figure.ToViewModel();
+                    newUiFigure.FigureMoved += OnFigureMoved;
+                    toBeInserted.Add(newUiFigure);
+                }
+            }
+
+            foreach (var i in toBeInserted)
+            {
+                Figures.Add(i);
             }
         }
 
@@ -69,7 +86,7 @@ namespace ZermeloCheckers
             GameFactory = gameFactory;
 
             // move size of the game to the config
-            Game = GameFactory.CreateGame(8, false);
+            Game = GameFactory.CreateGame(6, false);
             _figures = new ObservableCollection<FigureViewModel>(Game.Figures.Select(x => x.ToViewModel()).ToList());
 
             foreach (var figure in _figures)

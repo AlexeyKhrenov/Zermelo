@@ -23,7 +23,7 @@ namespace ZermeloCheckers
         public MainWindow()
         {
             InitializeComponent();
-            gameBoard.Initialize(8);
+            gameBoard.Initialize(6);
         }
     }
 }

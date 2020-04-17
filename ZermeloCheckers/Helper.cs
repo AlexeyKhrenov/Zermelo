@@ -20,16 +20,28 @@ namespace ZermeloCheckers
         }
 
         // todo - move this component to XAML
-        public static UIElement ToUIElement(this FigureViewModel figureViewModel)
+        public static UIElement ToUIElement(this FigureViewModel figure)
         {
-            return new Rectangle()
+            if (figure.Type == "WhiteQueen" || figure.Type == "BlackQueen")
             {
-                Height = 26,
-                Width = 26,
-                Fill = figureViewModel.Type != "White" ? Brushes.Black : Brushes.White,
-                //Stroke = Brushes.Non
-                StrokeThickness = 2,
-            };
+                return new Rectangle()
+                {
+                    Height = 26,
+                    Width = 26,
+                    Fill = figure.Type != "WhiteQueen" ? Brushes.Black : Brushes.White,
+                    Stroke = Brushes.Tan,
+                    StrokeThickness = 5,
+                };
+            }
+            else
+            {
+                return new Rectangle()
+                {
+                    Height = 26,
+                    Width = 26,
+                    Fill = figure.Type != "White" ? Brushes.Black : Brushes.White,
+                };
+            }
         }
     }
 }

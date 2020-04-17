@@ -12,18 +12,18 @@ namespace Checkers.Rules
         public override void ApplyRule(IGame game, Piece[,] pieces, IHistoryItem latestMove)
         {
             var piece = pieces[latestMove.To.X, latestMove.To.Y];
-            if (piece.IsQueen)
+            if (!piece.IsQueen)
             {
-                return;
-            }
+                bool v1 = (piece.CanGoDown && piece.Y == game.Size - 1);
+                bool v2 = (piece.CanGoUp && piece.Y == 0);
 
-            if(
-                (piece.CanGoDown && piece.Y == game.Size - 1) ||
-                (piece.CanGoUp && piece.Y == 0)
-            )
-            {
-                piece.IsQueen = true;
-                latestMove.IsPieceChangeType = true;
+                if (v1 || v2)
+                {
+                    piece.IsQueen = true;
+                    piece.CanGoDown = true;
+                    piece.CanGoUp = true;
+                    latestMove.IsPieceChangeType = true;
+                }
             }
 
             Next(game, pieces, latestMove);

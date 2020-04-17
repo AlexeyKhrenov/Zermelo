@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
 using System.Windows;
@@ -63,15 +64,18 @@ namespace ZermeloCheckers
         {
             FiguresProperty = DependencyProperty.Register(
                 "Figures", typeof(ObservableCollection<FigureViewModel>), typeof(Board),
-                new FrameworkPropertyMetadata(new PropertyChangedCallback(OnFiguresChanged))
+                new FrameworkPropertyMetadata(new PropertyChangedCallback(WholeSetOfFiguresChanged))
             );
         }
 
-        private static void OnFiguresChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void WholeSetOfFiguresChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var board = (Board)d;
             var newValue = (ObservableCollection<FigureViewModel>)e.NewValue;
             var oldValue = (ObservableCollection<FigureViewModel>)e.OldValue;
+
+            newValue.CollectionChanged += board.Figures_CollectionChanged;
+            
 
             foreach (var item in newValue)
             {
@@ -84,6 +88,40 @@ namespace ZermeloCheckers
 
         public Board()
         {
+        }
+
+        private void Figures_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            var oldItems = e.OldItems;
+            var newItems = e.NewItems;
+
+            if (oldItems != null)
+            {
+                foreach (var item in oldItems)
+                {
+                    RemoveFigure(item as FigureViewModel);
+                }
+            }
+
+            if (newItems != null)
+            {
+                foreach (var item in newItems)
+                {
+                    AddFigure(item as FigureViewModel);
+                }
+            }
+        }
+
+        private void RemoveFigure(FigureViewModel figure)
+        {
+            var square = squares[figure.X, figure.Y];
+            square.RemoveFigure();
+        }
+
+        private void AddFigure(FigureViewModel figure)
+        {
+            var square = squares[figure.X, figure.Y];
+            square.AddFigure(figure.ToUIElement());
         }
 
         // todo - consider changing to the game model
@@ -129,8 +167,6 @@ namespace ZermeloCheckers
 
             if (figure.TryMoveFigure(targetX, targetY))
             {
-                selectedSquare.RemoveFigure();
-                squares[targetX, targetY].AddFigure(figure.ToUIElement());
                 return true;
             }
 
