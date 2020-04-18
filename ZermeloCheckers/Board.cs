@@ -160,9 +160,9 @@ namespace ZermeloCheckers
                 var selectedSquare = squares[figure.X, figure.Y];
                 selectedSquare.Select();
 
-                if (figure.AllowedMoves != null)
+                if (figure.AvailableMoves != null)
                 {
-                    foreach (var allowedMove in figure.AllowedMoves)
+                    foreach (var allowedMove in figure.AvailableMoves)
                     {
                         squares[allowedMove.X, allowedMove.Y].SelectAllowedMove();
                     }
@@ -177,9 +177,9 @@ namespace ZermeloCheckers
             var selectedSquare = squares[figure.X, figure.Y];
             selectedSquare.Deselect();
 
-            if (figure.AllowedMoves != null)
+            if (figure.AvailableMoves != null)
             {
-                foreach (var allowedMove in figure.AllowedMoves)
+                foreach (var allowedMove in figure.AvailableMoves)
                 {
                     squares[allowedMove.X, allowedMove.Y].DeselectAllowedMove();
                 }

@@ -6,7 +6,7 @@ using System.Text;
 namespace Game.PublicInterfaces
 {
     // todo - consider delering this interface
-    public interface IFigure
+    public interface IFigure : IEquatable<IFigure>
     {
         int X { get; set; }
 

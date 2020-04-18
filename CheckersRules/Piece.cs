@@ -60,5 +60,21 @@ namespace Checkers
             CanGoUp = canGoUp;
             AvailableMoves = new List<Point>();
         }
+
+        // todo - consider changing to smaller value types
+        public override int GetHashCode()
+        {
+            return (X << 8) + Y;
+        }
+
+        public bool Equals(IFigure other)
+        {
+            if (other == null)
+            {
+                return false;
+            }
+
+            return X == other.X && Y == other.Y && Type == other.Type; 
+        }
     }
 }

@@ -16,7 +16,7 @@ namespace ZermeloCheckers
                 X = figure.X,
                 Y = figure.Y,
                 Type = figure.Type,
-                AllowedMoves = figure.AvailableMoves
+                AvailableMoves = figure.AvailableMoves
             };
         }
 

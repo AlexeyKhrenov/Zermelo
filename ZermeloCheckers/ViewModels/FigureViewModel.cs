@@ -8,28 +8,18 @@ using Game.PublicInterfaces;
 
 namespace ZermeloCheckers.ViewModels
 {
-    public class FigureViewModel
+    public class FigureViewModel : IFigure
     {
-        public int X;
-        public int Y;
-        public string Type;
+        public int X { get; set; }
+
+        public int Y { get; set; }
+
+        public string Type { get; set; }
 
         public delegate void FigureMovedHandler(object sender, int x0, int y0, int x1, int y1);
         public event FigureMovedHandler FigureMoved;
 
-        public List<Point> _all;
-        public List<Point> AllowedMoves
-        {
-            get
-            {
-                return _all;
-            }
-
-            set
-            {
-                _all = value;
-            }
-        }
+        public List<Point> AvailableMoves { get; set; }
 
         public bool HasCoordinates(int x, int y)
         {
@@ -52,7 +42,23 @@ namespace ZermeloCheckers.ViewModels
 
         public bool IsMoveAllowed(int x, int y)
         {
-            return AllowedMoves != null && AllowedMoves.Any(p => p.X == x && p.Y == y);
+            return AvailableMoves != null && AvailableMoves.Any(p => p.X == x && p.Y == y);
+        }
+
+        // todo - consider changing to smaller value types
+        public override int GetHashCode()
+        {
+            return (X << 8) + Y;
+        }
+
+        public bool Equals(IFigure other)
+        {
+            if (other == null)
+            {
+                return false;
+            }
+
+            return X == other.X && Y == other.Y && Type == other.Type;
         }
     }
 }

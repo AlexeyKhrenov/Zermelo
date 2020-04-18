@@ -63,41 +63,19 @@ namespace ZermeloCheckers.ViewModels
 
         public void UpdateFigures(IList<IFigure> modelFigures, ObservableCollection<FigureViewModel> uiFigures)
         {
-            var toBeRemoved = new List<FigureViewModel>();
-            var toBeInserted = new List<FigureViewModel>();
-
-            foreach (var uiFigure in uiFigures)
-            {
-                var source = modelFigures.FirstOrDefault(f => f.X == uiFigure.X && f.Y == uiFigure.Y && f.Type == uiFigure.Type);
-                if (source == null)
-                {
-                    toBeRemoved.Add(uiFigure);
-                }
-                else
-                {
-                    uiFigure.AllowedMoves = source.AvailableMoves;
-                }
-            }
+            var toBeRemoved = uiFigures.Except(modelFigures).ToList();
+            var toBeInserted = modelFigures.Except(uiFigures).ToList();
 
             foreach (var r in toBeRemoved)
             {
-                uiFigures.Remove(r);
-            }
-
-            foreach (var figure in modelFigures)
-            {
-                var source = uiFigures.FirstOrDefault(f => f.X == figure.X && f.Y == figure.Y && f.Type == figure.Type);
-                if (source == null)
-                {
-                    var newUiFigure = figure.ToViewModel();
-                    newUiFigure.FigureMoved += OnFigureMoved;
-                    toBeInserted.Add(newUiFigure);
-                }
+                uiFigures.Remove(r as FigureViewModel);
             }
 
             foreach (var i in toBeInserted)
             {
-                uiFigures.Add(i);
+                var newUiFigure = i.ToViewModel();
+                newUiFigure.FigureMoved += OnFigureMoved;
+                uiFigures.Add(newUiFigure);
             }
         }
 
