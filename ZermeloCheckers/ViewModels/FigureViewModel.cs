@@ -6,7 +6,7 @@ using System.Linq;
 
 using Game.PublicInterfaces;
 
-namespace ZermeloCheckers
+namespace ZermeloCheckers.ViewModels
 {
     public class FigureViewModel
     {

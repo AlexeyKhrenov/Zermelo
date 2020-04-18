@@ -9,7 +9,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Windows.Documents;
  
-namespace ZermeloCheckers
+namespace ZermeloCheckers.ViewModels
 {
     class BoardViewModel : INotifyPropertyChanged
     {
