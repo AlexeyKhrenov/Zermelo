@@ -45,7 +45,12 @@ namespace Checkers.Rules
                 }
             }
 
-            Next(game, pieces, latestMove);
+            Next(game, pieces, null);
+        }
+
+        public override void UndoRule(IGame game, Piece[,] pieces, IHistoryItem toUndo, IHistoryItem lastMoveBeforeUndo)
+        {
+            throw new InvalidOperationException();
         }
     }
 }

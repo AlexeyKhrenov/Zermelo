@@ -8,7 +8,8 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Windows.Documents;
- 
+using System.Windows.Input;
+
 namespace ZermeloCheckers.ViewModels
 {
     class BoardViewModel : INotifyPropertyChanged
@@ -16,8 +17,23 @@ namespace ZermeloCheckers.ViewModels
         // TODO - remove hard-coded value
         public int Size = 8;
 
+        private bool _isUndoEnabled = false;
+        public bool IsUndoEnabled
+        {
+            get { return _isUndoEnabled; }
+            set
+            {
+                _isUndoEnabled = value;
+                RaisePropertyChanged();
+            }
+        }
+
         private ObservableCollection<FigureViewModel> _player1Figures;
         private ObservableCollection<FigureViewModel> _player2Figures;
+
+        public string ActivePlayer => Game?.ActivePlayer.Name;
+
+        public ICommand UndoMoveCommand { get; set; }
 
         private IGameFactory GameFactory;
 
@@ -59,6 +75,15 @@ namespace ZermeloCheckers.ViewModels
             Game.Move(x0, y0, x1, y1);
             UpdateFigures(Game.Player1.Figures, Player1Figures);
             UpdateFigures(Game.Player2.Figures, Player2Figures);
+            RaisePropertyChanged(nameof(ActivePlayer));
+        }
+
+        public void OnUndoMoveCommand()
+        {
+            Game.Undo();
+            UpdateFigures(Game.Player1.Figures, Player1Figures);
+            UpdateFigures(Game.Player2.Figures, Player2Figures);
+            RaisePropertyChanged(nameof(ActivePlayer));
         }
 
         public void UpdateFigures(IList<IFigure> modelFigures, ObservableCollection<FigureViewModel> uiFigures)
@@ -77,6 +102,8 @@ namespace ZermeloCheckers.ViewModels
                 newUiFigure.FigureMoved += OnFigureMoved;
                 uiFigures.Add(newUiFigure);
             }
+
+            IsUndoEnabled = Game.HistoryLength != 0;
         }
 
         public BoardViewModel(IGameFactory gameFactory)
@@ -97,6 +124,9 @@ namespace ZermeloCheckers.ViewModels
             {
                 figure.FigureMoved += OnFigureMoved;
             }
+
+            UndoMoveCommand = new RelayCommand(obj => OnUndoMoveCommand());
+            IsUndoEnabled = false;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

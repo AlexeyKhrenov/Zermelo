@@ -7,6 +7,13 @@ namespace Game.Implementations
 {
     public class Player : IPlayer
     {
+        public string Name { get; private set; }
+
         public IList<IFigure> Figures { get; set; }
+
+        public Player(string name)
+        {
+            Name = name;
+        }
     }
 }

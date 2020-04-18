@@ -24,5 +24,7 @@ namespace Game.PublicInterfaces
         void SwitchPlayersTurn();
 
         bool IsRevertedBoard { get; }
+
+        int HistoryLength { get; }
     }
 }

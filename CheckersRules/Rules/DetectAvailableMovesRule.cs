@@ -13,6 +13,18 @@ namespace Checkers.Rules
 
         public override void ApplyRule(IGame game, Piece[,] pieces, IHistoryItem latestMove)
         {
+            CheckRule(game, pieces, latestMove);
+            Next(game, pieces, latestMove);
+        }
+
+        public override void UndoRule(IGame game, Piece[,] pieces, IHistoryItem toUndo, IHistoryItem lastMoveBeforeUndo)
+        {
+            CheckRule(game, pieces, toUndo);
+            NextUndo(game, pieces, toUndo, lastMoveBeforeUndo);
+        }
+
+        private void CheckRule(IGame game, Piece[,] pieces, IHistoryItem latestMove)
+        {
             foreach (var figure in game.ActivePlayer.Figures)
             {
                 // todo - remove this cast
@@ -47,7 +59,6 @@ namespace Checkers.Rules
                     }
                 }
             }
-            Next(game, pieces, latestMove);
         }
 
         public void Check(Piece piece, Piece[,] pieces, int directionDown, int directionRight)

@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Game.Implementations
 {
-    public struct HistoryItem : IHistoryItem
+    public class HistoryItem : IHistoryItem
     {
         public IPlayer Player { get; private set; }
 
@@ -18,10 +18,13 @@ namespace Game.Implementations
 
         public bool IsKill { get; set; }
 
+        public IFigure Captured { get; set; }
+
         public HistoryItem(IPlayer player, Point from, Point to)
         {
             IsPieceChangeType = false;
             IsKill = false;
+            Captured = null;
 
             Player = player;
             From = from;

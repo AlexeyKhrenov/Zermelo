@@ -13,7 +13,18 @@
     </Window.DataContext>
 
     <Grid>
-        <local:Board 
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="200"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="100"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <local:Board
+            Grid.Column="0"
+            Grid.Row="0"
+            Grid.RowSpan="2"
             x:Name="gameBoard"
             Height="400"
             Width="400"
@@ -21,5 +32,7 @@
             Player2Figures="{Binding Player2Figures}"
         >
         </local:Board>
+        <Label Grid.Column="1" Grid.Row="0" Content="{Binding ActivePlayer}" />
+        <Button Grid.Column="1" Grid.Row="1" IsEnabled="{Binding IsUndoEnabled}"  Command="{Binding UndoMoveCommand}">Undo</Button>
     </Grid>
 </Window>

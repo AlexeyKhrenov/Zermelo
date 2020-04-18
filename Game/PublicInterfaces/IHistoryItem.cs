@@ -16,5 +16,7 @@ namespace Game.PublicInterfaces
         Point From { get; }
 
         Point To { get; }
+
+        IFigure Captured { get; set; }
     }
 }

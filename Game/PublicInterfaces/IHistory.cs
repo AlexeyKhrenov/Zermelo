@@ -10,6 +10,10 @@ namespace Game.PublicInterfaces
     {
         void Push(IHistoryItem historyItem);
 
+        int Length { get; }
+
         IHistoryItem Pop();
+
+        IHistoryItem Latest { get; }
     }
 }

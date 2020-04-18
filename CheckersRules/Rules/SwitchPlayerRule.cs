@@ -14,5 +14,15 @@ namespace Checkers.Rules
             game.SwitchPlayersTurn();
             Next(game, pieces, latestMove);
         }
+
+        public override void UndoRule(IGame game, Piece[,] pieces, IHistoryItem toUndo, IHistoryItem lastMoveBeforeUndo)
+        {
+            if (game.ActivePlayer != toUndo.Player)
+            {
+                game.SwitchPlayersTurn();
+            }
+            
+            NextUndo(game, pieces, toUndo, lastMoveBeforeUndo);
+        }
     }
 }

@@ -6,6 +6,8 @@ namespace Game.PublicInterfaces
 {
     public interface IPlayer
     {
+        string Name { get; }
+
         IList<IFigure> Figures { get; set; }
     }
 }

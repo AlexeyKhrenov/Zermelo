@@ -43,9 +43,10 @@ namespace Checkers
             ChainOfRules.ApplyRule(game, matrix, move);
         }
 
-        public void Undo()
+        public void Undo(IGame game, IHistoryItem undo, IHistoryItem lastMoveBeforeUndo)
         {
-            throw new NotImplementedException();
+            var matrix = Helper.ToPieceMatrix(game.Size, game.Player1.Figures, game.Player2.Figures);
+            ChainOfRules.UndoRule(game, matrix, undo, lastMoveBeforeUndo);
         }
     }
 }

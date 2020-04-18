@@ -15,22 +15,27 @@ namespace Checkers.Rules
             var piece = pieces[latestMove.From.X, latestMove.From.Y];
             piece.X = latestMove.To.X;
             piece.Y = latestMove.To.Y;
-
-            var figure = game.ActivePlayer.Figures.First(f => f.X == piece.X && f.Y == piece.Y);
-            game.ActivePlayer.Figures.Remove(figure);
-
-            figure.X = piece.X;
-            figure.Y = piece.Y;
-
-            game.ActivePlayer.Figures.Add(figure);
+            pieces[latestMove.From.X, latestMove.From.Y] = null;
+            pieces[latestMove.To.X, latestMove.To.Y] = piece;
 
             ClearAvailableMoves(game.Player1);
             ClearAvailableMoves(game.Player2);
 
-            pieces[latestMove.From.X, latestMove.From.Y] = null;
-            pieces[latestMove.To.X, latestMove.To.Y] = piece;
-
             Next(game, pieces, latestMove);
+        }
+
+        public override void UndoRule(IGame game, Piece[,] pieces, IHistoryItem toUndo, IHistoryItem lastMoveBeforeUndo)
+        {
+            var piece = pieces[toUndo.To.X, toUndo.To.Y];
+            piece.X = toUndo.From.X;
+            piece.Y = toUndo.From.Y;
+            pieces[toUndo.To.X, toUndo.To.Y] = null;
+            pieces[toUndo.From.X, toUndo.From.Y] = piece;
+
+            ClearAvailableMoves(game.Player1);
+            ClearAvailableMoves(game.Player2);
+
+            NextUndo(game, pieces, toUndo, lastMoveBeforeUndo);
         }
 
         private void ClearAvailableMoves(IPlayer player)

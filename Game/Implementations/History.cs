@@ -10,6 +10,8 @@ namespace Game.Implementations
     {
         private Stack<IHistoryItem> _stack;
 
+        public int Length => _stack.Count;
+
         public History()
         {
             _stack = new Stack<IHistoryItem>();
@@ -19,6 +21,8 @@ namespace Game.Implementations
         {
             return _stack.Pop();
         }
+
+        public IHistoryItem Latest => _stack.Count != 0 ? _stack.Peek() : null;
 
         public void Push(IHistoryItem item)
         {

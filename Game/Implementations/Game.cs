@@ -26,13 +26,15 @@ namespace Game.Implementations
         public bool IsRevertedBoard => _isRevertedBoard;
         public IList<IFigure> Figures { get; set; }
 
+        public int HistoryLength => _history?.Length ?? 0;
+
         private IHistory _history { get; set; }
 
         public Game(IGameRules rules, IHistory history, int size, bool revertedSides)
         {
             // todo - need to inject this objects?
-            Player1 = new Player();
-            Player2 = new Player();
+            Player1 = new Player("Player 1");
+            Player2 = new Player("Player 2");
 
             Player1.Figures = new List<IFigure>();
             Player2.Figures = new List<IFigure>();
@@ -55,6 +57,10 @@ namespace Game.Implementations
 
         public void Undo()
         {
+            var move = _history.Pop();
+            var lastMoveBeforeUndo = _history.Latest;
+
+            Rules.Undo(this, move, lastMoveBeforeUndo);
         }
 
         public void SwitchPlayersTurn()

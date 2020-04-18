@@ -10,6 +10,6 @@ namespace Game.PublicInterfaces
 
         void MakeMove(IGame game, IHistoryItem latestMove);
 
-        void Undo();
+        void Undo(IGame game, IHistoryItem undo, IHistoryItem lastMoveBeforeUndo);
     }
 }

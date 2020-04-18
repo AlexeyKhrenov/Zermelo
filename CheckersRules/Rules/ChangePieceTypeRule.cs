@@ -1,6 +1,7 @@
 ﻿using Game.PublicInterfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Checkers.Rules
@@ -27,6 +28,26 @@ namespace Checkers.Rules
             }
 
             Next(game, pieces, latestMove);
+        }
+
+        public override void UndoRule(IGame game, Piece[,] pieces, IHistoryItem toUndo, IHistoryItem lastMoveBeforeUndo)
+        {
+            if (toUndo.IsPieceChangeType)
+            {
+                var piece = pieces[toUndo.From.X, toUndo.From.Y];
+
+                piece.IsQueen = false;
+                if (toUndo.To.Y > toUndo.From.Y)
+                {
+                    piece.CanGoUp = false;
+                }
+                else
+                {
+                    piece.CanGoDown = false;
+                }
+            }
+
+            NextUndo(game, pieces, toUndo, lastMoveBeforeUndo);
         }
     }
 }

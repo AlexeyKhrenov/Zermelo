@@ -16,13 +16,27 @@ namespace Checkers.Rules
 
             foreach (var figure in game.ActivePlayer.Figures)
             {
-                figure.AvailableMoves.Clear();
                 needToPassControl &= !Check(figure, pieces);
             }
 
             if (needToPassControl)
             {
                 Next(game, pieces, latestMove);
+            }
+        }
+
+        public override void UndoRule(IGame game, Piece[,] pieces, IHistoryItem toUndo, IHistoryItem lastMoveBeforeUndo)
+        {
+            var needToPassControl = true;
+
+            foreach (var figure in game.ActivePlayer.Figures)
+            {
+                needToPassControl &= !Check(figure, pieces);
+            }
+
+            if (needToPassControl)
+            {
+                NextUndo(game, pieces, toUndo, lastMoveBeforeUndo);
             }
         }
 
