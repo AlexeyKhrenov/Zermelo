@@ -1,4 +1,6 @@
-﻿using Game.PublicInterfaces;
+﻿using CheckersAI;
+using Game.Implementations;
+using Game.PublicInterfaces;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -110,8 +112,11 @@ namespace ZermeloCheckers.ViewModels
         {
             GameFactory = gameFactory;
 
+            var player1 = new HumanPlayer("Player 1");
+            var player2 = new ComputerPlayer("Player 2");
+
             // move size of the game to the config
-            Game = GameFactory.CreateGame(6, false);
+            Game = GameFactory.CreateGame(6, false, player1, player2);
             _player1Figures = new ObservableCollection<FigureViewModel>(Game.Player1.Figures.Select(x => x.ToViewModel()).ToList());
             _player2Figures = new ObservableCollection<FigureViewModel>(Game.Player2.Figures.Select(x => x.ToViewModel()).ToList());
 

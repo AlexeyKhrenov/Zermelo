@@ -30,11 +30,10 @@ namespace Game.Implementations
 
         private IHistory _history { get; set; }
 
-        public Game(IGameRules rules, IHistory history, int size, bool revertedSides)
+        public Game(IGameRules rules, IPlayer player1, IPlayer player2, IHistory history, int size, bool revertedSides)
         {
-            // todo - need to inject this objects?
-            Player1 = new Player("Player 1");
-            Player2 = new Player("Player 2");
+            Player1 = player1;
+            Player2 = player2;
 
             Player1.Figures = new List<IFigure>();
             Player2.Figures = new List<IFigure>();
@@ -53,6 +52,7 @@ namespace Game.Implementations
             var move = new HistoryItem(ActivePlayer, new Point(x0, y0), new Point(x1, y1));
             _history.Push(move);
             Rules.MakeMove(this, move);
+            ActivePlayer.MakeMove(this);
         }
 
         public void Undo()

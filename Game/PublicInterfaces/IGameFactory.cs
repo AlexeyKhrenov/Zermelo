@@ -6,6 +6,6 @@ namespace Game.PublicInterfaces
 {
     public interface IGameFactory
     {
-        IGame CreateGame(int size, bool revertedSides);
+        IGame CreateGame(int size, bool revertedSides, IPlayer player1, IPlayer player2);
     }
 }

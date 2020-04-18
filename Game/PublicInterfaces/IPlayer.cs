@@ -9,5 +9,7 @@ namespace Game.PublicInterfaces
         string Name { get; }
 
         IList<IFigure> Figures { get; set; }
+
+        void MakeMove(IGame game);
     }
 }
