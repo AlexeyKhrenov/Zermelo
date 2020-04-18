@@ -33,12 +33,14 @@ namespace Checkers
 
         public void CreateInitialPosition(IGame game)
         {
-            InitialPositionRules.ApplyRule(game, game.Figures.ToPieceMatrix(game.Size), null);
+            var matrix = Helper.ToPieceMatrix(game.Size, game.Player1.Figures, game.Player2.Figures);
+            InitialPositionRules.ApplyRule(game, matrix, null);
         }
 
         public void MakeMove(IGame game, IHistoryItem move)
         {
-            ChainOfRules.ApplyRule(game, game.Figures.ToPieceMatrix(game.Size), move);
+            var matrix = Helper.ToPieceMatrix(game.Size, game.Player1.Figures, game.Player2.Figures);
+            ChainOfRules.ApplyRule(game, matrix, move);
         }
 
         public void Undo()

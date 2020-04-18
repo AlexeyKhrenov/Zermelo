@@ -13,7 +13,8 @@ namespace Checkers.Rules
         {
             var size = game.Size;
             var changedSides = game.IsRevertedBoard;
-            var figures = game.Figures;
+            var player1Figures = game.Player1.Figures;
+            var player2Figures = game.Player2.Figures;
 
             if (size < 4)
             {
@@ -27,7 +28,9 @@ namespace Checkers.Rules
                 var startX = 1 - y % 2;
                 for (var x = startX; x < size; x += 2)
                 {
-                    figures.Add(new Piece(x, y, !isWhite, true, false));
+                    var piece = new Piece(x, y, !isWhite, true, false);
+                    pieces[x, y] = piece;
+                    player1Figures.Add(piece);
                 }
             }
 
@@ -36,13 +39,13 @@ namespace Checkers.Rules
                 var startX = 1 - y % 2;
                 for (var x = startX; x < size; x += 2)
                 {
-                    figures.Add(new Piece(x, y, isWhite, false, true));
+                    var piece = new Piece(x, y, isWhite, false, true);
+                    pieces[x, y] = piece;
+                    player2Figures.Add(piece);
                 }
             }
 
-            game.Figures = figures;
-
-            Next(game, figures.ToPieceMatrix(size), latestMove);
+            Next(game, pieces, latestMove);
         }
     }
 }

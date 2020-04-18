@@ -17,11 +17,12 @@ namespace Checkers.Rules
             {
                 var capturedPieceX = (latestMove.From.X + latestMove.To.X) / 2;
                 var capturedPieceY = (latestMove.From.Y + latestMove.To.Y) / 2;
-                var capturedPiece = game.Figures.First(f => f.X == capturedPieceX && f.Y == capturedPieceY);
+
+                var capturedPiece = game.AwaitingPlayer.Figures.First(f => f.X == capturedPieceX && f.Y == capturedPieceY);
 
                 pieces[capturedPieceX, capturedPieceY] = null;
 
-                game.Figures.Remove(capturedPiece);
+                game.AwaitingPlayer.Figures.Remove(capturedPiece);
             }
 
             Next(game, pieces, latestMove);

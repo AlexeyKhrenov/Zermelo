@@ -1,9 +1,10 @@
-﻿using Game.Implementations;
-using Game.PublicInterfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
+
+using Game.Implementations;
+using Game.PublicInterfaces;
 
 namespace Game.Implementations
 {
@@ -11,23 +12,33 @@ namespace Game.Implementations
     {
         public int Size { get; set; }
 
-        public bool Player1Turn { get; set; }
-
         public IPlayer ActivePlayer { get; set; }
+
+        public IPlayer AwaitingPlayer => ActivePlayer == Player1 ? Player2 : Player1;
+
+        public IPlayer Player1 { get; }
+
+        public IPlayer Player2 { get; }
 
         private IGameRules Rules { get; set; }
 
         private bool _isRevertedBoard { get; set; }
         public bool IsRevertedBoard => _isRevertedBoard;
-
-
         public IList<IFigure> Figures { get; set; }
 
         private IHistory _history { get; set; }
 
         public Game(IGameRules rules, IHistory history, int size, bool revertedSides)
         {
-            Figures = new List<IFigure>();
+            // todo - need to inject this objects?
+            Player1 = new Player();
+            Player2 = new Player();
+
+            Player1.Figures = new List<IFigure>();
+            Player2.Figures = new List<IFigure>();
+
+            ActivePlayer = Player1;
+
             _history = history;
             Size = size;
             Rules = rules;
@@ -48,6 +59,14 @@ namespace Game.Implementations
 
         public void SwitchPlayersTurn()
         {
+            if (ActivePlayer == Player1)
+            {
+                ActivePlayer = Player2;
+            }
+            else
+            {
+                ActivePlayer = Player1;
+            }
         }
     }
 }

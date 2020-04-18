@@ -16,7 +16,8 @@
             x:Name="gameBoard"
             Height="400"
             Width="400"
-            Figures="{Binding Figures}"
+            Player1Figures="{Binding Player1Figures}"
+            Player2Figures="{Binding Player2Figures}"
         >
         </local:Board>
     </Grid>

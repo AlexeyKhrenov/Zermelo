@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Linq;
-using System.Text;
+
+using Game.PublicInterfaces;
 
 namespace ZermeloCheckers
 {
@@ -15,7 +17,19 @@ namespace ZermeloCheckers
         public delegate void FigureMovedHandler(object sender, int x0, int y0, int x1, int y1);
         public event FigureMovedHandler FigureMoved;
 
-        public List<Point> AllowedMoves;
+        public List<Point> _all;
+        public List<Point> AllowedMoves
+        {
+            get
+            {
+                return _all;
+            }
+
+            set
+            {
+                _all = value;
+            }
+        }
 
         public bool HasCoordinates(int x, int y)
         {

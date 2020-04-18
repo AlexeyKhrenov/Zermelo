@@ -16,7 +16,8 @@ namespace ZermeloCheckers
         // TODO - remove hard-coded value
         public int Size = 8;
 
-        private ObservableCollection<FigureViewModel> _figures;
+        private ObservableCollection<FigureViewModel> _player1Figures;
+        private ObservableCollection<FigureViewModel> _player2Figures;
 
         private IGameFactory GameFactory;
 
@@ -27,15 +28,28 @@ namespace ZermeloCheckers
              
         }
 
-        public ObservableCollection<FigureViewModel> Figures
+        public ObservableCollection<FigureViewModel> Player1Figures
         {
             get
             {
-                return _figures;
+                return _player1Figures;
             }
             set
             {
-                _figures = value;
+                _player1Figures = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        public ObservableCollection<FigureViewModel> Player2Figures
+        {
+            get
+            {
+                return _player2Figures;
+            }
+            set
+            {
+                _player2Figures = value;
                 RaisePropertyChanged();
             }
         }
@@ -43,13 +57,18 @@ namespace ZermeloCheckers
         public void OnFigureMoved(object sender, int x0, int y0, int x1, int y1)
         {
             Game.Move(x0, y0, x1, y1);
+            UpdateFigures(Game.Player1.Figures, Player1Figures);
+            UpdateFigures(Game.Player2.Figures, Player2Figures);
+        }
 
+        public void UpdateFigures(IList<IFigure> modelFigures, ObservableCollection<FigureViewModel> uiFigures)
+        {
             var toBeRemoved = new List<FigureViewModel>();
             var toBeInserted = new List<FigureViewModel>();
 
-            foreach (var uiFigure in Figures)
+            foreach (var uiFigure in uiFigures)
             {
-                var source = Game.Figures.FirstOrDefault(f => f.X == uiFigure.X && f.Y == uiFigure.Y && f.Type == uiFigure.Type);
+                var source = modelFigures.FirstOrDefault(f => f.X == uiFigure.X && f.Y == uiFigure.Y && f.Type == uiFigure.Type);
                 if (source == null)
                 {
                     toBeRemoved.Add(uiFigure);
@@ -60,13 +79,14 @@ namespace ZermeloCheckers
                 }
             }
 
-            foreach (var r in toBeRemoved){
-                Figures.Remove(r);
+            foreach (var r in toBeRemoved)
+            {
+                uiFigures.Remove(r);
             }
 
-            foreach (var figure in Game.Figures)
+            foreach (var figure in modelFigures)
             {
-                var source = Figures.FirstOrDefault(f => f.X == figure.X && f.Y == figure.Y && f.Type == figure.Type);
+                var source = uiFigures.FirstOrDefault(f => f.X == figure.X && f.Y == figure.Y && f.Type == figure.Type);
                 if (source == null)
                 {
                     var newUiFigure = figure.ToViewModel();
@@ -77,7 +97,7 @@ namespace ZermeloCheckers
 
             foreach (var i in toBeInserted)
             {
-                Figures.Add(i);
+                uiFigures.Add(i);
             }
         }
 
@@ -87,16 +107,19 @@ namespace ZermeloCheckers
 
             // move size of the game to the config
             Game = GameFactory.CreateGame(6, false);
-            _figures = new ObservableCollection<FigureViewModel>(Game.Figures.Select(x => x.ToViewModel()).ToList());
+            _player1Figures = new ObservableCollection<FigureViewModel>(Game.Player1.Figures.Select(x => x.ToViewModel()).ToList());
+            _player2Figures = new ObservableCollection<FigureViewModel>(Game.Player2.Figures.Select(x => x.ToViewModel()).ToList());
 
-            foreach (var figure in _figures)
+            foreach (var figure in _player1Figures)
+            {
+                figure.FigureMoved += OnFigureMoved;
+            }
+
+            foreach (var figure in _player2Figures)
             {
                 figure.FigureMoved += OnFigureMoved;
             }
         }
-
-        // WARNING - business logic
-        
 
         public event PropertyChangedEventHandler PropertyChanged;
         

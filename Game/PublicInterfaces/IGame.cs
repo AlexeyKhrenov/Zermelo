@@ -8,9 +8,13 @@ namespace Game.PublicInterfaces
     {
         IPlayer ActivePlayer { get; set; }
 
-        int Size { get; set; }
+        IPlayer AwaitingPlayer { get; }
 
-        IList<IFigure> Figures { get; set; }
+        IPlayer Player1 { get; }
+
+        IPlayer Player2 { get; }
+
+        int Size { get; set; }
 
         void Move(int x0, int y0, int x1, int y1);
 

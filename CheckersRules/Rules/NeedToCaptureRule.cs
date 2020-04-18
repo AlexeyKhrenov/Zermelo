@@ -14,7 +14,7 @@ namespace Checkers.Rules
         {
             var needToPassControl = true;
 
-            foreach (var figure in game.Figures)
+            foreach (var figure in game.ActivePlayer.Figures)
             {
                 figure.AvailableMoves.Clear();
                 needToPassControl &= !Check(figure, pieces);

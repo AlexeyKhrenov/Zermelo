@@ -16,54 +16,40 @@ using System.Windows.Shapes;
 
 namespace ZermeloCheckers
 {
-    /// <summary>
-    /// Follow steps 1a or 1b and then 2 to use this custom control in a XAML file.
-    ///
-    /// Step 1a) Using this custom control in a XAML file that exists in the current project.
-    /// Add this XmlNamespace attribute to the root element of the markup file where it is 
-    /// to be used:
-    ///
-    ///     xmlns:MyNamespace="clr-namespace:ZermeloCheckers"
-    ///
-    ///
-    /// Step 1b) Using this custom control in a XAML file that exists in a different project.
-    /// Add this XmlNamespace attribute to the root element of the markup file where it is 
-    /// to be used:
-    ///
-    ///     xmlns:MyNamespace="clr-namespace:ZermeloCheckers;assembly=ZermeloCheckers"
-    ///
-    /// You will also need to add a project reference from the project where the XAML file lives
-    /// to this project and Rebuild to avoid compilation errors:
-    ///
-    ///     Right click on the target project in the Solution Explorer and
-    ///     "Add Reference"->"Projects"->[Browse to and select this project]
-    ///
-    ///
-    /// Step 2)
-    /// Go ahead and use your control in the XAML file.
-    ///
-    ///     <MyNamespace:Board/>
-    ///
-    /// </summary>
     public class Board : Grid
     {
-        public static DependencyProperty FiguresProperty;
+        public static DependencyProperty Player1FiguresProperty;
+        public static DependencyProperty Player2FiguresProperty;
 
         private FigureViewModel selectedFigure;
         private BoardSquare[,] squares;
 
-        public ObservableCollection<FigureViewModel> Figures
+        public ObservableCollection<FigureViewModel> Player1Figures
         {
-            get { return (ObservableCollection<FigureViewModel>) GetValue(FiguresProperty); }
+            get { return (ObservableCollection<FigureViewModel>) GetValue(Player1FiguresProperty); }
             set {
-                SetValue(FiguresProperty, value); 
+                SetValue(Player1FiguresProperty, value); 
+            }
+        }
+
+        public ObservableCollection<FigureViewModel> Player2Figures
+        {
+            get { return (ObservableCollection<FigureViewModel>)GetValue(Player2FiguresProperty); }
+            set
+            {
+                SetValue(Player2FiguresProperty, value);
             }
         }
 
         static Board()
         {
-            FiguresProperty = DependencyProperty.Register(
-                "Figures", typeof(ObservableCollection<FigureViewModel>), typeof(Board),
+            Player1FiguresProperty = DependencyProperty.Register(
+                "Player1Figures", typeof(ObservableCollection<FigureViewModel>), typeof(Board),
+                new FrameworkPropertyMetadata(new PropertyChangedCallback(WholeSetOfFiguresChanged))
+            );
+
+            Player2FiguresProperty = DependencyProperty.Register(
+                "Player2Figures", typeof(ObservableCollection<FigureViewModel>), typeof(Board),
                 new FrameworkPropertyMetadata(new PropertyChangedCallback(WholeSetOfFiguresChanged))
             );
         }
@@ -72,10 +58,8 @@ namespace ZermeloCheckers
         {
             var board = (Board)d;
             var newValue = (ObservableCollection<FigureViewModel>)e.NewValue;
-            var oldValue = (ObservableCollection<FigureViewModel>)e.OldValue;
 
             newValue.CollectionChanged += board.Figures_CollectionChanged;
-            
 
             foreach (var item in newValue)
             {
@@ -166,9 +150,9 @@ namespace ZermeloCheckers
             return figure.TryMoveFigure(targetX, targetY);
         }
 
-        private void TrySelectFigure(BoardSquare square)
+        private void SelectFigure(BoardSquare square)
         {
-            var figure = Figures.FirstOrDefault(x => x.HasCoordinates(square.X, square.Y));
+            var figure = Player1Figures.Union(Player2Figures).FirstOrDefault(x => x.HasCoordinates(square.X, square.Y));
 
             if (figure != null)
             {
@@ -214,7 +198,7 @@ namespace ZermeloCheckers
             }
             else
             {
-                TrySelectFigure(square);
+                SelectFigure(square);
             }
         }
     }

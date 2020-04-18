@@ -13,11 +13,10 @@ namespace Checkers.Rules
 
         public override void ApplyRule(IGame game, Piece[,] pieces, IHistoryItem latestMove)
         {
-            foreach (var figure in game.Figures)
+            foreach (var figure in game.ActivePlayer.Figures)
             {
                 // todo - remove this cast
                 var piece = pieces[figure.X, figure.Y];
-                piece.AvailableMoves.Clear();
                 var size = game.Size;
 
                 if (piece.CanGoUp && piece.Y > 0)
