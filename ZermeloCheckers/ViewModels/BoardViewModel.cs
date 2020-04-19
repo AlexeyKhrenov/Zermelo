@@ -113,7 +113,7 @@ namespace ZermeloCheckers.ViewModels
             GameFactory = gameFactory;
 
             var player1 = new HumanPlayer("Player 1");
-            var player2 = new ComputerPlayer("Player 2");
+            var player2 = new HumanPlayer("Player 2");
 
             // move size of the game to the config
             Game = GameFactory.CreateGame(6, false, player1, player2);

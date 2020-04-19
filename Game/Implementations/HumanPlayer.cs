@@ -10,7 +10,7 @@ namespace Game.Implementations
         private string _name;
         public string Name => _name + " (human)";
 
-        public IList<IFigure> Figures { get; set; }
+        public IEnumerable<IFigure> Figures { get; set; }
 
         public HumanPlayer(string name)
         {

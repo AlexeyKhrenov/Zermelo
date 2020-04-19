@@ -24,7 +24,7 @@ namespace Checkers.Rules
 
         private void CheckRule(BoardMinified board, HistoryItemMinified latestMove)
         {
-            foreach (var figure in board.ActiveSetOfFigures)
+            foreach (var figure in board.GetActivePlayer().Pieces)
             {
                 // todo - remove this cast
                 var piece = board.Pieces[figure.X, figure.Y];
@@ -60,7 +60,7 @@ namespace Checkers.Rules
             }
         }
 
-        public void Check(Piece piece, Piece[,] pieces, int directionDown, int directionRight)
+        public void Check(PieceMinified piece, PieceMinified[,] pieces, int directionDown, int directionRight)
         {
             if (pieces[piece.X + directionRight, piece.Y + directionDown] == null)
             {

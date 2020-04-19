@@ -12,8 +12,8 @@ namespace Checkers.Rules
         {
             var size = board.GetSize();
             var changedSides = board.InvertedCoordinates;
-            var player1Figures = new List<Piece>();
-            var player2Figures = new List<Piece>();
+            var player1Figures = new List<PieceMinified>();
+            var player2Figures = new List<PieceMinified>();
 
             if (size < 4)
             {
@@ -27,7 +27,7 @@ namespace Checkers.Rules
                 var startX = 1 - y % 2;
                 for (var x = startX; x < size; x += 2)
                 {
-                    var piece = new Piece(x, y, !isWhite, true, false);
+                    var piece = new PieceMinified(x, y, !isWhite, true, false);
                     board.Pieces[x, y] = piece;
                     player1Figures.Add(piece);
                 }
@@ -38,14 +38,14 @@ namespace Checkers.Rules
                 var startX = 1 - y % 2;
                 for (var x = startX; x < size; x += 2)
                 {
-                    var piece = new Piece(x, y, isWhite, false, true);
+                    var piece = new PieceMinified(x, y, isWhite, false, true);
                     board.Pieces[x, y] = piece;
                     player2Figures.Add(piece);
                 }
             }
 
-            board.Player1Pieces = player1Figures.ToArray();
-            board.Player2Pieces = player2Figures.ToArray();
+            board.Player1.Pieces = player1Figures.ToArray();
+            board.Player2.Pieces = player2Figures.ToArray();
 
             Next(board, null);
         }

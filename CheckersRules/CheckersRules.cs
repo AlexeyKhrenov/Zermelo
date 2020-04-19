@@ -32,35 +32,37 @@ namespace Checkers
             InitialPositionRules.AddNext(new DetectAvailableMovesRule());
         }
 
-        public IBoard CreateBoard(IPlayer player1, IPlayer player2, bool invertedCoordinates)
+        public void PlaceFigures(IBoard board)
         {
-            var board = new BoardMinified();
-
-            InitialPositionRules.ApplyRule(board, null);
-
-            return new Board().Restore(board, player1, player2);
+            var min = new BoardMinified();
+            InitialPositionRules.ApplyRule(min, null);   
+            min.Maximize(board);
         }
 
         public void MakeMove(IBoard board, IHistoryItem move)
         {
-            ChainOfRules.ApplyRule(CheckInputBoard(board), move);
+            var minBoard = new BoardMinified();
+            minBoard.Minify(board);
+
+            var minMove = new HistoryItemMinified();
+            minMove.Minify(move);
+
+            ChainOfRules.ApplyRule(minBoard, minMove);
+            minBoard.Maximize(board);
         }
 
         public void Undo(IBoard board, IHistoryItem toUndo, IHistoryItem lastMoveBeforeUndo)
         {
-            ChainOfRules.UndoRule(CheckInputBoard(board), toUndo, lastMoveBeforeUndo);
-        }
+            var minBoard = new BoardMinified();
+            minBoard.Minify(board);
 
-        private BoardMinified CheckInputBoard(IBoard board)
-        {
-            if (board is BoardMinified)
-            {
-                return (BoardMinified) board;
-            }
-            else
-            {
-                throw new InvalidOperationException("The board was not created using checkers rules");
-            }
+            var minToUndo = new HistoryItemMinified();
+            minToUndo.Minify(toUndo);
+
+            var minLastMove = new HistoryItemMinified();
+            minLastMove.Minify(toUndo);
+
+            ChainOfRules.UndoRule(minBoard, minToUndo, minLastMove);
         }
     }
 }

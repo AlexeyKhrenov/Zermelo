@@ -9,21 +9,26 @@ namespace Checkers.Minifications
     internal class HistoryItemMinified : IMementoMinification<IHistoryItem>
     {
         // todo - minify this class
-        public int Player { get; set; }
+        public bool Player { get; set; }
         public bool IsPieceChangeType { get; set; }
         public bool IsKill { get; set; }
-        public Point From { get; }
-        public Point To { get; }
-        public Piece Captured { get; set; }
+        public Point From { get; set; }
+        public Point To { get; set; }
+        public PieceMinified Captured { get; set; }
 
-        public void Minify(IHistoryItem maximizedSource)
+        public void Minify(IHistoryItem fromMaximizedSource)
         {
-            throw new NotImplementedException();
+            IsKill = fromMaximizedSource.IsKill;
+            IsPieceChangeType = fromMaximizedSource.IsPieceChangeType;
+            From = fromMaximizedSource.From;
+            To = fromMaximizedSource.To;
+            Captured = new PieceMinified();
+            Captured.Minify(fromMaximizedSource.Captured);
         }
 
-        public IHistoryItem Restore()
+        public void Maximize(IHistoryItem toMaximizedTarget)
         {
-            throw new NotImplementedException();
+            throw new InvalidOperationException();
         }
     }
 }

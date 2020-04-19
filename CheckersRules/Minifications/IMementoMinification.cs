@@ -4,10 +4,10 @@ using System.Text;
 
 namespace Checkers.Minifications
 {
-    interface IMementoMinification<T>
+    interface IMementoMinification<T> where T : class
     {
-        T Restore();
+        void Minify(T fromMaximizedSource);
 
-        void Minify(T maximizedSource);
+        void Maximize(T toMaximizedTarget);
     }
 }

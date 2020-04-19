@@ -14,8 +14,6 @@ namespace Game.Implementations
 
         public IPlayer ActivePlayer { get; private set; }
 
-        public IPlayer AwaitingPlayer { get; private set; }
-
         public int Size { get; private set; }
 
         public bool InvertedCoordinates { get; private set; }

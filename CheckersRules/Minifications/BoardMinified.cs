@@ -8,54 +8,95 @@ namespace Checkers.Minifications
     // todo - this should become a struct with methods
     internal class BoardMinified : IMementoMinification<IBoard>
     {
-        public Piece[,] Pieces { get; set; }
-        public Piece[] Player1Pieces { get; set; }
-        public Piece[] Player2Pieces { get; set; }
-        public Piece[] ActiveSetOfFigures { get; set; }
-        public Piece[] AwaitingSetOfFigures { get; set; }
+        public PieceMinified[,] Pieces { get; set; }
+
+        public PlayerMinified Player1 { get; set; }
+
+        public PlayerMinified Player2 { get; set; }
 
         public bool InvertedCoordinates { get; set; }
-        public int ActivePlayer { get; set; }
+
+        public bool ActivePlayer { get; set; }
 
         public void SwitchPlayers()
         {
-            if (ActiveSetOfFigures == Player1Pieces)
-            {
-                ActiveSetOfFigures = Player2Pieces;
-            }
-            else
-            {
-                ActiveSetOfFigures = Player1Pieces;
-            }
+            ActivePlayer = !ActivePlayer;
         }
 
+        // todo - create property
+        public PlayerMinified GetActivePlayer()
+        {
+            return ActivePlayer ? Player1 : Player2;
+        }
+
+        // todo - create property
         public int GetSize()
         {
             return Pieces.GetLength(0);
         }
 
-        internal bool IsActivePlayer(int player)
+        public PieceMinified RemovePiece(int x, int y, bool player)
         {
-            throw new NotImplementedException();
+            Pieces[x, y] = null;
+
+            if (player)
+            {
+                return Player1.RemovePiece(x, y);
+            }
+            else
+            {
+                return Player2.RemovePiece(x, y);
+            }
         }
 
-        public Piece RemovePiece(int x, int y)
+        public void MovePiece(int x0, int y0, int x1, int y1)
         {
+            Pieces[x1, y1] = Pieces[x0, y0];
+            Pieces[x0, y0] = null;
         }
 
-        internal void RestorePiece(Piece captured)
+        internal void RestorePiece(PieceMinified captured, bool player)
         {
-            throw new NotImplementedException();
+            if (player)
+            {
+                Player1.RestorePiece(captured);
+            }
+            else
+            {
+                Player2.RestorePiece(captured);
+            }
+
+            Pieces[captured.X, captured.Y] = captured;
         }
 
-        public IBoard Restore()
+        public void Minify(IBoard from)
         {
-            throw new NotImplementedException();
+            ActivePlayer = from.ActivePlayer == from.Player1;
+            Player1 = new PlayerMinified();
+            Player1.Minify(from.Player1);
+            Player2 = new PlayerMinified();
+            Player2.Minify(from.Player2);
+
+            foreach (var figure in from.Player1.Figures)
+            {
+                var minPiece = new PieceMinified();
+                minPiece.Minify(figure);
+                Pieces[figure.X, figure.Y] = minPiece;
+            }
+
+            foreach (var figure in from.Player2.Figures)
+            {
+                var minPiece = new PieceMinified();
+                minPiece.Minify(figure);
+                Pieces[figure.X, figure.Y] = minPiece;
+            }
         }
 
-        public void Minify(IBoard maximizedSource)
+        public void Maximize(IBoard to)
         {
-            throw new NotImplementedException();
+            to.ActivePlayer = ActivePlayer ? to.Player1 : to.Player2;
+            Player1.Maximize(to.Player1);
+            Player2.Maximize(to.Player2);
         }
     }
 }

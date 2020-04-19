@@ -15,7 +15,7 @@ namespace Game.Implementations
         private IGameRules Rules { get; set; }
 
         private IBoard _board;
-        public IBoard Board => _board;
+        public IBoard Board { get; private set; }
 
         public int HistoryLength => _history?.Length ?? 0;
 
@@ -33,16 +33,11 @@ namespace Game.Implementations
             _board = rules.CreateBoard(player1, player2, revertedSides);
         }
 
-        public IEnumerable<IFigure> GetFigures()
-        {
-            return _board.GetFigures();
-        }
-
         public void Move(int x0, int y0, int x1, int y1)
         {
             var move = new HistoryItem(_board.ActivePlayer, new Point(x0, y0), new Point(x1, y1));
             _history.Push(move);
-            //Rules.MakeMove(this, move);
+            Rules.MakeMove(board, move);
         }
 
         public void Undo()

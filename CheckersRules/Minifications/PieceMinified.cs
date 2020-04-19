@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Checkers.Minifications
 {
-    class PieceMinified
+    public class PieceMinified : IMementoMinification<IFigure>, IFigure
     {
         public int X { get; set; }
 
@@ -51,6 +51,10 @@ namespace Checkers.Minifications
             }
         }
 
+        public PieceMinified()
+        {
+        }
+
         public PieceMinified(int x, int y, bool isWhite, bool canGoUp, bool canGoDown)
         {
             X = x;
@@ -75,6 +79,40 @@ namespace Checkers.Minifications
             }
 
             return X == other.X && Y == other.Y && Type == other.Type;
+        }
+
+        public void Minify(IFigure from)
+        {
+            X = from.X;
+            Y = from.Y;
+
+            Enum.TryParse(from.Type, out PieceTypes type);
+
+            switch (type)
+            {
+                case PieceTypes.Black:
+                    IsQueen = false;
+                    IsWhite = false;
+                    break;
+                case PieceTypes.White:
+                    IsQueen = false;
+                    IsWhite = true;
+                    break;
+                case PieceTypes.BlackQueen:
+                    IsQueen = true;
+                    IsWhite = false;
+                    break;
+                case PieceTypes.WhiteQueen:
+                    IsQueen = true;
+                    IsWhite = true;
+                    break;
+                default:
+                    throw new InvalidOperationException();
+            }
+        }
+
+        public void Maximize(IFigure toMaximizedTarget)
+        {
         }
     }
 }

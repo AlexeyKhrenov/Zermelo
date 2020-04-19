@@ -13,7 +13,7 @@ namespace Checkers.Rules
         {
             var needToPassControl = true;
 
-            foreach (var figure in board.ActiveSetOfFigures)
+            foreach (var figure in board.GetActivePlayer().Pieces)
             {
                 needToPassControl &= !Check(figure, board.Pieces);
             }
@@ -28,7 +28,7 @@ namespace Checkers.Rules
         {
             var needToPassControl = true;
 
-            foreach (var figure in board.ActiveSetOfFigures)
+            foreach (var figure in board.GetActivePlayer().Pieces)
             {
                 needToPassControl &= !Check(figure, board.Pieces);
             }
@@ -40,7 +40,7 @@ namespace Checkers.Rules
         }
 
         // returns true if a piece to capture was detected
-        public static bool Check(IFigure figure, Piece[,] pieces)
+        public static bool Check(PieceMinified figure, PieceMinified[,] pieces)
         {
             var result = false;
 
@@ -77,7 +77,7 @@ namespace Checkers.Rules
             return result;
         }
 
-        private static bool CheckDirection(Piece piece, Piece[,] pieces, int directionRight, int directionDown)
+        private static bool CheckDirection(PieceMinified piece, PieceMinified[,] pieces, int directionRight, int directionDown)
         {
             var target = pieces[piece.X + directionRight, piece.Y + directionDown];
             if (target != null && target.IsWhite != piece.IsWhite)
