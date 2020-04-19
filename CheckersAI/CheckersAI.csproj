@@ -5,6 +5,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="PracticeBoard.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="PracticeBoard.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\CheckersRules\Checkers.csproj" />
   </ItemGroup>
 

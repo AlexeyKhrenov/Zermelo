@@ -33,7 +33,7 @@ namespace ZermeloCheckers.ViewModels
         private ObservableCollection<FigureViewModel> _player1Figures;
         private ObservableCollection<FigureViewModel> _player2Figures;
 
-        public string ActivePlayer => Game?.ActivePlayer.Name;
+        public string ActivePlayer => Game?.Board.ActivePlayer.Name;
 
         public ICommand UndoMoveCommand { get; set; }
 
@@ -75,20 +75,20 @@ namespace ZermeloCheckers.ViewModels
         public void OnFigureMoved(object sender, int x0, int y0, int x1, int y1)
         {
             Game.Move(x0, y0, x1, y1);
-            UpdateFigures(Game.Player1.Figures, Player1Figures);
-            UpdateFigures(Game.Player2.Figures, Player2Figures);
+            UpdateFigures(Game.Player1Figures, Player1Figures);
+            UpdateFigures(Game.Player2Figures, Player2Figures);
             RaisePropertyChanged(nameof(ActivePlayer));
         }
 
         public void OnUndoMoveCommand()
         {
             Game.Undo();
-            UpdateFigures(Game.Player1.Figures, Player1Figures);
-            UpdateFigures(Game.Player2.Figures, Player2Figures);
+            UpdateFigures(Game.Player1Figures, Player1Figures);
+            UpdateFigures(Game.Player2Figures, Player2Figures);
             RaisePropertyChanged(nameof(ActivePlayer));
         }
 
-        public void UpdateFigures(IList<IFigure> modelFigures, ObservableCollection<FigureViewModel> uiFigures)
+        public void UpdateFigures(IEnumerable<IFigure> modelFigures, ObservableCollection<FigureViewModel> uiFigures)
         {
             var toBeRemoved = uiFigures.Except(modelFigures).ToList();
             var toBeInserted = modelFigures.Except(uiFigures).ToList();
@@ -117,8 +117,8 @@ namespace ZermeloCheckers.ViewModels
 
             // move size of the game to the config
             Game = GameFactory.CreateGame(6, false, player1, player2);
-            _player1Figures = new ObservableCollection<FigureViewModel>(Game.Player1.Figures.Select(x => x.ToViewModel()).ToList());
-            _player2Figures = new ObservableCollection<FigureViewModel>(Game.Player2.Figures.Select(x => x.ToViewModel()).ToList());
+            _player1Figures = new ObservableCollection<FigureViewModel>(Game.Player1Figures.Select(x => x.ToViewModel()).ToList());
+            _player2Figures = new ObservableCollection<FigureViewModel>(Game.Player2Figures.Select(x => x.ToViewModel()).ToList());
 
             foreach (var figure in _player1Figures)
             {

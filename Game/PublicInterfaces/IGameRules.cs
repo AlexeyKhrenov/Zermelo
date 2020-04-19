@@ -6,10 +6,10 @@ namespace Game.PublicInterfaces
 {
     public interface IGameRules
     {
-        void CreateInitialPosition(IGame game);
+        IBoard CreateBoard(IPlayer player1, IPlayer player2, bool invertedCoordinates);
 
-        void MakeMove(IGame game, IHistoryItem latestMove);
+        void MakeMove(IBoard game, IHistoryItem latestMove);
 
-        void Undo(IGame game, IHistoryItem undo, IHistoryItem lastMoveBeforeUndo);
+        void Undo(IBoard board, IHistoryItem undo, IHistoryItem lastMoveBeforeUndo);
     }
 }

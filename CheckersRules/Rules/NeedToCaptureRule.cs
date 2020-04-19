@@ -1,4 +1,5 @@
-﻿using Game.PublicInterfaces;
+﻿using Checkers.Minifications;
+using Game.PublicInterfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,35 +9,33 @@ namespace Checkers.Rules
 {
     internal class NeedToCaptureRule : AbstractRule
     {
-        public override string Name => nameof(NeedToCaptureRule);
-
-        public override void ApplyRule(IGame game, Piece[,] pieces, IHistoryItem latestMove)
+        public override void ApplyRule(BoardMinified board, HistoryItemMinified latestMove)
         {
             var needToPassControl = true;
 
-            foreach (var figure in game.ActivePlayer.Figures)
+            foreach (var figure in board.ActiveSetOfFigures)
             {
-                needToPassControl &= !Check(figure, pieces);
+                needToPassControl &= !Check(figure, board.Pieces);
             }
 
             if (needToPassControl)
             {
-                Next(game, pieces, latestMove);
+                Next(board, latestMove);
             }
         }
 
-        public override void UndoRule(IGame game, Piece[,] pieces, IHistoryItem toUndo, IHistoryItem lastMoveBeforeUndo)
+        public override void UndoRule(BoardMinified board, HistoryItemMinified toUndo, HistoryItemMinified lastMoveBeforeUndo)
         {
             var needToPassControl = true;
 
-            foreach (var figure in game.ActivePlayer.Figures)
+            foreach (var figure in board.ActiveSetOfFigures)
             {
-                needToPassControl &= !Check(figure, pieces);
+                needToPassControl &= !Check(figure, board.Pieces);
             }
 
             if (needToPassControl)
             {
-                NextUndo(game, pieces, toUndo, lastMoveBeforeUndo);
+                NextUndo(board, toUndo, lastMoveBeforeUndo);
             }
         }
 

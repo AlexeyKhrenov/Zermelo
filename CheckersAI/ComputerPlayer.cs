@@ -18,7 +18,7 @@ namespace CheckersAI
             _name = name;
         }
 
-        public void MakeMove(IGame game)
+        public void MakeMove(IBoard board)
         {
             Thread.Sleep(200);
             var availableMoves = Figures.Select(x => x.AvailableMoves).SelectMany(x => x).ToList();
@@ -29,6 +29,14 @@ namespace CheckersAI
             var figure = Figures.First(x => x.AvailableMoves.Contains(move));
 
             game.Move(figure.X, figure.Y, move.X, move.Y);
+        }
+
+        public void ClearAvailableMoves()
+        {
+            foreach (var figure in Figures)
+            {
+                figure.AvailableMoves.Clear();
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Game.PublicInterfaces;
+﻿using Checkers.Minifications;
+using Game.PublicInterfaces;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -9,39 +10,37 @@ namespace Checkers.Rules
 {
     internal class DetectAvailableMovesRule : AbstractRule
     {
-        public override string Name => nameof(DetectAvailableMovesRule);
-
-        public override void ApplyRule(IGame game, Piece[,] pieces, IHistoryItem latestMove)
+        public override void ApplyRule(BoardMinified board, HistoryItemMinified latestMove)
         {
-            CheckRule(game, pieces, latestMove);
-            Next(game, pieces, latestMove);
+            CheckRule(board, latestMove);
+            Next(board, latestMove);
         }
 
-        public override void UndoRule(IGame game, Piece[,] pieces, IHistoryItem toUndo, IHistoryItem lastMoveBeforeUndo)
+        public override void UndoRule(BoardMinified board, HistoryItemMinified toUndo, HistoryItemMinified lastMoveBeforeUndo)
         {
-            CheckRule(game, pieces, toUndo);
-            NextUndo(game, pieces, toUndo, lastMoveBeforeUndo);
+            CheckRule(board, toUndo);
+            NextUndo(board, toUndo, lastMoveBeforeUndo);
         }
 
-        private void CheckRule(IGame game, Piece[,] pieces, IHistoryItem latestMove)
+        private void CheckRule(BoardMinified board, HistoryItemMinified latestMove)
         {
-            foreach (var figure in game.ActivePlayer.Figures)
+            foreach (var figure in board.ActiveSetOfFigures)
             {
                 // todo - remove this cast
-                var piece = pieces[figure.X, figure.Y];
-                var size = game.Size;
+                var piece = board.Pieces[figure.X, figure.Y];
+                var size = board.GetSize();
 
                 if (piece.CanGoUp && piece.Y > 0)
                 {
                     //left
                     if (piece.X > 0)
                     {
-                        Check(piece, pieces, -1, -1);
+                        Check(piece, board.Pieces, -1, -1);
                     }
                     //right
                     if (piece.X < size - 1)
                     {
-                        Check(piece, pieces, -1, 1);
+                        Check(piece, board.Pieces, -1, 1);
                     }
                 }
 
@@ -50,12 +49,12 @@ namespace Checkers.Rules
                     //left
                     if (piece.X > 0)
                     {
-                        Check(piece, pieces, 1, -1);
+                        Check(piece, board.Pieces, 1, -1);
                     }
                     //right
                     if (piece.X < size - 1)
                     {
-                        Check(piece, pieces, 1, 1);
+                        Check(piece, board.Pieces, 1, 1);
                     }
                 }
             }

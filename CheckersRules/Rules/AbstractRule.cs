@@ -1,14 +1,13 @@
-﻿using Game.PublicInterfaces;
+﻿using Checkers.Minifications;
+using Game.PublicInterfaces;
 
 namespace Checkers.Rules
 {
     internal abstract class AbstractRule
     {
-        public abstract string Name { get; }
+        public abstract void ApplyRule(BoardMinified board, HistoryItemMinified move);
 
-        public abstract void ApplyRule(IGame game, Piece[,] pieces, IHistoryItem latestMove);
-
-        public abstract void UndoRule(IGame game, Piece[,] pieces, IHistoryItem toUndo, IHistoryItem lastMoveBeforeUndo);
+        public abstract void UndoRule(BoardMinified board, HistoryItemMinified toUndo, HistoryItemMinified lastMoveBeforeUndo);
 
         private AbstractRule NextRule;
 
@@ -24,14 +23,14 @@ namespace Checkers.Rules
             }
         }
 
-        protected void Next(IGame game, Piece[,] pieces, IHistoryItem latestMove)
+        protected void Next(BoardMinified board, HistoryItemMinified latestMove)
         {
-            NextRule?.ApplyRule(game, pieces, latestMove);
+            NextRule?.ApplyRule(board, latestMove);
         }
 
-        protected void NextUndo(IGame game, Piece[,] pieces, IHistoryItem toUndo, IHistoryItem lastMoveBeforeUndo)
+        protected void NextUndo(BoardMinified board, HistoryItemMinified toUndo, HistoryItemMinified lastMoveBeforeUndo)
         {
-            NextRule?.UndoRule(game, pieces, toUndo, lastMoveBeforeUndo);
+            NextRule?.UndoRule(board, toUndo, lastMoveBeforeUndo);
         }
     }
 }

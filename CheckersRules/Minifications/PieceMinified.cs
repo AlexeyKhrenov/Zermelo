@@ -1,13 +1,12 @@
-﻿using System;
+﻿using Game.PublicInterfaces;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 
-using Game.PublicInterfaces;
-
-namespace Checkers
+namespace Checkers.Minifications
 {
-    internal class Piece : IFigure
+    class PieceMinified
     {
         public int X { get; set; }
 
@@ -16,14 +15,15 @@ namespace Checkers
         public List<Point> AvailableMoves { get; set; }
 
         public bool CanGoUp { get; set; }
-        
+
         public bool CanGoDown { get; set; }
 
         public bool IsWhite { get; set; }
 
         public bool IsQueen { get; set; }
 
-        public string Type {
+        public string Type
+        {
             get
             {
                 if (IsWhite)
@@ -51,7 +51,7 @@ namespace Checkers
             }
         }
 
-        public Piece(int x, int y, bool isWhite, bool canGoUp, bool canGoDown)
+        public PieceMinified(int x, int y, bool isWhite, bool canGoUp, bool canGoDown)
         {
             X = x;
             Y = y;
@@ -74,7 +74,7 @@ namespace Checkers
                 return false;
             }
 
-            return X == other.X && Y == other.Y && Type == other.Type; 
+            return X == other.X && Y == other.Y && Type == other.Type;
         }
     }
 }

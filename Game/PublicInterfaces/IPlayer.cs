@@ -8,8 +8,8 @@ namespace Game.PublicInterfaces
     {
         string Name { get; }
 
-        IList<IFigure> Figures { get; set; }
+        void MakeMove(IBoard board, IGameRules rules);
 
-        void MakeMove(IGame game);
+        IEnumerable<IFigure> Figures { get; set; }
     }
 }

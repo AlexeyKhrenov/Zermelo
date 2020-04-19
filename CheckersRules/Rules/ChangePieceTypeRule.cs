@@ -1,4 +1,5 @@
-﻿using Game.PublicInterfaces;
+﻿using Checkers.Minifications;
+using Game.PublicInterfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,14 +9,12 @@ namespace Checkers.Rules
 {
     internal class ChangePieceTypeRule : AbstractRule
     {
-        public override string Name => nameof(ChangePieceTypeRule);
-
-        public override void ApplyRule(IGame game, Piece[,] pieces, IHistoryItem latestMove)
+        public override void ApplyRule(BoardMinified board, HistoryItemMinified latestMove)
         {
-            var piece = pieces[latestMove.To.X, latestMove.To.Y];
+            var piece = board.Pieces[latestMove.To.X, latestMove.To.Y];
             if (!piece.IsQueen)
             {
-                bool v1 = (piece.CanGoDown && piece.Y == game.Size - 1);
+                bool v1 = (piece.CanGoDown && piece.Y == board.GetSize() - 1);
                 bool v2 = (piece.CanGoUp && piece.Y == 0);
 
                 if (v1 || v2)
@@ -27,14 +26,14 @@ namespace Checkers.Rules
                 }
             }
 
-            Next(game, pieces, latestMove);
+            Next(board, latestMove);
         }
 
-        public override void UndoRule(IGame game, Piece[,] pieces, IHistoryItem toUndo, IHistoryItem lastMoveBeforeUndo)
+        public override void UndoRule(BoardMinified board, HistoryItemMinified toUndo, HistoryItemMinified lastMoveBeforeUndo)
         {
             if (toUndo.IsPieceChangeType)
             {
-                var piece = pieces[toUndo.From.X, toUndo.From.Y];
+                var piece = board.Pieces[toUndo.From.X, toUndo.From.Y];
 
                 piece.IsQueen = false;
                 if (toUndo.To.Y > toUndo.From.Y)
@@ -47,7 +46,7 @@ namespace Checkers.Rules
                 }
             }
 
-            NextUndo(game, pieces, toUndo, lastMoveBeforeUndo);
+            NextUndo(board, toUndo, lastMoveBeforeUndo);
         }
     }
 }

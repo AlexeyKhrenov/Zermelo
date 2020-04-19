@@ -1,4 +1,5 @@
-﻿using Game.PublicInterfaces;
+﻿using Checkers.Minifications;
+using Game.PublicInterfaces;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -7,14 +8,12 @@ namespace Checkers.Rules
 {
     internal class InitialPositionRule : AbstractRule
     {
-        public override string Name => nameof(InitialPositionRule);
-
-        public override void ApplyRule(IGame game, Piece[,] pieces, IHistoryItem latestMove)
+        public override void ApplyRule(BoardMinified board, HistoryItemMinified latestMove)
         {
-            var size = game.Size;
-            var changedSides = game.IsRevertedBoard;
-            var player1Figures = game.Player1.Figures;
-            var player2Figures = game.Player2.Figures;
+            var size = board.GetSize();
+            var changedSides = board.InvertedCoordinates;
+            var player1Figures = new List<Piece>();
+            var player2Figures = new List<Piece>();
 
             if (size < 4)
             {
@@ -29,7 +28,7 @@ namespace Checkers.Rules
                 for (var x = startX; x < size; x += 2)
                 {
                     var piece = new Piece(x, y, !isWhite, true, false);
-                    pieces[x, y] = piece;
+                    board.Pieces[x, y] = piece;
                     player1Figures.Add(piece);
                 }
             }
@@ -40,15 +39,18 @@ namespace Checkers.Rules
                 for (var x = startX; x < size; x += 2)
                 {
                     var piece = new Piece(x, y, isWhite, false, true);
-                    pieces[x, y] = piece;
+                    board.Pieces[x, y] = piece;
                     player2Figures.Add(piece);
                 }
             }
 
-            Next(game, pieces, null);
+            board.Player1Pieces = player1Figures.ToArray();
+            board.Player2Pieces = player2Figures.ToArray();
+
+            Next(board, null);
         }
 
-        public override void UndoRule(IGame game, Piece[,] pieces, IHistoryItem toUndo, IHistoryItem lastMoveBeforeUndo)
+        public override void UndoRule(BoardMinified board, HistoryItemMinified toUndo, HistoryItemMinified lastMoveBeforeUndo)
         {
             throw new InvalidOperationException();
         }

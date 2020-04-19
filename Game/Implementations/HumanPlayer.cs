@@ -17,7 +17,7 @@ namespace Game.Implementations
             _name = name;
         }
 
-        public void MakeMove(IGame game)
+        public void MakeMove(IBoard board, IGameRules rules)
         {
         }
     }

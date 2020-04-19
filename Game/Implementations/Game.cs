@@ -12,19 +12,10 @@ namespace Game.Implementations
     {
         public int Size { get; set; }
 
-        public IPlayer ActivePlayer { get; set; }
-
-        public IPlayer AwaitingPlayer => ActivePlayer == Player1 ? Player2 : Player1;
-
-        public IPlayer Player1 { get; }
-
-        public IPlayer Player2 { get; }
-
         private IGameRules Rules { get; set; }
 
-        private bool _isRevertedBoard { get; set; }
-        public bool IsRevertedBoard => _isRevertedBoard;
-        public IList<IFigure> Figures { get; set; }
+        private IBoard _board;
+        public IBoard Board => _board;
 
         public int HistoryLength => _history?.Length ?? 0;
 
@@ -32,26 +23,26 @@ namespace Game.Implementations
 
         public Game(IGameRules rules, IPlayer player1, IPlayer player2, IHistory history, int size, bool revertedSides)
         {
-            Player1 = player1;
-            Player2 = player2;
-
-            Player1.Figures = new List<IFigure>();
-            Player2.Figures = new List<IFigure>();
-
-            ActivePlayer = Player1;
+            // remove this intialization
+            player1.Figures = new List<IFigure>();
+            player2.Figures = new List<IFigure>();
 
             _history = history;
             Size = size;
             Rules = rules;
-            _isRevertedBoard = revertedSides;
-            rules.CreateInitialPosition(this);
+            _board = rules.CreateBoard(player1, player2, revertedSides);
+        }
+
+        public IEnumerable<IFigure> GetFigures()
+        {
+            return _board.GetFigures();
         }
 
         public void Move(int x0, int y0, int x1, int y1)
         {
-            var move = new HistoryItem(ActivePlayer, new Point(x0, y0), new Point(x1, y1));
+            var move = new HistoryItem(_board.ActivePlayer, new Point(x0, y0), new Point(x1, y1));
             _history.Push(move);
-            Rules.MakeMove(this, move);
+            //Rules.MakeMove(this, move);
         }
 
         public void Undo()
@@ -59,19 +50,7 @@ namespace Game.Implementations
             var move = _history.Pop();
             var lastMoveBeforeUndo = _history.Latest;
 
-            Rules.Undo(this, move, lastMoveBeforeUndo);
-        }
-
-        public void SwitchPlayersTurn()
-        {
-            if (ActivePlayer == Player1)
-            {
-                ActivePlayer = Player2;
-            }
-            else
-            {
-                ActivePlayer = Player1;
-            }
+            //Rules.Undo(this, move, lastMoveBeforeUndo);
         }
     }
 }

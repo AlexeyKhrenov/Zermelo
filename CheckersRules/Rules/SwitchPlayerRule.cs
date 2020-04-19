@@ -1,4 +1,5 @@
-﻿using Game.PublicInterfaces;
+﻿using Checkers.Minifications;
+using Game.PublicInterfaces;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -7,22 +8,20 @@ namespace Checkers.Rules
 {
     internal class SwitchPlayerRule : AbstractRule
     {
-        public override string Name => nameof(SwitchPlayerRule);
-
-        public override void ApplyRule(IGame game, Piece[,] pieces, IHistoryItem latestMove)
+        public override void ApplyRule(BoardMinified board, HistoryItemMinified latestMove)
         {
-            game.SwitchPlayersTurn();
-            Next(game, pieces, latestMove);
+            board.SwitchPlayers();
+            Next(board, latestMove);
         }
 
-        public override void UndoRule(IGame game, Piece[,] pieces, IHistoryItem toUndo, IHistoryItem lastMoveBeforeUndo)
+        public override void UndoRule(BoardMinified board, HistoryItemMinified toUndo, HistoryItemMinified lastMoveBeforeUndo)
         {
-            if (game.ActivePlayer != toUndo.Player)
+            if (board.ActivePlayer != toUndo.Player)
             {
-                game.SwitchPlayersTurn();
+                board.SwitchPlayers();
             }
             
-            NextUndo(game, pieces, toUndo, lastMoveBeforeUndo);
+            NextUndo(board, toUndo, lastMoveBeforeUndo);
         }
     }
 }

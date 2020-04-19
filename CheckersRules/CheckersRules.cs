@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using Checkers.Minifications;
 using Checkers.Rules;
 using Game.PublicInterfaces;
 
@@ -31,22 +32,35 @@ namespace Checkers
             InitialPositionRules.AddNext(new DetectAvailableMovesRule());
         }
 
-        public void CreateInitialPosition(IGame game)
+        public IBoard CreateBoard(IPlayer player1, IPlayer player2, bool invertedCoordinates)
         {
-            var matrix = Helper.ToPieceMatrix(game.Size, game.Player1.Figures, game.Player2.Figures);
-            InitialPositionRules.ApplyRule(game, matrix, null);
+            var board = new BoardMinified();
+
+            InitialPositionRules.ApplyRule(board, null);
+
+            return new Board().Restore(board, player1, player2);
         }
 
-        public void MakeMove(IGame game, IHistoryItem move)
+        public void MakeMove(IBoard board, IHistoryItem move)
         {
-            var matrix = Helper.ToPieceMatrix(game.Size, game.Player1.Figures, game.Player2.Figures);
-            ChainOfRules.ApplyRule(game, matrix, move);
+            ChainOfRules.ApplyRule(CheckInputBoard(board), move);
         }
 
-        public void Undo(IGame game, IHistoryItem undo, IHistoryItem lastMoveBeforeUndo)
+        public void Undo(IBoard board, IHistoryItem toUndo, IHistoryItem lastMoveBeforeUndo)
         {
-            var matrix = Helper.ToPieceMatrix(game.Size, game.Player1.Figures, game.Player2.Figures);
-            ChainOfRules.UndoRule(game, matrix, undo, lastMoveBeforeUndo);
+            ChainOfRules.UndoRule(CheckInputBoard(board), toUndo, lastMoveBeforeUndo);
+        }
+
+        private BoardMinified CheckInputBoard(IBoard board)
+        {
+            if (board is BoardMinified)
+            {
+                return (BoardMinified) board;
+            }
+            else
+            {
+                throw new InvalidOperationException("The board was not created using checkers rules");
+            }
         }
     }
 }

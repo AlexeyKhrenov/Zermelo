@@ -1,4 +1,5 @@
-﻿using Game.PublicInterfaces;
+﻿using Checkers.Minifications;
+using Game.PublicInterfaces;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -7,24 +8,22 @@ namespace Checkers.Rules
 {
     internal class NeedToContinueCaptureRule : AbstractRule
     {
-        public override string Name => nameof(NeedToContinueCaptureRule);
-
-        public override void ApplyRule(IGame game, Piece[,] pieces, IHistoryItem latestMove)
+        public override void ApplyRule(BoardMinified board, HistoryItemMinified latestMove)
         {
             if (latestMove.IsKill)
             {
-                var piece = pieces[latestMove.To.X, latestMove.To.Y];
+                var piece = board.Pieces[latestMove.To.X, latestMove.To.Y];
 
-                if (NeedToCaptureRule.Check(piece, pieces))
+                if (NeedToCaptureRule.Check(piece, board.Pieces))
                 {
                     return;
                 }
             }
 
-            Next(game, pieces, latestMove);
+            Next(board, latestMove);
         }
 
-        public override void UndoRule(IGame game, Piece[,] pieces, IHistoryItem toUndo, IHistoryItem lastMoveBeforeUndo)
+        public override void UndoRule(BoardMinified board, HistoryItemMinified toUndo, HistoryItemMinified lastMoveBeforeUndo)
         {
             if (
                 lastMoveBeforeUndo != null &&
@@ -32,20 +31,20 @@ namespace Checkers.Rules
                 lastMoveBeforeUndo.IsKill &&
                 toUndo.Player == lastMoveBeforeUndo.Player)
             {
-                var piece = pieces[toUndo.From.X, toUndo.From.Y];
+                var piece = board.Pieces[toUndo.From.X, toUndo.From.Y];
 
-                NeedToCaptureRule.Check(piece, pieces);
+                NeedToCaptureRule.Check(piece, board.Pieces);
 
-                if (game.ActivePlayer != lastMoveBeforeUndo.Player)
+                if (board.IsActivePlayer(lastMoveBeforeUndo.Player))
                 {
-                    game.SwitchPlayersTurn();
+                    board.SwitchPlayers();
                 }
 
                 return;
             }
             else
             {
-                NextUndo(game, pieces, toUndo, lastMoveBeforeUndo);
+                NextUndo(board, toUndo, lastMoveBeforeUndo);
             }
         }
     }
