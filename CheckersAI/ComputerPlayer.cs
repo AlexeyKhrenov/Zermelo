@@ -20,13 +20,13 @@ namespace CheckersAI
 
         public void MakeMove(IGame game)
         {
-            Thread.Sleep(500);
+            Thread.Sleep(200);
             var availableMoves = Figures.Select(x => x.AvailableMoves).SelectMany(x => x).ToList();
 
             var moveIndex = new Random().Next(0, availableMoves.Count);
             var move = availableMoves[moveIndex];
 
-            var figure = Figures.FirstOrDefault(x => x.AvailableMoves.Contains(move));
+            var figure = Figures.First(x => x.AvailableMoves.Contains(move));
 
             game.Move(figure.X, figure.Y, move.X, move.Y);
         }

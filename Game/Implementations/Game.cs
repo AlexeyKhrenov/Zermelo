@@ -52,7 +52,6 @@ namespace Game.Implementations
             var move = new HistoryItem(ActivePlayer, new Point(x0, y0), new Point(x1, y1));
             _history.Push(move);
             Rules.MakeMove(this, move);
-            ActivePlayer.MakeMove(this);
         }
 
         public void Undo()
