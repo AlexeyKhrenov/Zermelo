@@ -27,7 +27,7 @@ namespace Checkers.Rules
                 var startX = 1 - y % 2;
                 for (var x = startX; x < size; x += 2)
                 {
-                    var piece = new PieceMinified(x, y, !isWhite, true, false);
+                    var piece = new PieceMinified(x, y, isWhite, true, false);
                     board.Pieces[x, y] = piece;
                     player1Figures.Add(piece);
                 }
@@ -38,7 +38,7 @@ namespace Checkers.Rules
                 var startX = 1 - y % 2;
                 for (var x = startX; x < size; x += 2)
                 {
-                    var piece = new PieceMinified(x, y, isWhite, false, true);
+                    var piece = new PieceMinified(x, y, !isWhite, false, true);
                     board.Pieces[x, y] = piece;
                     player2Figures.Add(piece);
                 }

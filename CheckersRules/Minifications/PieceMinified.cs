@@ -1,6 +1,7 @@
 ﻿using Game.PublicInterfaces;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Text;
 
@@ -22,6 +23,7 @@ namespace Checkers.Minifications
 
         public bool IsQueen { get; set; }
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public string Type
         {
             get
@@ -30,22 +32,22 @@ namespace Checkers.Minifications
                 {
                     if (IsQueen)
                     {
-                        return PieceTypes.BlackQueen.ToString();
+                        return PieceTypes.WhiteQueen.ToString();
                     }
                     else
                     {
-                        return PieceTypes.Black.ToString();
+                        return PieceTypes.White.ToString();
                     }
                 }
                 else
                 {
                     if (IsQueen)
                     {
-                        return PieceTypes.WhiteQueen.ToString();
+                        return PieceTypes.BlackQueen.ToString();
                     }
                     else
                     {
-                        return PieceTypes.White.ToString();
+                        return PieceTypes.Black.ToString();
                     }
                 }
             }
