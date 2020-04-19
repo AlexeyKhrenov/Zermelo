@@ -6,7 +6,7 @@ using System.Threading;
 
 namespace CheckersAI
 {
-    public class ComputerPlayer : IPlayer
+    public class ComputerPlayer
     {
         private string _name;
         public string Name => _name + " (computer)"; 
@@ -27,8 +27,6 @@ namespace CheckersAI
             var move = availableMoves[moveIndex];
 
             var figure = Figures.First(x => x.AvailableMoves.Contains(move));
-
-            game.Move(figure.X, figure.Y, move.X, move.Y);
         }
 
         public void ClearAvailableMoves()

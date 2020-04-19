@@ -13,5 +13,7 @@ namespace Game.PublicInterfaces
         void Undo();
 
         int HistoryLength { get; }
+
+        IBoard Board { get; }
     }
 }

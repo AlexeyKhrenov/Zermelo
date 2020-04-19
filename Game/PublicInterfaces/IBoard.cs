@@ -6,7 +6,7 @@ namespace Game.PublicInterfaces
 {
     public interface IBoard
     {
-        IPlayer ActivePlayer { get; set; }
+        IPlayer ActivePlayer { get; }
 
         IPlayer Player1 { get; }
 
@@ -17,5 +17,7 @@ namespace Game.PublicInterfaces
         bool InvertedCoordinates { get; }
 
         IEnumerable<IFigure> GetFigures();
+
+        void SwitchPlayers();
     }
 }

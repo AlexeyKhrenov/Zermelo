@@ -35,6 +35,7 @@ namespace Checkers
         public void PlaceFigures(IBoard board)
         {
             var min = new BoardMinified();
+            min.Minify(board);
             InitialPositionRules.ApplyRule(min, null);   
             min.Maximize(board);
         }

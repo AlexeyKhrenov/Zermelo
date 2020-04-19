@@ -28,8 +28,7 @@
             x:Name="gameBoard"
             Height="400"
             Width="400"
-            Player1Figures="{Binding Player1Figures}"
-            Player2Figures="{Binding Player2Figures}"
+            Figures="{Binding Figures}"
         >
         </local:Board>
         <Label Grid.Column="1" Grid.Row="0" Content="{Binding ActivePlayer}" />

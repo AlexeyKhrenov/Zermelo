@@ -71,6 +71,9 @@ namespace Checkers.Minifications
 
         public void Minify(IBoard from)
         {
+            Pieces = new PieceMinified[from.Size, from.Size];
+            InvertedCoordinates = from.InvertedCoordinates;
+
             ActivePlayer = from.ActivePlayer == from.Player1;
             Player1 = new PlayerMinified();
             Player1.Minify(from.Player1);
@@ -94,7 +97,13 @@ namespace Checkers.Minifications
 
         public void Maximize(IBoard to)
         {
-            to.ActivePlayer = ActivePlayer ? to.Player1 : to.Player2;
+            var activePlayer = ActivePlayer ? to.Player1 : to.Player2;
+
+            if (to.ActivePlayer != activePlayer)
+            {
+                to.SwitchPlayers();
+            }
+
             Player1.Maximize(to.Player1);
             Player2.Maximize(to.Player2);
         }

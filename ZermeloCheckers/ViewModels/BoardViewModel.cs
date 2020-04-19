@@ -30,8 +30,7 @@ namespace ZermeloCheckers.ViewModels
             }
         }
 
-        private ObservableCollection<FigureViewModel> _player1Figures;
-        private ObservableCollection<FigureViewModel> _player2Figures;
+        private ObservableCollection<FigureViewModel> _figures;
 
         public string ActivePlayer => Game?.Board.ActivePlayer.Name;
 
@@ -46,28 +45,15 @@ namespace ZermeloCheckers.ViewModels
              
         }
 
-        public ObservableCollection<FigureViewModel> Player1Figures
+        public ObservableCollection<FigureViewModel> Figures
         {
             get
             {
-                return _player1Figures;
+                return _figures;
             }
             set
             {
-                _player1Figures = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        public ObservableCollection<FigureViewModel> Player2Figures
-        {
-            get
-            {
-                return _player2Figures;
-            }
-            set
-            {
-                _player2Figures = value;
+                _figures = value;
                 RaisePropertyChanged();
             }
         }
@@ -75,16 +61,14 @@ namespace ZermeloCheckers.ViewModels
         public void OnFigureMoved(object sender, int x0, int y0, int x1, int y1)
         {
             Game.Move(x0, y0, x1, y1);
-            UpdateFigures(Game.Player1Figures, Player1Figures);
-            UpdateFigures(Game.Player2Figures, Player2Figures);
+            UpdateFigures(Game.Board.GetFigures(), Figures);
             RaisePropertyChanged(nameof(ActivePlayer));
         }
 
         public void OnUndoMoveCommand()
         {
             Game.Undo();
-            UpdateFigures(Game.Player1Figures, Player1Figures);
-            UpdateFigures(Game.Player2Figures, Player2Figures);
+            UpdateFigures(Game.Board.GetFigures(), Figures);
             RaisePropertyChanged(nameof(ActivePlayer));
         }
 
@@ -117,15 +101,9 @@ namespace ZermeloCheckers.ViewModels
 
             // move size of the game to the config
             Game = GameFactory.CreateGame(6, false, player1, player2);
-            _player1Figures = new ObservableCollection<FigureViewModel>(Game.Player1Figures.Select(x => x.ToViewModel()).ToList());
-            _player2Figures = new ObservableCollection<FigureViewModel>(Game.Player2Figures.Select(x => x.ToViewModel()).ToList());
+            _figures = new ObservableCollection<FigureViewModel>(Game.Board.GetFigures().Select(x => x.ToViewModel()).ToList());
 
-            foreach (var figure in _player1Figures)
-            {
-                figure.FigureMoved += OnFigureMoved;
-            }
-
-            foreach (var figure in _player2Figures)
+            foreach (var figure in _figures)
             {
                 figure.FigureMoved += OnFigureMoved;
             }

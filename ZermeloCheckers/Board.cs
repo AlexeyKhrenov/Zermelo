@@ -19,38 +19,21 @@ namespace ZermeloCheckers
 {
     public class Board : Grid
     {
-        public static DependencyProperty Player1FiguresProperty;
-        public static DependencyProperty Player2FiguresProperty;
+        public static DependencyProperty FiguresProperty;
 
         private FigureViewModel selectedFigure;
         private BoardSquare[,] squares;
 
-        public ObservableCollection<FigureViewModel> Player1Figures
+        public ObservableCollection<FigureViewModel> Figures
         {
-            get { return (ObservableCollection<FigureViewModel>) GetValue(Player1FiguresProperty); }
-            set {
-                SetValue(Player1FiguresProperty, value); 
-            }
-        }
-
-        public ObservableCollection<FigureViewModel> Player2Figures
-        {
-            get { return (ObservableCollection<FigureViewModel>)GetValue(Player2FiguresProperty); }
-            set
-            {
-                SetValue(Player2FiguresProperty, value);
-            }
+            get { return (ObservableCollection<FigureViewModel>) GetValue(FiguresProperty); }
+            set { SetValue(FiguresProperty, value); }
         }
 
         static Board()
         {
-            Player1FiguresProperty = DependencyProperty.Register(
-                "Player1Figures", typeof(ObservableCollection<FigureViewModel>), typeof(Board),
-                new FrameworkPropertyMetadata(new PropertyChangedCallback(WholeSetOfFiguresChanged))
-            );
-
-            Player2FiguresProperty = DependencyProperty.Register(
-                "Player2Figures", typeof(ObservableCollection<FigureViewModel>), typeof(Board),
+            FiguresProperty = DependencyProperty.Register(
+                "Figures", typeof(ObservableCollection<FigureViewModel>), typeof(Board),
                 new FrameworkPropertyMetadata(new PropertyChangedCallback(WholeSetOfFiguresChanged))
             );
         }
@@ -153,7 +136,7 @@ namespace ZermeloCheckers
 
         private void SelectFigure(BoardSquare square)
         {
-            var figure = Player1Figures.Union(Player2Figures).FirstOrDefault(x => x.HasCoordinates(square.X, square.Y));
+            var figure = Figures.FirstOrDefault(x => x.HasCoordinates(square.X, square.Y));
 
             if (figure != null)
             {
