@@ -22,8 +22,12 @@ namespace Checkers.Minifications
             IsPieceChangeType = fromMaximizedSource.IsPieceChangeType;
             From = fromMaximizedSource.From;
             To = fromMaximizedSource.To;
-            Captured = new PieceMinified();
-            Captured.Minify(fromMaximizedSource.Captured);
+
+            if (fromMaximizedSource.Captured != null)
+            {
+                Captured = new PieceMinified();
+                Captured.Minify(fromMaximizedSource.Captured);
+            }
         }
 
         public void Maximize(IHistoryItem toMaximizedTarget)

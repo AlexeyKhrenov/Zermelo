@@ -24,6 +24,9 @@ namespace Game.Implementations
             InvertedCoordinates = invertedCoordinates;
             Player1 = player1;
             Player2 = player2;
+
+            // by default
+            ActivePlayer = player1;
         }
 
         public IEnumerable<IFigure> GetFigures()

@@ -31,6 +31,7 @@ namespace Game.Implementations
             Rules = rules;
 
             Board = new Board(player1, player2, size, revertedSides);
+            Rules.PlaceFigures(Board);
         }
 
         public void Move(int x0, int y0, int x1, int y1)
