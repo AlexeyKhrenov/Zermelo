@@ -1,6 +1,7 @@
 ﻿using Game.PublicInterfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Checkers.Minifications
@@ -10,23 +11,21 @@ namespace Checkers.Minifications
     {
         public PieceMinified[,] Pieces { get; set; }
 
-        public PlayerMinified Player1 { get; set; }
-
-        public PlayerMinified Player2 { get; set; }
-
         public bool InvertedCoordinates { get; set; }
 
+        // change to array
+        public List<PieceMinified> Player1Pieces { get; set; }
+
+        // change to array
+        public List<PieceMinified> Player2Pieces { get; set; }
+
         public bool ActivePlayer { get; set; }
+
+        public List<PieceMinified> ActiveSet => ActivePlayer ? Player1Pieces : Player2Pieces;
 
         public void SwitchPlayers()
         {
             ActivePlayer = !ActivePlayer;
-        }
-
-        // todo - create property
-        public PlayerMinified GetActivePlayer()
-        {
-            return ActivePlayer ? Player1 : Player2;
         }
 
         // todo - create property
@@ -41,11 +40,17 @@ namespace Checkers.Minifications
 
             if (player)
             {
-                return Player1.RemovePiece(x, y);
+                // todo - remove Linq
+                var toRemove = Player1Pieces.First(f => f.X == x && f.Y == y);
+                Player1Pieces.Remove(toRemove);
+                return toRemove;
             }
             else
             {
-                return Player2.RemovePiece(x, y);
+                // todo - remove Linq
+                var toRemove = Player2Pieces.First(f => f.X == x && f.Y == y);
+                Player2Pieces.Remove(toRemove);
+                return toRemove;
             }
         }
 
@@ -53,17 +58,30 @@ namespace Checkers.Minifications
         {
             Pieces[x1, y1] = Pieces[x0, y0];
             Pieces[x0, y0] = null;
+
+            if (ActivePlayer)
+            {
+                var piece = Player1Pieces.First(f => f.X == x0 && f.Y == y0);
+                piece.X = x1;
+                piece.Y = y1;
+            }
+            else
+            {
+                var piece = Player2Pieces.First(f => f.X == x0 && f.Y == y0);
+                piece.X = x1;
+                piece.Y = y1;
+            }
         }
 
         internal void RestorePiece(PieceMinified captured, bool player)
         {
             if (player)
             {
-                Player1.RestorePiece(captured);
+                Player1Pieces.Add(captured);
             }
             else
             {
-                Player2.RestorePiece(captured);
+                Player2Pieces.Add(captured);
             }
 
             Pieces[captured.X, captured.Y] = captured;
@@ -71,41 +89,40 @@ namespace Checkers.Minifications
 
         public void Minify(IBoard from)
         {
+            Player1Pieces = new List<PieceMinified>();
+            Player2Pieces = new List<PieceMinified>();
+
             Pieces = new PieceMinified[from.Size, from.Size];
             InvertedCoordinates = from.InvertedCoordinates;
 
             ActivePlayer = from.ActivePlayer == from.Player1;
-            Player1 = new PlayerMinified();
-            Player1.Minify(from.Player1);
-            Player2 = new PlayerMinified();
-            Player2.Minify(from.Player2);
 
             foreach (var figure in from.Player1.Figures)
             {
                 var minPiece = new PieceMinified();
-                minPiece.Minify(figure);
+                minPiece.Minify((Piece)figure);
+                Player1Pieces.Add(minPiece);
                 Pieces[figure.X, figure.Y] = minPiece;
             }
 
             foreach (var figure in from.Player2.Figures)
             {
                 var minPiece = new PieceMinified();
-                minPiece.Minify(figure);
+                minPiece.Minify((Piece)figure);
+                Player2Pieces.Add(minPiece);
                 Pieces[figure.X, figure.Y] = minPiece;
             }
         }
 
         public void Maximize(IBoard to)
         {
-            var activePlayer = ActivePlayer ? to.Player1 : to.Player2;
+            to.Player1.Figures = Player1Pieces.Select(x => x.ToPiece()).ToList();
+            to.Player2.Figures = Player2Pieces.Select(x => x.ToPiece()).ToList();
 
-            if (to.ActivePlayer != activePlayer)
+            if (to.ActivePlayer != (ActivePlayer ? to.Player1 : to.Player2))
             {
                 to.SwitchPlayers();
             }
-
-            Player1.Maximize(to.Player1);
-            Player2.Maximize(to.Player2);
         }
     }
 }

@@ -26,7 +26,7 @@ namespace Checkers.Minifications
             if (fromMaximizedSource.Captured != null)
             {
                 Captured = new PieceMinified();
-                Captured.Minify(fromMaximizedSource.Captured);
+                Captured.Minify((Piece)fromMaximizedSource.Captured);
             }
         }
 

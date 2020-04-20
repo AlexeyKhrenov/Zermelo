@@ -13,7 +13,7 @@ namespace Checkers.Rules
         {
             var needToPassControl = true;
 
-            foreach (var figure in board.GetActivePlayer().Pieces)
+            foreach (var figure in board.ActiveSet)
             {
                 needToPassControl &= !Check(figure, board.Pieces);
             }
@@ -28,7 +28,7 @@ namespace Checkers.Rules
         {
             var needToPassControl = true;
 
-            foreach (var figure in board.GetActivePlayer().Pieces)
+            foreach (var figure in board.ActiveSet)
             {
                 needToPassControl &= !Check(figure, board.Pieces);
             }

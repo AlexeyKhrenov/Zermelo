@@ -44,8 +44,8 @@ namespace Checkers.Rules
                 }
             }
 
-            board.Player1.Pieces = player1Figures.ToArray();
-            board.Player2.Pieces = player2Figures.ToArray();
+            board.Player1Pieces = player1Figures;
+            board.Player2Pieces = player2Figures;
 
             Next(board, null);
         }

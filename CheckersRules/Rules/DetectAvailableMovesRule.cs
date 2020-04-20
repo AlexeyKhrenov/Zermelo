@@ -24,7 +24,7 @@ namespace Checkers.Rules
 
         private void CheckRule(BoardMinified board, HistoryItemMinified latestMove)
         {
-            foreach (var figure in board.GetActivePlayer().Pieces)
+            foreach (var figure in board.ActiveSet)
             {
                 // todo - remove this cast
                 var piece = board.Pieces[figure.X, figure.Y];

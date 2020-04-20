@@ -18,7 +18,6 @@ namespace Checkers.Rules
         public override void UndoRule(BoardMinified board, HistoryItemMinified toUndo, HistoryItemMinified lastMoveBeforeUndo)
         {
             board.MovePiece(toUndo.To.X, toUndo.To.Y, toUndo.From.X, toUndo.From.Y);
-
             NextUndo(board, toUndo, lastMoveBeforeUndo);
         }
     }

@@ -75,6 +75,9 @@ namespace ZermeloCheckers.ViewModels
         public void UpdateFigures(IEnumerable<IFigure> modelFigures, ObservableCollection<FigureViewModel> uiFigures)
         {
             var toBeRemoved = uiFigures.Except(modelFigures).ToList();
+
+            // todo - refactor this
+            var toBeUpdated = modelFigures.Join(uiFigures, x => x.GetHashCode(), x => x.GetHashCode(), (x,y) => new KeyValuePair<IFigure, FigureViewModel>(x,y)).ToList();
             var toBeInserted = modelFigures.Except(uiFigures).ToList();
 
             foreach (var r in toBeRemoved)
@@ -87,6 +90,11 @@ namespace ZermeloCheckers.ViewModels
                 var newUiFigure = i.ToViewModel();
                 newUiFigure.FigureMoved += OnFigureMoved;
                 uiFigures.Add(newUiFigure);
+            }
+
+            foreach (var u in toBeUpdated)
+            {
+                u.Value.AvailableMoves = u.Key.AvailableMoves;
             }
 
             IsUndoEnabled = Game.HistoryLength != 0;
