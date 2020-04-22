@@ -2,6 +2,7 @@
 using CheckersAI.Tree;
 using CheckersAI.TreeSearch;
 using System;
+using System.IO;
 
 namespace Benchmarking
 {
@@ -18,8 +19,17 @@ namespace Benchmarking
         static void Main(string[] args)
         {
             Console.WriteLine("Hello World!");
-            var tree = CreateSampleTree();
-            var result = new AlfaBetaSearch<int?>().Search(tree, 3, new Evaluator());
+
+            GenerateTree();
+
+            var randomTree = File.ReadAllText("../../../RandomByteTree.txt");
+            var tree = TreeGenerator.ParseTree(randomTree, 4);
+        }
+
+        private static void GenerateTree()
+        {
+            var randomTree = TreeGenerator.GenerateTree(1024 * 1024);
+            File.WriteAllText("../../../RandomByteTree.txt", randomTree);
         }
 
         static Node<int?> CreateSimpleTree()
