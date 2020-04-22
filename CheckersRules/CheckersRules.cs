@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using Checkers.Minifications;
 using Checkers.Rules;
 using Game.PublicInterfaces;
 
+[assembly: InternalsVisibleTo("CheckersAI")]
 namespace Checkers
 {
     // todo - checkers rules appender or host or assembler

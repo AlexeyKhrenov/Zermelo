@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Checkers.Minifications
 {
-    public class PieceMinified : IMementoMinification<Piece>
+    internal class PieceMinified : IMementoMinification<Piece>
     {
         public int X;
         public int Y;

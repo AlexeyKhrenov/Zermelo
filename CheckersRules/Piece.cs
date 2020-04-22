@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Checkers
 {
-    public class Piece : IFigure
+    internal class Piece : IFigure
     {
         public int X { get; set; }
 
