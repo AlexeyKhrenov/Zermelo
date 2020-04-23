@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 
 [assembly: InternalsVisibleTo("Benchmarking")]
+[assembly: InternalsVisibleTo("ZermeloUnitTests")]
 namespace CheckersAI
 {
     public class ComputerPlayer

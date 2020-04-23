@@ -1,15 +1,25 @@
-﻿using CheckersAI.Tree;
+﻿using Benchmarking.ByteTree;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
 namespace Benchmarking
 {
     internal static class TreeGenerator
     {
-        /// <summary>
-        /// generates random byte tree of equal deep
-        /// </summary>
+        public static void GenerateTree()
+        {
+            var randomTree = GenerateTree(1024 * 1024);
+            File.WriteAllText("../../../RandomByteTree.txt", randomTree);
+        }
+
+        public static ByteNode ReadTree()
+        {
+            var randomTree = File.ReadAllText("RandomByteTree.txt");
+            return ParseByteTree(randomTree, 4);
+        }
+
         public static string GenerateTree(int size)
         {
             var rand = new Random();
@@ -28,32 +38,36 @@ namespace Benchmarking
             return builder.ToString();
         }
 
-        public static Node<byte> ParseTree(string tree, byte branchingFactor)
+        public static ByteNode ParseByteTree(string tree, byte branchingFactor)
         {
             var bytes = tree.Split(' ');
 
-            if (Math.Log(bytes.Length, branchingFactor) % 1 != 0)
+            var depth = Math.Log(bytes.Length, branchingFactor);
+
+            if (depth % 1 != 0)
             {
                 throw new ArgumentException("Invalid branching factor");
             }
 
-            var queue = new Queue<Node<byte>>();
+            var isMaxPlayer = depth % 2 == 0;
+
+            var queue = new Queue<ByteNode>();
 
             foreach (var b in bytes)
             {
-                queue.Enqueue(new Node<byte>(byte.Parse(b), false));
+                queue.Enqueue(new ByteNode(byte.Parse(b), isMaxPlayer));
             }
 
             while (queue.Count != 1)
             {
-                var nodes = new Node<byte>[branchingFactor];
+                var nodes = new ByteNode[branchingFactor];
 
                 for (var i = 0; i < branchingFactor; i++)
                 {
                     nodes[i] = queue.Dequeue();
                 }
 
-                queue.Enqueue(new Node<byte>(0, nodes[0].IsMaxPlayer, nodes));
+                queue.Enqueue(new ByteNode(0, !nodes[0].IsMaxPlayer, nodes));
             }
 
             return queue.Dequeue();

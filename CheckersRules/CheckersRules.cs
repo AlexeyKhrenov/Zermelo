@@ -7,6 +7,7 @@ using Checkers.Minifications;
 using Checkers.Rules;
 using Game.PublicInterfaces;
 
+[assembly: InternalsVisibleTo("ZermeloUnitTests")]
 [assembly: InternalsVisibleTo("CheckersAI")]
 namespace Checkers
 {

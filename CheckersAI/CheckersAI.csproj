@@ -16,4 +16,8 @@
     <ProjectReference Include="..\CheckersRules\Checkers.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Tree\" />
+  </ItemGroup>
+
 </Project>

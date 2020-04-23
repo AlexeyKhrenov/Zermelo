@@ -1,11 +1,11 @@
 ﻿using CheckersAI.Tree;
+using System.Threading.Tasks;
 
-namespace CheckersAI.TreeSearch
+namespace CheckersAI.AsyncTreeSearch
 {
-    // the implementation may have different output range and therefore different return type
-    internal class AlfaBetaSearch<TNode, TValue, TMetric> 
-        where TValue : struct 
-        where TNode : INode<TNode, TValue>
+    internal class AlfaBetaSearchMultithreaded<TNode, TValue, TMetric>
+        where TValue : struct
+        where TNode : IAlfaBetaNode<TNode, TValue, TMetric>
         where TMetric : struct
     {
         private IEvaluator<TNode, TValue, TMetric> _evaluator;
@@ -14,7 +14,7 @@ namespace CheckersAI.TreeSearch
         private TMetric _maxValue;
         private TMetric _minValue;
 
-        public AlfaBetaSearch(
+        public AlfaBetaSearchMultithreaded(
             IEvaluator<TNode, TValue, TMetric> evaluator,
             IBrancher<TNode, TValue> brancher,
             IComparator<TMetric> comparator,
@@ -34,6 +34,11 @@ namespace CheckersAI.TreeSearch
             return SearchAlfaBeta(node, depth, _minValue, _maxValue);
         }
 
+        private async Task<TMetric> GoDown(TNode node, int depth)
+        {
+
+        }
+
         /// <summary>
         /// alfa - MinValue, beta - MaxValue
         /// </summary>
@@ -42,6 +47,9 @@ namespace CheckersAI.TreeSearch
             if ((node.Children == null || node.Children.Length == 0) && depth > 0)
             {
                 _brancher.Branch(node);
+                foreach (var children in node.Children)
+                {
+                }
             }
 
             if (depth == 0 || node.Children == null || node.Children.Length == 0)
