@@ -39,14 +39,14 @@ namespace CheckersAI.TreeSearch
         /// </summary>
         private TMetric SearchAlfaBeta(TNode node, int depth, TMetric alfa, TMetric beta)
         {
+            if (depth == 0)
+            {
+                return _evaluator.Evaluate(node);
+            }
+
             if ((node.Children == null || node.Children.Length == 0) && depth > 0)
             {
                 _brancher.Branch(node);
-            }
-
-            if (depth == 0 || node.Children == null || node.Children.Length == 0)
-            {
-                return _evaluator.Evaluate(node);
             }
 
             if (node.IsMaxPlayer)

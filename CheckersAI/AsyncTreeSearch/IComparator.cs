@@ -4,7 +4,7 @@ using System.Text;
 
 namespace CheckersAI.AsyncTreeSearch
 {
-    class IComparator
+    internal interface IComparator<T> : TreeSearch.IComparator<T> where T : struct
     {
     }
 }

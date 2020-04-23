@@ -1,10 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using CheckersAI.Tree;
 
-namespace CheckersAI.Tree
+namespace CheckersAI.AsyncTreeSearch
 {
-    internal interface IAlfaBetaNode<TNode, TValue, TMetric> : INode<TNode, TValue> where TNode : INode<TNode, TValue> where TValue : struct
+    internal interface IAlfaBetaNode<TNode, TValue, TMetric> : INode<TNode, TValue>
+        where TNode : IAlfaBetaNode<TNode, TValue, TMetric> 
+        where TValue : struct
+        where TMetric : struct
     {
         TMetric Alfa { get; set; }
 

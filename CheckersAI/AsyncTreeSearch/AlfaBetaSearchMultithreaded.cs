@@ -1,5 +1,4 @@
-﻿using CheckersAI.Tree;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace CheckersAI.AsyncTreeSearch
 {
@@ -9,14 +8,14 @@ namespace CheckersAI.AsyncTreeSearch
         where TMetric : struct
     {
         private IEvaluator<TNode, TValue, TMetric> _evaluator;
-        private IBrancher<TNode, TValue> _brancher;
+        private IBrancher<TNode, TValue, TMetric> _brancher;
         private IComparator<TMetric> _comparator;
         private TMetric _maxValue;
         private TMetric _minValue;
 
         public AlfaBetaSearchMultithreaded(
             IEvaluator<TNode, TValue, TMetric> evaluator,
-            IBrancher<TNode, TValue> brancher,
+            IBrancher<TNode, TValue, TMetric> brancher,
             IComparator<TMetric> comparator,
             TMetric maxValue,
             TMetric minValue
@@ -35,6 +34,61 @@ namespace CheckersAI.AsyncTreeSearch
         }
 
         private async Task<TMetric> GoDown(TNode node, int depth)
+        {
+            if (depth == 0)
+            {
+                var result = await _evaluator.Evaluate(node);
+                await GoUp(node, result);
+            }
+
+            if ((node.Children == null || node.Children.Length == 0) && depth > 0)
+            {
+                await _brancher.Branch(node);
+            }
+        }
+
+        private async Task<TMetric> GoUp(TNode node, TMetric result)
+        {
+            if (node.IsMaxPlayer)
+            {
+                // todo - change to remember where better result came from
+                if (_comparator.IsBigger(result, node.Alfa))
+                {
+                    node.Alfa = result;
+
+                    // go up only if needed
+                    if (_comparator.IsBigger(node.Beta, node.Alfa))
+                    {
+                        if (node.Parent != null)
+                        {
+                            await GoUp(node.Parent, node.Alfa);
+                        }
+                    }
+                    else
+                    {
+                        // no need to go up
+                    }
+                }
+            }
+            else
+            {
+                // todo - change to remember where better result came from
+                if (_comparator.IsBigger(node.Beta, result))
+                {
+                    // go up only if beta is updated
+                    node.Beta = result;
+                    if (_comparator.IsBigger(node.Beta, node.Alfa)) //todo - try to switch case check to improve perfomance
+                    {
+                        if (node.Parent != null)
+                        {
+                            await GoUp(node.Parent, node.Beta);
+                        }
+                    }
+                }
+            }
+        }
+
+        private void UpdateMaximizer(TNode maximizer, TMetric result)
         {
 
         }
