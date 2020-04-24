@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 using BenchmarkDotNet.Running;
-using Benchmarking.AlfaBetaSingleThreaded;
 
 [assembly: InternalsVisibleTo("ZermeloUnitTests")]
 namespace Benchmarking
@@ -10,7 +9,12 @@ namespace Benchmarking
     {
         static void Main(string[] args)
         {
-            BenchmarkRunner.Run<AlfaBetaSingleThreadedBenchmark>();
+            var r1 = new AlfaBetaSearchBenchmark().EvaluateTree();
+            var r2 = new AlfaBetaSearchBenchmark().EvaluateTreeAsync();
+            Console.WriteLine(r1);
+            Console.WriteLine(r2);
+            Console.ReadKey();
+            //BenchmarkRunner.Run<AlfaBetaSingleThreadedBenchmark>();
         }
     }
 }

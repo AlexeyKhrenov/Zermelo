@@ -19,5 +19,14 @@ namespace Benchmarking.ByteTree
             IsMaxPlayer = isMaxPlayer;
             Children = children;
         }
+
+        public int GetDepth()
+        {
+            if (Children == null || Children.Length == 0)
+            {
+                return 0;
+            }
+            return Children[0].GetDepth() + 1;
+        }
     }
 }

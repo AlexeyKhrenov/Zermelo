@@ -20,6 +20,12 @@ namespace Benchmarking
             return ParseByteTree(randomTree, 4);
         }
 
+        public static AlfaBetaByteNode ReadAlfaBetaByteTree()
+        {
+            var randomTree = File.ReadAllText("RandomByteTree.txt");
+            return ParseAsAlfaBetaTree(randomTree, 4);
+        }
+
         public static string GenerateTree(int size)
         {
             var rand = new Random();
