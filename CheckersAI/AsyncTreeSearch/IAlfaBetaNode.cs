@@ -14,5 +14,9 @@ namespace CheckersAI.AsyncTreeSearch
         TNode Parent { get; set; }
 
         TNode BestMove { get; set; }
+
+        bool IsFinalizedDuringSearch { get; set; }
+
+        byte ChildrenPropagatedCount { get; set; }
     }
 }

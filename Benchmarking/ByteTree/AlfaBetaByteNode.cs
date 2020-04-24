@@ -12,10 +12,13 @@
 
         public AlfaBetaByteNode Parent { get; set; }
 
-        public AlfaBetaByteNode BestChild { get; set; }
-
         public bool IsMaxPlayer { get; set; }
+
         public AlfaBetaByteNode BestMove { get; set; }
+
+        public bool IsFinalizedDuringSearch { get; set; }
+
+        public byte ChildrenPropagatedCount { get; set; }
 
         public AlfaBetaByteNode(byte value, bool isMaxPlayer, params AlfaBetaByteNode[] children)
         {
@@ -25,6 +28,9 @@
 
             Alfa = byte.MinValue;
             Beta = byte.MaxValue;
+
+            IsFinalizedDuringSearch = false;
+            ChildrenPropagatedCount = 0;
         }
 
         public void LinkBackChildren()

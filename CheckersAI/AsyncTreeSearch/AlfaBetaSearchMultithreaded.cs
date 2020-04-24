@@ -29,13 +29,13 @@ namespace CheckersAI.AsyncTreeSearch
 
         private async Task GoDown(TNode node, int depth)
         {
-            //if (node.Parent != null)
-            //{
-            //    if (NeedToCutOff(node.Parent))
-            //    {
-            //        return;
-            //    }
-            //}
+            if (node.Parent != null)
+            {
+                if (NeedToCutOff(node.Parent))
+                {
+                    return;
+                }
+            }
 
             if (depth == 0)
             { 
@@ -43,7 +43,7 @@ namespace CheckersAI.AsyncTreeSearch
                 // change this logic to be more recursive
                 node.Alfa = result;
                 node.Beta = result;
-                await GoUp(node);
+                await Bubble(node, result);
             }
 
             if ((node.Children == null || node.Children.Length == 0) && depth > 0)
@@ -61,60 +61,37 @@ namespace CheckersAI.AsyncTreeSearch
         }
 
         
-        private async Task GoUp(TNode node)
+        private async Task Bubble(TNode node, TMetric newValue)
         {
-            var parent = node.Parent;
-
-            if (parent == null)
+            if (node.IsMaxPlayer)
             {
-                return;
-            }
-
-            var newValue = GetResult(node);
-
-            if (parent.IsMaxPlayer)
-            {
-                if (_comparator.IsBigger(parent.Alfa, newValue))
+                if(_comparator.IsBigger(newValue, node.Alfa))
                 {
-                    if (ReferenceEquals(parent.BestMove, node))
-                    {
-                        var bestMove = FindMaxNode(parent.Children);
-                        parent.BestMove = bestMove;
-                        parent.Alfa = GetResult(bestMove);
-                        await GoUp(parent);
-                    }
-                }
-                else
-                {
-                    if (_comparator.IsBigger(newValue, parent.Alfa))
-                    {
-                        parent.Alfa = newValue;
-                        parent.BestMove = node;
-                        await GoUp(parent);
-                    }
-
+                    node.Alfa = newValue;
                 }
             }
             else
             {
-                if (_comparator.IsBigger(parent.Beta, newValue))
+                if(_comparator.IsBigger(node.Beta, newValue))
                 {
-                    parent.Beta = newValue;
-                    parent.BestMove = node;
-                    await GoUp(parent);
+                    node.Beta = newValue;
                 }
-                else
+            }
+
+            node.ChildrenPropagatedCount++;
+            if(_comparator.IsBigger(node.Alfa, node.Beta))
+            {
+                node.IsFinalizedDuringSearch = true;
+            }
+
+            if(!_comparator.IsBigger(node.Alfa, node.Beta) &&
+                !_comparator.IsBigger(node.Beta, node.Alfa) ||
+                node.Children.Length == node.ChildrenPropagatedCount)
+            {
+                node.IsFinalizedDuringSearch = true;
+                if (node.Parent != null)
                 {
-                    if (ReferenceEquals(parent.BestMove, node))
-                    {
-                        if (_comparator.IsBigger(newValue, parent.Beta))
-                        {
-                            var bestMove = FindMinNode(parent.Children);
-                            parent.Beta = GetResult(bestMove);
-                            parent.BestMove = bestMove;
-                            await GoUp(parent);
-                        }
-                    }
+                    await Bubble(node.Parent, GetResult(node));
                 }
             }
         }
@@ -157,7 +134,7 @@ namespace CheckersAI.AsyncTreeSearch
 
         private bool NeedToCutOff(TNode parent)
         {
-            return !_comparator.IsBigger(parent.Beta, parent.Alfa);
+            return parent.IsFinalizedDuringSearch;
         }
     }
 }
