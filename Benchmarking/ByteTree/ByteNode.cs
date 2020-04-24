@@ -19,17 +19,5 @@ namespace Benchmarking.ByteTree
             IsMaxPlayer = isMaxPlayer;
             Children = children;
         }
-
-        public void Branch(byte? branchingFactor = null)
-        {
-            if (branchingFactor != null)
-            {
-                Children = new ByteNode[branchingFactor.Value];
-                for (var i = 0; i < Children.Length; i++)
-                {
-                    Children[i] = new ByteNode((byte)(Value % i), !IsMaxPlayer);
-                }
-            }
-        }
     }
 }

@@ -15,7 +15,7 @@ namespace Benchmarking.ByteTree
             _branchingFactor = branchingFactor;
         }
 
-        public void Branch(INode<ByteNode, byte> node)
+        public void Branch(ByteNode node)
         {
             if (node.Children != null && node.Children.Length > 0)
             {

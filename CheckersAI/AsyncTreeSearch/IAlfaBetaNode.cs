@@ -12,5 +12,7 @@ namespace CheckersAI.AsyncTreeSearch
         TMetric Beta { get; set; }
 
         TNode Parent { get; set; }
+
+        TNode BestMove { get; set; }
     }
 }

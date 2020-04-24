@@ -10,141 +10,154 @@ namespace CheckersAI.AsyncTreeSearch
         private IEvaluator<TNode, TValue, TMetric> _evaluator;
         private IBrancher<TNode, TValue, TMetric> _brancher;
         private IComparator<TMetric> _comparator;
-        private TMetric _maxValue;
-        private TMetric _minValue;
 
         public AlfaBetaSearchMultithreaded(
             IEvaluator<TNode, TValue, TMetric> evaluator,
             IBrancher<TNode, TValue, TMetric> brancher,
-            IComparator<TMetric> comparator,
-            TMetric maxValue,
-            TMetric minValue
+            IComparator<TMetric> comparator
         )
         {
             _evaluator = evaluator;
             _brancher = brancher;
             _comparator = comparator;
-            _minValue = minValue;
-            _maxValue = maxValue;
         }
 
-        public TMetric Search(TNode node, int depth)
+        public void Search(TNode node, int depth)
         {
-            return SearchAlfaBeta(node, depth, _minValue, _maxValue);
+            Task.Run(() => GoDown(node, depth)).Wait();
         }
 
-        private async Task<TMetric> GoDown(TNode node, int depth)
+        private async Task GoDown(TNode node, int depth)
         {
+            //if (node.Parent != null)
+            //{
+            //    if (NeedToCutOff(node.Parent))
+            //    {
+            //        return;
+            //    }
+            //}
+
             if (depth == 0)
-            {
+            { 
                 var result = await _evaluator.Evaluate(node);
-                await GoUp(node, result);
+                // change this logic to be more recursive
+                node.Alfa = result;
+                node.Beta = result;
+                await GoUp(node);
             }
 
             if ((node.Children == null || node.Children.Length == 0) && depth > 0)
             {
                 await _brancher.Branch(node);
             }
+
+            var tasks = new Task[node.Children.Length];
+            for (var i = 0; i < node.Children.Length; i++)
+            {
+                tasks[i] = GoDown(node.Children[i], depth - 1); //todo - check for closure
+            }
+
+            await Task.WhenAll(tasks);
         }
 
-        private async Task<TMetric> GoUp(TNode node, TMetric result)
+        
+        private async Task GoUp(TNode node)
         {
-            if (node.IsMaxPlayer)
-            {
-                // todo - change to remember where better result came from
-                if (_comparator.IsBigger(result, node.Alfa))
-                {
-                    node.Alfa = result;
+            var parent = node.Parent;
 
-                    // go up only if needed
-                    if (_comparator.IsBigger(node.Beta, node.Alfa))
+            if (parent == null)
+            {
+                return;
+            }
+
+            var newValue = GetResult(node);
+
+            if (parent.IsMaxPlayer)
+            {
+                if (_comparator.IsBigger(parent.Alfa, newValue))
+                {
+                    if (ReferenceEquals(parent.BestMove, node))
                     {
-                        if (node.Parent != null)
-                        {
-                            await GoUp(node.Parent, node.Alfa);
-                        }
+                        var bestMove = FindMaxNode(parent.Children);
+                        parent.BestMove = bestMove;
+                        parent.Alfa = GetResult(bestMove);
+                        await GoUp(parent);
                     }
-                    else
+                }
+                else
+                {
+                    if (_comparator.IsBigger(newValue, parent.Alfa))
                     {
-                        // no need to go up
+                        parent.Alfa = newValue;
+                        parent.BestMove = node;
+                        await GoUp(parent);
                     }
+
                 }
             }
             else
             {
-                // todo - change to remember where better result came from
-                if (_comparator.IsBigger(node.Beta, result))
+                if (_comparator.IsBigger(parent.Beta, newValue))
                 {
-                    // go up only if beta is updated
-                    node.Beta = result;
-                    if (_comparator.IsBigger(node.Beta, node.Alfa)) //todo - try to switch case check to improve perfomance
+                    parent.Beta = newValue;
+                    parent.BestMove = node;
+                    await GoUp(parent);
+                }
+                else
+                {
+                    if (ReferenceEquals(parent.BestMove, node))
                     {
-                        if (node.Parent != null)
+                        if (_comparator.IsBigger(newValue, parent.Beta))
                         {
-                            await GoUp(node.Parent, node.Beta);
+                            var bestMove = FindMinNode(parent.Children);
+                            parent.Beta = GetResult(bestMove);
+                            parent.BestMove = bestMove;
+                            await GoUp(parent);
                         }
                     }
                 }
             }
         }
 
-        private void UpdateMaximizer(TNode maximizer, TMetric result)
+        private TMetric GetResult(TNode node)
         {
-
+            return node.IsMaxPlayer ? node.Alfa : node.Beta;
         }
 
-        /// <summary>
-        /// alfa - MinValue, beta - MaxValue
-        /// </summary>
-        private TMetric SearchAlfaBeta(TNode node, int depth, TMetric alfa, TMetric beta)
+        private TNode FindMaxNode(TNode[] nodes)
         {
-            if ((node.Children == null || node.Children.Length == 0) && depth > 0)
+            var max = nodes[0];
+            foreach (var node in nodes)
             {
-                _brancher.Branch(node);
-                foreach (var children in node.Children)
+                if (IsBigger(node, max))
                 {
+                    max = node;
                 }
             }
+            return max;
+        }
 
-            if (depth == 0 || node.Children == null || node.Children.Length == 0)
+        private TNode FindMinNode(TNode[] nodes)
+        {
+            var min = nodes[0];
+            foreach (var node in nodes)
             {
-                return _evaluator.Evaluate(node);
-            }
-
-            if (node.IsMaxPlayer)
-            {
-                var maxVal = _minValue;
-                foreach (var child in node.Children)
+                if (IsBigger(min, node))
                 {
-                    var result = SearchAlfaBeta(child, depth - 1, alfa, beta);
-                    maxVal = _comparator.IsBigger(result, maxVal) ? result : maxVal;
-
-                    if (!_comparator.IsBigger(beta, result))
-                    {
-                        break;
-                    }
-
-                    alfa = _comparator.IsBigger(result, alfa) ? result : alfa;
+                    min = node;
                 }
-                return maxVal;
             }
-            else
-            {
-                var minVal = _maxValue;
-                foreach (var child in node.Children)
-                {
-                    var result = SearchAlfaBeta(child, depth - 1, alfa, beta);
-                    minVal = !_comparator.IsBigger(result, minVal) ? result : minVal;
+            return min;
+        }
 
-                    if (!_comparator.IsBigger(result, alfa))
-                    {
-                        break;
-                    }
+        private bool IsBigger(TNode a, TNode b)
+        {
+            return _comparator.IsBigger(GetResult(a), GetResult(b));
+        }
 
-                    beta = _comparator.IsBigger(beta, result) ? result : beta;
-                }
-                return minVal;
-            }
+        private bool NeedToCutOff(TNode parent)
+        {
+            return !_comparator.IsBigger(parent.Beta, parent.Alfa);
         }
     }
 }

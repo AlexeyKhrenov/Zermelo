@@ -1,12 +1,8 @@
-﻿using CheckersAI.TreeSearch;
-using System;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using System.Text;
-
-namespace Benchmarking.ByteTree
+﻿namespace Benchmarking.ByteTree
 {
-    internal class Comparator : IComparator<byte>
+    internal class Comparator :
+        CheckersAI.TreeSearch.IComparator<byte>,
+        CheckersAI.AsyncTreeSearch.IComparator<byte>
     {
         //[MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool IsBigger(byte a, byte b)
