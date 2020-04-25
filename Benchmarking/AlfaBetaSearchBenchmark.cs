@@ -13,7 +13,7 @@ namespace Benchmarking
         private AlfaBetaSearch<ByteNode, byte, byte> _oneThread;
         private ByteNode _oneThreadTree;
 
-        private AlfaBetaSearchMultithreaded<AlfaBetaByteNode, byte, byte> _tasks;
+        private AlfaBetaSearchTaskBased<AlfaBetaByteNode, byte, byte> _tasks;
         private AlfaBetaByteNode _tasksTree;
         private AlfaBetaByteNode[] _tasksTreeToArray;
 
@@ -23,7 +23,7 @@ namespace Benchmarking
             var brancher = new BrancherMock();
             var evaluator = new Evaluator();
             _oneThread = new AlfaBetaSearch<ByteNode, byte, byte>(evaluator, brancher, comparator, byte.MaxValue, byte.MinValue);
-            _tasks = new AlfaBetaSearchMultithreaded<AlfaBetaByteNode, byte, byte>(evaluator, brancher, comparator);
+            _tasks = new AlfaBetaSearchTaskBased<AlfaBetaByteNode, byte, byte>(evaluator, brancher, comparator);
 
             _oneThreadTree = TreeGenerator.ReadTree();
             _tasksTree = TreeGenerator.ReadAlfaBetaByteTree();

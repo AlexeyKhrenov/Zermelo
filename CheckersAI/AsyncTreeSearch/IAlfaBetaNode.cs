@@ -11,11 +11,15 @@ namespace CheckersAI.AsyncTreeSearch
 
         TMetric Beta { get; set; }
 
+        bool IsFinalized { get; set; }
+
+        bool IsAnnounced { get; set; }
+
+        bool WasCutOff { get; set; }
+
         TNode Parent { get; set; }
 
         TNode BestMove { get; set; }
-
-        bool IsFinalizedDuringSearch { get; set; }
 
         byte ChildrenPropagatedCount { get; set; }
     }

@@ -1,11 +1,13 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Threading;
 
 namespace CheckersAI.AsyncTreeSearch
 {
     internal class AlfaBetaSearchMultithreaded<TNode, TValue, TMetric>
         where TValue : struct
-        where TNode : IAlfaBetaNode<TNode, TValue, TMetric>
+        where TNode : class, IAlfaBetaNode<TNode, TValue, TMetric>
         where TMetric : struct
     {
         private IEvaluator<TNode, TValue, TMetric> _evaluator;
@@ -23,80 +25,124 @@ namespace CheckersAI.AsyncTreeSearch
             _comparator = comparator;
         }
 
-        public void Search(TNode node, int depth)
+        public void Search(TNode tree, int depth)
         {
-            GoDown(node, depth);
-        }
+            var threads = new Thread[Environment.ProcessorCount];
 
-        public void ClearTree(TNode[] nodes, TMetric maxValue, TMetric minValue)
-        {
-            foreach (var node in nodes)
+            for (var i = 0; i < threads.Length; i++)
             {
-                node.Alfa = minValue;
-                node.Beta = maxValue;
+                threads[i] = new Thread(() => Traverse(tree, depth));
+            }
+
+            foreach (var thread in threads)
+            {
+                thread.Join();
             }
         }
 
-        private int _cutted = 0;
-        private void GoDown(TNode node, int depth)
+        public void Traverse(TNode node, int depth)
         {
-            if (node.Parent != null)
+            TNode currentNode = node;
+
+            // use iterative approach to save stack for huge trees
+            while (!node.IsFinalized)
             {
-                if (NeedToCutOff(node.Parent))
+                depth--;
+                var next = GoDown(node, depth);
+                if (next != null)
                 {
-                    _cutted++;
-                    return;
+                    currentNode = next;
+                }
+                else
+                {
+                    currentNode = GoUp(currentNode);
                 }
             }
+        }
 
-            if (depth == 0)
-            { 
-                var result = _evaluator.Evaluate(node);
-                // change this logic to be more recursive
-                node.Alfa = result;
-                node.Beta = result;
-                Bubble(node, result);
+        private TNode GoDown(TNode node, int depth)
+        {
+            if (CheckNodeFinalized(node) || CheckNodeCuttoff(node) || CheckNodeAnnounced(node))
+            {
+
             }
 
-            if ((node.Children == null || node.Children.Length == 0) && depth > 0)
+            if (node.Children == null)
             {
+                // need to lock the node for branching
                 _brancher.Branch(node);
             }
 
-            Parallel.ForEach(node.Children, x => GoDown(x, depth - 1));
-        }
-        
-        private void Bubble(TNode node, TMetric newValue)
-        {
-            if (node.IsMaxPlayer)
+            if (depth == 0 || node.Children.Length == 0)
             {
-                if(_comparator.IsBigger(newValue, node.Alfa))
+                node.IsFinalized = true;
+
+                //todo - remove evaluation - everything should be evaluated by branchers
+                var result = _evaluator.Evaluate(node);
+                node.Alfa = result;
+                node.Beta = result;
+                return default;
+            }
+
+            foreach (var child in node.Children)
+            {
+                if (!child.IsFinalized && !child.IsAnnounced && !child.WasCutOff)
                 {
-                    node.Alfa = newValue;
+                    return child;
+                }
+            }
+
+            node.IsAnnounced = true;
+            return default;
+        }
+
+        //always returns parent
+        private TNode GoUp(TNode node)
+        {
+            var parent = node.Parent;
+
+            if (node.IsFinalized)
+            {
+                var newResult = GetResult(node);
+                parent.ChildrenPropagatedCount++;
+                UpdateParent(parent, newResult);
+            }
+
+            return parent;
+        }
+
+        private bool CanProcessNode(TNode node)
+        {
+            if (node.WasCutOff || node.IsFinalized || node.IsAnnounced)
+            {
+                return false;
+            }
+
+            if (_comparator.IsBigger(node.Alfa, node.Beta))
+            {
+                node.WasCutOff = true;
+                return true;
+            }
+
+            return false;
+        }
+
+        private void UpdateParent(TNode parent, TMetric newResult)
+        {
+            if (parent.IsMaxPlayer)
+            {
+                // interlock parent
+                if (_comparator.IsBigger(newResult, parent.Alfa))
+                {
+                    parent.Alfa = newResult;
                 }
             }
             else
             {
-                if(_comparator.IsBigger(node.Beta, newValue))
+                // interlock parent
+                if (_comparator.IsBigger(parent.Beta, newResult))
                 {
-                    node.Beta = newValue;
-                }
-            }
-
-            node.ChildrenPropagatedCount++;
-            if(_comparator.IsBigger(node.Alfa, node.Beta))
-            {
-                node.IsFinalizedDuringSearch = true;
-            }
-
-            if(!_comparator.IsBigger(node.Alfa, node.Beta) &&
-                !_comparator.IsBigger(node.Beta, node.Alfa) ||
-                node.Children.Length == node.ChildrenPropagatedCount)
-            {
-                node.IsFinalizedDuringSearch = true;
-                if (node.Parent != null)
-                {
-                    Bubble(node.Parent, GetResult(node));
+                    parent.Beta = newResult;
                 }
             }
         }
@@ -104,42 +150,6 @@ namespace CheckersAI.AsyncTreeSearch
         private TMetric GetResult(TNode node)
         {
             return node.IsMaxPlayer ? node.Alfa : node.Beta;
-        }
-
-        private TNode FindMaxNode(TNode[] nodes)
-        {
-            var max = nodes[0];
-            foreach (var node in nodes)
-            {
-                if (IsBigger(node, max))
-                {
-                    max = node;
-                }
-            }
-            return max;
-        }
-
-        private TNode FindMinNode(TNode[] nodes)
-        {
-            var min = nodes[0];
-            foreach (var node in nodes)
-            {
-                if (IsBigger(min, node))
-                {
-                    min = node;
-                }
-            }
-            return min;
-        }
-
-        private bool IsBigger(TNode a, TNode b)
-        {
-            return _comparator.IsBigger(GetResult(a), GetResult(b));
-        }
-
-        private bool NeedToCutOff(TNode parent)
-        {
-            return parent.IsFinalizedDuringSearch;
         }
     }
 }

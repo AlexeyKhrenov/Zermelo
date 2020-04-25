@@ -10,7 +10,7 @@ namespace ZermeloUnitTests
 {
     public class SearchWithoutBranchingAsync
     {
-        private AlfaBetaSearchMultithreaded<AlfaBetaByteNode, byte, byte> _search;
+        private AlfaBetaSearchTaskBased<AlfaBetaByteNode, byte, byte> _search;
 
         public SearchWithoutBranchingAsync()
         {
@@ -18,7 +18,7 @@ namespace ZermeloUnitTests
             var brancher = new BrancherMock();
             var evaluator = new Evaluator();
 
-            _search = new AlfaBetaSearchMultithreaded<AlfaBetaByteNode, byte, byte>(evaluator, brancher, comparator);
+            _search = new AlfaBetaSearchTaskBased<AlfaBetaByteNode, byte, byte>(evaluator, brancher, comparator);
         }
 
         [Theory]
