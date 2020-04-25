@@ -10,6 +10,6 @@ namespace CheckersAI.AsyncTreeSearch
         where TValue : struct
         where TMetric : struct
     {
-        Task<TMetric> Evaluate(TNode node);
+        TMetric Evaluate(TNode node);
     }
 }

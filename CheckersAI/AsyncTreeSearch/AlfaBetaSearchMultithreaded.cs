@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace CheckersAI.AsyncTreeSearch
 {
@@ -24,44 +25,48 @@ namespace CheckersAI.AsyncTreeSearch
 
         public void Search(TNode node, int depth)
         {
-            Task.Run(() => GoDown(node, depth)).Wait();
+            GoDown(node, depth);
         }
 
-        private async Task GoDown(TNode node, int depth)
+        public void ClearTree(TNode[] nodes, TMetric maxValue, TMetric minValue)
+        {
+            foreach (var node in nodes)
+            {
+                node.Alfa = minValue;
+                node.Beta = maxValue;
+            }
+        }
+
+        private int _cutted = 0;
+        private void GoDown(TNode node, int depth)
         {
             if (node.Parent != null)
             {
                 if (NeedToCutOff(node.Parent))
                 {
+                    _cutted++;
                     return;
                 }
             }
 
             if (depth == 0)
             { 
-                var result = await _evaluator.Evaluate(node);
+                var result = _evaluator.Evaluate(node);
                 // change this logic to be more recursive
                 node.Alfa = result;
                 node.Beta = result;
-                await Bubble(node, result);
+                Bubble(node, result);
             }
 
             if ((node.Children == null || node.Children.Length == 0) && depth > 0)
             {
-                await _brancher.Branch(node);
+                _brancher.Branch(node);
             }
 
-            var tasks = new Task[node.Children.Length];
-            for (var i = 0; i < node.Children.Length; i++)
-            {
-                tasks[i] = GoDown(node.Children[i], depth - 1); //todo - check for closure
-            }
-
-            await Task.WhenAll(tasks);
+            Parallel.ForEach(node.Children, x => GoDown(x, depth - 1));
         }
-
         
-        private async Task Bubble(TNode node, TMetric newValue)
+        private void Bubble(TNode node, TMetric newValue)
         {
             if (node.IsMaxPlayer)
             {
@@ -91,7 +96,7 @@ namespace CheckersAI.AsyncTreeSearch
                 node.IsFinalizedDuringSearch = true;
                 if (node.Parent != null)
                 {
-                    await Bubble(node.Parent, GetResult(node));
+                    Bubble(node.Parent, GetResult(node));
                 }
             }
         }

@@ -1,4 +1,6 @@
-﻿namespace Benchmarking.ByteTree
+﻿using System.Collections.Generic;
+
+namespace Benchmarking.ByteTree
 {
     public class AlfaBetaByteNode : CheckersAI.AsyncTreeSearch.IAlfaBetaNode<AlfaBetaByteNode, byte, byte>
     {
@@ -48,6 +50,28 @@
                 return 0;
             }
             return Children[0].GetDepth() + 1;
+        }
+
+        public List<AlfaBetaByteNode> ToList()
+        {
+            var list = new List<AlfaBetaByteNode>();
+            var level = new Queue<AlfaBetaByteNode>();
+
+            level.Enqueue(this);
+
+            while (level.TryDequeue(out var nextNode))
+            {
+                list.Add(nextNode);
+                if (nextNode.Children != null)
+                {
+                    foreach (var child in nextNode.Children)
+                    {
+                        level.Enqueue(child);
+                    }
+                }
+            }
+
+            return list;
         }
     }
 }

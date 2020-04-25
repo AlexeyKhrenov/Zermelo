@@ -15,6 +15,7 @@ namespace Benchmarking
 
         private AlfaBetaSearchMultithreaded<AlfaBetaByteNode, byte, byte> _tasks;
         private AlfaBetaByteNode _tasksTree;
+        private AlfaBetaByteNode[] _tasksTreeToArray;
 
         public AlfaBetaSearchBenchmark()
         {
@@ -26,6 +27,7 @@ namespace Benchmarking
 
             _oneThreadTree = TreeGenerator.ReadTree();
             _tasksTree = TreeGenerator.ReadAlfaBetaByteTree();
+            _tasksTreeToArray = _tasksTree.ToList().ToArray();
         }
 
         [Benchmark]
@@ -38,7 +40,9 @@ namespace Benchmarking
         public byte EvaluateTreeAsync()
         {
             _tasks.Search(_tasksTree, _tasksTree.GetDepth());
-            return _tasksTree.IsMaxPlayer ? _tasksTree.Alfa : _tasksTree.Beta;
+            var result = _tasksTree.IsMaxPlayer ? _tasksTree.Alfa : _tasksTree.Beta;
+            _tasks.ClearTree(_tasksTreeToArray, byte.MaxValue, byte.MinValue);
+            return result;
         }
     }
 }

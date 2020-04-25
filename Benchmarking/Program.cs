@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using BenchmarkDotNet.Running;
 
@@ -9,12 +10,11 @@ namespace Benchmarking
     {
         static void Main(string[] args)
         {
-            var r1 = new AlfaBetaSearchBenchmark().EvaluateTree();
-            var r2 = new AlfaBetaSearchBenchmark().EvaluateTreeAsync();
-            Console.WriteLine(r1);
-            Console.WriteLine(r2);
-            Console.ReadKey();
-            //BenchmarkRunner.Run<AlfaBetaSingleThreadedBenchmark>();
+            var r = new AlfaBetaSearchBenchmark();
+            var r1 = r.EvaluateTree();
+            var r2 = r.EvaluateTreeAsync();
+
+            BenchmarkRunner.Run<AlfaBetaSearchBenchmark>();
         }
     }
 }
