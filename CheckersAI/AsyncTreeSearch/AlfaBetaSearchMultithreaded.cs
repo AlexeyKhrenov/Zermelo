@@ -41,6 +41,8 @@ namespace CheckersAI.AsyncTreeSearch
             }
         }
 
+        private int opCount = 0;
+
         // move min and max arguments to the constructor
         public void ClearTree(TNode[] tree, TMetric maxValue, TMetric minValue)
         {
@@ -51,132 +53,87 @@ namespace CheckersAI.AsyncTreeSearch
             }
         }
 
-        public void Traverse(TNode node, int depth)
+        public void Traverse(TNode node, int maxDepth)
         {
             TNode currentNode = node;
 
-            // use iterative approach to save stack for huge trees
-            while (!node.IsFinalized)
+            if (node.Children.Length != 0)
             {
-                var next = GoDown(currentNode, depth);
-                if (next != null)
+                // use iterative approach to save stack for huge trees
+                while (currentNode != null && node.FinalizedFlag != 0)
                 {
-                    depth--;
-                    currentNode = next;
+                    currentNode = NextNode(currentNode, maxDepth);
                 }
-                else
-                {
-                    next = GoUp(currentNode);
-                    if (next != null)
-                    {
-                        depth++;
-                        currentNode = next;
-                    }
-                }
+            }
+            else
+            {
+                var res = _evaluator.Evaluate(node);
+                node.Alfa = res;
+                node.Beta = res;
             }
         }
 
-        private TNode GoDown(TNode node, int depth)
+        private TNode NextNode(TNode node, int maxDepth)
         {
-            if (node.IsFinalized || CheckNodeCutoff(node) || node.IsAnnounced)
+            Interlocked.Increment(ref opCount);
+
+            if (node.FinalizedFlag == 0)
             {
-                return default;
+                return UpdateParent(node);
+            }
+
+            if (node.IsCutOff)
+            {
+                node.Parent.UpdateFinalizedFlag(node.ChildAddressBit);
+
+                return node.Parent;
             }
 
             if (node.Children == null)
             {
-                // need to lock the node for branching
                 _brancher.Branch(node);
             }
 
-            if (depth == 0 || node.Children.Length == 0)
+            if (node.Depth == maxDepth || node.Children.Length == 0)
             {
-                //todo - remove evaluation - everything should be evaluated by branchers
-                var result = _evaluator.Evaluate(node);
-                node.Alfa = result;
-                node.Beta = result;
+                var res = _evaluator.Evaluate(node);
+                node.Alfa = res;
+                node.Beta = res;
+                
+                var parent = UpdateParent(node);
+                node.FinalizedFlag = 0;
 
-                UpdateParent(node.Parent, result);
-
-                node.IsFinalized = true;
-
-                return default;
+                return parent;
             }
 
-            var finalizedOrCutoff = 0;
             foreach (var child in node.Children)
             {
-                if (child.IsFinalized || child.WasCutOff)
-                {
-                    finalizedOrCutoff++;
-                    continue;
-                }
-
-                if (!child.IsAnnounced)
+                if (child.FinalizedFlag != 0 && !child.IsCutOff)
                 {
                     return child;
                 }
             }
 
-            if (node.Children.Length == finalizedOrCutoff)
-            {
-                UpdateParent(node.Parent, GetResult(node));
-                node.IsFinalized = true;
-            }
-            else
-            {
-                node.IsAnnounced = true;
-            }
-
-            return default;
+            return node.Parent;
         }
 
-        private bool CheckNodeCutoff(TNode node)
-        {
-            if (node.WasCutOff)
-            {
-                return true;
-            }
-
-            if (_comparator.IsBigger(node.Alfa, node.Beta))
-            {
-                node.WasCutOff = true;
-                return true;
-            }
-
-            return false;
-        }
-
-        //always returns parent
-        private TNode GoUp(TNode node)
+        private TNode UpdateParent(TNode node)
         {
             var parent = node.Parent;
+            var newResult = GetResult(node);
+
+            parent.UpdateAlfaBeta(newResult);
+
+            parent.UpdateFinalizedFlag(node.ChildAddressBit);
+
+            CheckNodeCutOff(parent);
+
             return parent;
         }
 
-        private void UpdateParent(TNode parent, TMetric newResult)
+        private void CheckNodeCutOff(TNode node)
         {
-            if (parent != null)
-            {
-                if (parent.IsMaxPlayer)
-                {
-                    // interlock parent
-                    if (_comparator.IsBigger(newResult, parent.Alfa))
-                    {
-                        parent.Alfa = newResult;
-                    }
-                }
-                else
-                {
-                    // interlock parent
-                    if (_comparator.IsBigger(parent.Beta, newResult))
-                    {
-                        parent.Beta = newResult;
-                    }
-                }
-
-                CheckNodeCutoff(parent);
-            }
+            node.IsCutOff = _comparator.IsBigger(node.Alfa, node.Beta);
         }
 
         private TMetric GetResult(TNode node)

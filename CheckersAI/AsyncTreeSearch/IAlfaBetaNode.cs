@@ -15,12 +15,22 @@ namespace CheckersAI.AsyncTreeSearch
 
         bool IsAnnounced { get; set; }
 
-        bool WasCutOff { get; set; }
+        bool IsCutOff { get; set; }
 
         TNode Parent { get; set; }
 
         TNode BestMove { get; set; }
 
         byte ChildrenPropagatedCount { get; set; }
+
+        uint FinalizedFlag { get; set; }
+
+        uint ChildAddressBit { get; set; }
+
+        int Depth { get; set; }
+
+        void UpdateAlfaBeta(TMetric newValue);
+
+        void UpdateFinalizedFlag(uint address);
     }
 }

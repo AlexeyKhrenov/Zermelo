@@ -26,7 +26,13 @@ namespace Benchmarking.ByteTree
 
         public bool IsAnnounced { get; set; }
 
-        public bool WasCutOff { get; set; }
+        public bool IsCutOff { get; set; }
+
+        public uint FinalizedFlag { get; set; }
+
+        public uint ChildAddressBit { get; set; }
+
+        public int Depth { get; set; }
 
         public AlfaBetaByteNode(byte value, bool isMaxPlayer, params AlfaBetaByteNode[] children)
         {
@@ -39,6 +45,19 @@ namespace Benchmarking.ByteTree
 
             IsFinalizedDuringSearch = false;
             ChildrenPropagatedCount = 0;
+
+            for (var i = 0; i < Children.Length; i++)
+            {
+                uint childAddressBit = (uint)(1 << i);
+                Children[i].ChildAddressBit = childAddressBit;
+                FinalizedFlag |= childAddressBit;
+            }
+
+            // todo - remove this when dynamic branching is created
+            if (Children.Length == 0)
+            {
+                FinalizedFlag = 1;
+            }
         }
 
         public void LinkBackChildren()
@@ -55,7 +74,24 @@ namespace Benchmarking.ByteTree
             {
                 return 0;
             }
+
             return Children[0].GetDepth() + 1;
+        }
+
+        // todo - rename this method
+        public void EnumerateDepth()
+        {
+            var stack = new Stack<AlfaBetaByteNode>();
+            stack.Push(this);
+
+            while (stack.TryPop(out var next))
+            {
+                foreach (var child in next.Children)
+                {
+                    child.Depth = next.Depth + 1;
+                    stack.Push(child);
+                }
+            }
         }
 
         public List<AlfaBetaByteNode> ToList()
@@ -78,6 +114,39 @@ namespace Benchmarking.ByteTree
             }
 
             return list;
+        }
+
+        object _obj = new object();
+
+        // todo - change to quicker implementation
+        public void UpdateAlfaBeta(byte newValue)
+        {
+            lock (_obj)
+            {
+                if (IsMaxPlayer)
+                {
+                    if (newValue > Alfa)
+                    {
+                        Alfa = newValue;
+                    }
+                }
+                else
+                {
+                    if (newValue < Beta)
+                    {
+                        Beta = newValue;
+                    }
+                }
+            }
+        }
+
+        object _obj2 = new object();
+        public void UpdateFinalizedFlag(uint address)
+        {
+            lock (_obj2)
+            {
+                FinalizedFlag &= ~address;
+            }
         }
     }
 }

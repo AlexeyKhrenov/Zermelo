@@ -113,7 +113,9 @@ namespace Benchmarking
                 queue.Enqueue(newNode);
             }
 
-            return queue.Dequeue();
+            var result = queue.Dequeue();
+            result.EnumerateDepth();
+            return result;
         }
     }
 }
