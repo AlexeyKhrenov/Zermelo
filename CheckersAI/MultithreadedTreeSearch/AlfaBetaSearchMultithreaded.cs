@@ -7,22 +7,19 @@ namespace CheckersAI.MultithreadedTreeSearch
 {
     internal class AlfaBetaSearchMultithreaded<TNode, TValue, TMetric>
         where TValue : struct
-        where TNode : class, IAlfaBetaNode<TNode, TValue, TMetric>
+        where TNode : AlfaBetaNodeBase<TNode, TValue, TMetric>
         where TMetric : struct
     {
         private IEvaluator<TNode, TValue, TMetric> _evaluator;
         private IBrancher<TNode, TValue, TMetric> _brancher;
-        private IComparator<TMetric> _comparator;
 
         public AlfaBetaSearchMultithreaded(
             IEvaluator<TNode, TValue, TMetric> evaluator,
-            IBrancher<TNode, TValue, TMetric> brancher,
-            IComparator<TMetric> comparator
+            IBrancher<TNode, TValue, TMetric> brancher
         )
         {
             _evaluator = evaluator;
             _brancher = brancher;
-            _comparator = comparator;
         }
 
         public void Search(TNode tree, int depth)
@@ -70,11 +67,11 @@ namespace CheckersAI.MultithreadedTreeSearch
         {
             Interlocked.Increment(ref opCount);
 
-            var parentCutOff = node.CheckIfAnyParentNodesCuttedOff();
-            if (parentCutOff != null)
-            {
-                return parentCutOff;
-            }
+            //var parentCutOff = node.CheckIfAnyParentNodesCuttedOff();
+            //if (parentCutOff != null)
+            //{
+            //    return parentCutOff;
+            //}
 
             if (node.IsFinalized)
             {

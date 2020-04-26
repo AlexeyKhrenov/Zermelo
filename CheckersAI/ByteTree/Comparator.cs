@@ -1,13 +1,13 @@
 ﻿using System.Runtime.CompilerServices;
 
-namespace Benchmarking.ByteTree
+namespace CheckersAI.ByteTree
 {
     internal class Comparator :
-        CheckersAI.TreeSearch.IComparator<byte>,
-        CheckersAI.MultithreadedTreeSearch.IComparator<byte>
+        CheckersAI.TreeSearch.IComparator<sbyte>,
+        CheckersAI.MultithreadedTreeSearch.IComparator<sbyte>
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool IsBigger(byte a, byte b)
+        public bool IsBigger(sbyte a, sbyte b)
         {
             return a > b;
         }

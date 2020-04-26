@@ -1,19 +1,19 @@
 ﻿using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
-namespace Benchmarking.ByteTree
+namespace CheckersAI.ByteTree
 {
     internal class Evaluator :
-        CheckersAI.TreeSearch.IEvaluator<ByteNode, byte, byte>,
-        CheckersAI.MultithreadedTreeSearch.IEvaluator<AlfaBetaByteNode, byte, byte>
+        CheckersAI.TreeSearch.IEvaluator<ByteNode, sbyte, sbyte>,
+        CheckersAI.MultithreadedTreeSearch.IEvaluator<AlfaBetaByteNode, sbyte, sbyte>
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public byte Evaluate(ByteNode node)
+        public sbyte Evaluate(ByteNode node)
         {
             return node.Value;
         }
 
-        public byte Evaluate(AlfaBetaByteNode node)
+        public sbyte Evaluate(AlfaBetaByteNode node)
         {
             return node.Value;
         }

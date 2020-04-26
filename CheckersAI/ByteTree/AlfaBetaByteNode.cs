@@ -1,51 +1,29 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
-namespace Benchmarking.ByteTree
+namespace CheckersAI.ByteTree
 {
-    public class AlfaBetaByteNode : CheckersAI.MultithreadedTreeSearch.IAlfaBetaNode<AlfaBetaByteNode, byte, byte>
+    internal class AlfaBetaByteNode : MultithreadedTreeSearch.AlfaBetaNodeBase<AlfaBetaByteNode, sbyte, sbyte>
     {
-        public byte Alfa { get; set; }
-
-        public byte Beta { get; set; }
-
-        public byte Value { get; set; }
-
-        public AlfaBetaByteNode[] Children { get; set; }
-
-        public AlfaBetaByteNode Parent { get; set; }
-
-        public bool IsMaxPlayer { get; set; }
-
-        public byte Result { get; set; }
-
-        public bool IsAnnounced { get; set; }
-
-        public bool IsCutOff { get; set; }
-
-        public bool IsFinalized => _finalizedFlag == 0;
-
-        public int Depth { get; set; }
-
         private uint _childAddressBit;
         private uint _finalizedFlag;
 
-        public AlfaBetaByteNode(byte value, bool isMaxPlayer, params AlfaBetaByteNode[] children)
+        public AlfaBetaByteNode(sbyte value, bool isMaxPlayer, params AlfaBetaByteNode[] children)
         {
             Value = value;
             IsMaxPlayer = isMaxPlayer;
             Children = children;
 
-            Alfa = byte.MinValue;
-            Beta = byte.MaxValue;
+            Alfa = sbyte.MinValue;
+            Beta = sbyte.MaxValue;
 
             if (IsMaxPlayer)
             {
-                Result = byte.MinValue;
+                Result = sbyte.MinValue;
             }
             else
             {
-                Result = byte.MaxValue;
+                Result = sbyte.MaxValue;
             }
 
             for (var i = 0; i < Children.Length; i++)
@@ -86,8 +64,9 @@ namespace Benchmarking.ByteTree
             var stack = new Stack<AlfaBetaByteNode>();
             stack.Push(this);
 
-            while (stack.TryPop(out var next))
+            while (stack.Count != 0)
             {
+                var next = stack.Pop();
                 foreach (var child in next.Children)
                 {
                     child.Depth = next.Depth + 1;
@@ -103,8 +82,9 @@ namespace Benchmarking.ByteTree
 
             level.Enqueue(this);
 
-            while (level.TryDequeue(out var nextNode))
+            while (level.Count != 0)
             {
+                var nextNode = level.Dequeue();
                 list.Add(nextNode);
                 if (nextNode.Children != null)
                 {
@@ -121,7 +101,7 @@ namespace Benchmarking.ByteTree
         object _obj = new object();
 
         // todo - change to quicker implementation
-        public void Update(AlfaBetaByteNode node)
+        public override void Update(AlfaBetaByteNode node)
         {
             var newValue = node.Result;
 
@@ -148,7 +128,7 @@ namespace Benchmarking.ByteTree
         }
 
         object _obj2 = new object();
-        public void UpdateFinalizedFlag(AlfaBetaByteNode node)
+        public override void UpdateFinalizedFlag(AlfaBetaByteNode node)
         {
             var finalizedBit = node._childAddressBit;
 
@@ -158,13 +138,13 @@ namespace Benchmarking.ByteTree
             }
         }
 
-        public void UpdateTerminalNode(byte result)
+        public override void UpdateTerminalNode(sbyte result)
         {
             Result = result;
             _finalizedFlag = 0;
         }
 
-        public void UpdateAlfaBeta(byte alfa, byte beta)
+        public override void UpdateAlfaBeta(sbyte alfa, sbyte beta)
         {
             if (IsMaxPlayer)
             {
@@ -187,14 +167,14 @@ namespace Benchmarking.ByteTree
             }
         }
 
-        public void Clear()
+        public override void Clear()
         {
-            Alfa = byte.MinValue;
-            Beta = byte.MaxValue;
+            Alfa = sbyte.MinValue;
+            Beta = sbyte.MaxValue;
             Result = 0;
         }
 
-        public AlfaBetaByteNode CheckIfAnyParentNodesCuttedOff()
+        public override AlfaBetaByteNode CheckIfAnyParentNodesCuttedOff()
         {
             var parent = Parent;
             while (parent != null)

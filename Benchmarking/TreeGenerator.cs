@@ -1,4 +1,4 @@
-﻿using Benchmarking.ByteTree;
+﻿using CheckersAI.ByteTree;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -38,7 +38,7 @@ namespace Benchmarking
             for (var i = 1; i < buffer.Length; i++)
             {
                 builder.Append(' ');
-                builder.Append(buffer[i]);
+                builder.Append((sbyte)buffer[i]);
             }
 
             return builder.ToString();
@@ -61,7 +61,7 @@ namespace Benchmarking
 
             foreach (var b in bytes)
             {
-                queue.Enqueue(new ByteNode(byte.Parse(b), isMaxPlayer));
+                queue.Enqueue(new ByteNode(sbyte.Parse(b), isMaxPlayer));
             }
 
             while (queue.Count != 1)
@@ -96,7 +96,7 @@ namespace Benchmarking
 
             foreach (var b in bytes)
             {
-                queue.Enqueue(new AlfaBetaByteNode(byte.Parse(b), isMaxPlayer));
+                queue.Enqueue(new AlfaBetaByteNode(sbyte.Parse(b), isMaxPlayer));
             }
 
             while (queue.Count != 1)

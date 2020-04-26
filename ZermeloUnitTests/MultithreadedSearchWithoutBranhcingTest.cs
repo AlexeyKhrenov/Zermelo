@@ -1,5 +1,5 @@
 ﻿using Benchmarking;
-using Benchmarking.ByteTree;
+using CheckersAI.ByteTree;
 using CheckersAI.MultithreadedTreeSearch;
 using Xunit;
 
@@ -7,14 +7,14 @@ namespace ZermeloUnitTests
 {
     public class MultithreadedSearchWithoutBranhcingTest
     {
-        private AlfaBetaSearchMultithreaded<AlfaBetaByteNode, byte, byte> _search;
+        private AlfaBetaSearchMultithreaded<AlfaBetaByteNode, sbyte, sbyte> _search;
 
         public MultithreadedSearchWithoutBranhcingTest()
         {
             var comparator = new Comparator();
             var brancher = new BrancherMock();
             var evaluator = new Evaluator();
-            _search = new AlfaBetaSearchMultithreaded<AlfaBetaByteNode, byte, byte>(evaluator, brancher, comparator);
+            _search = new AlfaBetaSearchMultithreaded<AlfaBetaByteNode, sbyte, sbyte>(evaluator, brancher);
         }
 
         [Theory]
@@ -25,7 +25,7 @@ namespace ZermeloUnitTests
         [InlineData("8 1 7 2", 2, 2)]
         [InlineData("1 3 5 1 1 1 0 9", 3, 3)]
         [InlineData("8 7 3 9 9 8 2 4 1 8 8 9 9 9 3 4", 8, 4)]
-        public void MultithreadedSearchWithoutBranhcingTheory(string treeStr, byte expected, int depth)
+        public void MultithreadedSearchWithoutBranhcingTheory(string treeStr, sbyte expected, int depth)
         {
             var tree = TreeGenerator.ParseAsAlfaBetaTree(treeStr, 2);
             _search.Search(tree, depth);

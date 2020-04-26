@@ -5,11 +5,11 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Benchmarking.ByteTree
+namespace CheckersAI.ByteTree
 {
     internal class BrancherMock :
-        CheckersAI.TreeSearch.IBrancher<ByteNode, byte>,
-        CheckersAI.MultithreadedTreeSearch.IBrancher<AlfaBetaByteNode, byte, byte>
+        CheckersAI.TreeSearch.IBrancher<ByteNode, sbyte>,
+        CheckersAI.MultithreadedTreeSearch.IBrancher<AlfaBetaByteNode, sbyte, sbyte>
     {
         public void Branch(ByteNode node)
         {
