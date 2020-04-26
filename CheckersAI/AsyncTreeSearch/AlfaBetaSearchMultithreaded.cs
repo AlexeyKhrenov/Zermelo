@@ -32,11 +32,22 @@ namespace CheckersAI.AsyncTreeSearch
             for (var i = 0; i < threads.Length; i++)
             {
                 threads[i] = new Thread(() => Traverse(tree, depth));
+                threads[i].Start();
             }
 
             foreach (var thread in threads)
             {
                 thread.Join();
+            }
+        }
+
+        // move min and max arguments to the constructor
+        public void ClearTree(TNode[] tree, TMetric maxValue, TMetric minValue)
+        {
+            foreach (var node in tree)
+            {
+                node.Alfa = minValue;
+                node.Beta = maxValue;
             }
         }
 
@@ -47,24 +58,29 @@ namespace CheckersAI.AsyncTreeSearch
             // use iterative approach to save stack for huge trees
             while (!node.IsFinalized)
             {
-                depth--;
-                var next = GoDown(node, depth);
+                var next = GoDown(currentNode, depth);
                 if (next != null)
                 {
+                    depth--;
                     currentNode = next;
                 }
                 else
                 {
-                    currentNode = GoUp(currentNode);
+                    next = GoUp(currentNode);
+                    if (next != null)
+                    {
+                        depth++;
+                        currentNode = next;
+                    }
                 }
             }
         }
 
         private TNode GoDown(TNode node, int depth)
         {
-            if (CheckNodeFinalized(node) || CheckNodeCuttoff(node) || CheckNodeAnnounced(node))
+            if (node.IsFinalized || CheckNodeCutoff(node) || node.IsAnnounced)
             {
-
+                return default;
             }
 
             if (node.Children == null)
@@ -75,47 +91,51 @@ namespace CheckersAI.AsyncTreeSearch
 
             if (depth == 0 || node.Children.Length == 0)
             {
-                node.IsFinalized = true;
-
                 //todo - remove evaluation - everything should be evaluated by branchers
                 var result = _evaluator.Evaluate(node);
                 node.Alfa = result;
                 node.Beta = result;
+
+                UpdateParent(node.Parent, result);
+
+                node.IsFinalized = true;
+
                 return default;
             }
 
+            var finalizedOrCutoff = 0;
             foreach (var child in node.Children)
             {
-                if (!child.IsFinalized && !child.IsAnnounced && !child.WasCutOff)
+                if (child.IsFinalized || child.WasCutOff)
+                {
+                    finalizedOrCutoff++;
+                    continue;
+                }
+
+                if (!child.IsAnnounced)
                 {
                     return child;
                 }
             }
 
-            node.IsAnnounced = true;
+            if (node.Children.Length == finalizedOrCutoff)
+            {
+                UpdateParent(node.Parent, GetResult(node));
+                node.IsFinalized = true;
+            }
+            else
+            {
+                node.IsAnnounced = true;
+            }
+
             return default;
         }
 
-        //always returns parent
-        private TNode GoUp(TNode node)
+        private bool CheckNodeCutoff(TNode node)
         {
-            var parent = node.Parent;
-
-            if (node.IsFinalized)
+            if (node.WasCutOff)
             {
-                var newResult = GetResult(node);
-                parent.ChildrenPropagatedCount++;
-                UpdateParent(parent, newResult);
-            }
-
-            return parent;
-        }
-
-        private bool CanProcessNode(TNode node)
-        {
-            if (node.WasCutOff || node.IsFinalized || node.IsAnnounced)
-            {
-                return false;
+                return true;
             }
 
             if (_comparator.IsBigger(node.Alfa, node.Beta))
@@ -127,23 +147,35 @@ namespace CheckersAI.AsyncTreeSearch
             return false;
         }
 
+        //always returns parent
+        private TNode GoUp(TNode node)
+        {
+            var parent = node.Parent;
+            return parent;
+        }
+
         private void UpdateParent(TNode parent, TMetric newResult)
         {
-            if (parent.IsMaxPlayer)
+            if (parent != null)
             {
-                // interlock parent
-                if (_comparator.IsBigger(newResult, parent.Alfa))
+                if (parent.IsMaxPlayer)
                 {
-                    parent.Alfa = newResult;
+                    // interlock parent
+                    if (_comparator.IsBigger(newResult, parent.Alfa))
+                    {
+                        parent.Alfa = newResult;
+                    }
                 }
-            }
-            else
-            {
-                // interlock parent
-                if (_comparator.IsBigger(parent.Beta, newResult))
+                else
                 {
-                    parent.Beta = newResult;
+                    // interlock parent
+                    if (_comparator.IsBigger(parent.Beta, newResult))
+                    {
+                        parent.Beta = newResult;
+                    }
                 }
+
+                CheckNodeCutoff(parent);
             }
         }
 

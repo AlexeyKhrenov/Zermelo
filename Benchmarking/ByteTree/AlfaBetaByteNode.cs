@@ -22,6 +22,12 @@ namespace Benchmarking.ByteTree
 
         public byte ChildrenPropagatedCount { get; set; }
 
+        public bool IsFinalized { get; set; }
+
+        public bool IsAnnounced { get; set; }
+
+        public bool WasCutOff { get; set; }
+
         public AlfaBetaByteNode(byte value, bool isMaxPlayer, params AlfaBetaByteNode[] children)
         {
             Value = value;

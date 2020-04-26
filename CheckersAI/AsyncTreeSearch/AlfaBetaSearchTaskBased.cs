@@ -86,14 +86,14 @@ namespace CheckersAI.AsyncTreeSearch
             node.ChildrenPropagatedCount++;
             if(_comparator.IsBigger(node.Alfa, node.Beta))
             {
-                node.IsFinalizedDuringSearch = true;
+                node.IsFinalized = true;
             }
 
             if(!_comparator.IsBigger(node.Alfa, node.Beta) &&
                 !_comparator.IsBigger(node.Beta, node.Alfa) ||
                 node.Children.Length == node.ChildrenPropagatedCount)
             {
-                node.IsFinalizedDuringSearch = true;
+                node.IsFinalized = true;
                 if (node.Parent != null)
                 {
                     Bubble(node.Parent, GetResult(node));
@@ -139,7 +139,7 @@ namespace CheckersAI.AsyncTreeSearch
 
         private bool NeedToCutOff(TNode parent)
         {
-            return parent.IsFinalizedDuringSearch;
+            return parent.IsFinalized;
         }
     }
 }

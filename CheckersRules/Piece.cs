@@ -62,6 +62,17 @@ namespace Checkers
             AvailableMoves = new List<Point>();
         }
 
+        public Piece(int x, int y, bool isWhite, bool canGoUp, bool canGoDown, bool isQueen)
+        {
+            X = x;
+            Y = y;
+            IsWhite = isWhite;
+            CanGoDown = canGoDown;
+            CanGoUp = canGoUp;
+            AvailableMoves = new List<Point>();
+            IsQueen = isQueen;
+        }
+
         // todo - consider changing to smaller value types
         public override int GetHashCode()
         {
