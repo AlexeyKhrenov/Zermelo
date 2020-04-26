@@ -27,7 +27,7 @@ namespace CheckersAI.MultithreadedTreeSearch
 
         public void Search(TNode tree, int depth)
         {
-            var threads = new Thread[8];
+            var threads = new Thread[Environment.ProcessorCount];
 
             for (var i = 0; i < threads.Length; i++)
             {
@@ -69,6 +69,12 @@ namespace CheckersAI.MultithreadedTreeSearch
         private TNode NextNode(TNode node, int maxDepth)
         {
             Interlocked.Increment(ref opCount);
+
+            var parentCutOff = node.CheckIfAnyParentNodesCuttedOff();
+            if (parentCutOff != null)
+            {
+                return parentCutOff;
+            }
 
             if (node.IsFinalized)
             {

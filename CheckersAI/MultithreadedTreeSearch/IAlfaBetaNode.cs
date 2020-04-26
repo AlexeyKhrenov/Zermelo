@@ -32,5 +32,7 @@ namespace CheckersAI.MultithreadedTreeSearch
         void Clear();
 
         void UpdateTerminalNode(TMetric result);
+
+        TNode CheckIfAnyParentNodesCuttedOff();
     }
 }

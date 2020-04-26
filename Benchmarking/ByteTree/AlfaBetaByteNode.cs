@@ -193,5 +193,20 @@ namespace Benchmarking.ByteTree
             Beta = byte.MaxValue;
             Result = 0;
         }
+
+        public AlfaBetaByteNode CheckIfAnyParentNodesCuttedOff()
+        {
+            var parent = Parent;
+            while (parent != null)
+            {
+                if (parent.IsCutOff)
+                {
+                    return parent;
+                }
+                parent = parent.Parent;
+            }
+
+            return null;
+        }
     }
 }
