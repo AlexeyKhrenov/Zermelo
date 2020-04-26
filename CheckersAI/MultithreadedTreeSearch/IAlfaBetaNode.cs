@@ -17,18 +17,20 @@ namespace CheckersAI.MultithreadedTreeSearch
 
         TNode Parent { get; set; }
 
-        uint FinalizedFlag { get; set; }
-
-        uint ChildAddressBit { get; set; }
-
+        bool IsFinalized { get; }
+        
         int Depth { get; set; }
 
         TMetric Result { get; set; }
 
-        void Update(TMetric newValue, uint finalizedBit);
+        void Update(TNode node);
 
-        void UpdateFinalizedFlag(uint address);
+        void UpdateFinalizedFlag(TNode node);
 
         void UpdateAlfaBeta(TMetric alfa, TMetric beta);
+
+        void Clear();
+
+        void UpdateTerminalNode(TMetric result);
     }
 }

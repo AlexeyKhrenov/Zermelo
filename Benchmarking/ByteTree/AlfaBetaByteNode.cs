@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace Benchmarking.ByteTree
 {
@@ -16,21 +17,18 @@ namespace Benchmarking.ByteTree
 
         public bool IsMaxPlayer { get; set; }
 
-        public AlfaBetaByteNode BestMove { get; set; }
-
-        public bool IsFinalizedDuringSearch { get; set; }
-
         public byte Result { get; set; }
 
         public bool IsAnnounced { get; set; }
 
         public bool IsCutOff { get; set; }
 
-        public uint FinalizedFlag { get; set; }
-
-        public uint ChildAddressBit { get; set; }
+        public bool IsFinalized => _finalizedFlag == 0;
 
         public int Depth { get; set; }
+
+        private uint _childAddressBit;
+        private uint _finalizedFlag;
 
         public AlfaBetaByteNode(byte value, bool isMaxPlayer, params AlfaBetaByteNode[] children)
         {
@@ -50,19 +48,17 @@ namespace Benchmarking.ByteTree
                 Result = byte.MaxValue;
             }
 
-            IsFinalizedDuringSearch = false;
-
             for (var i = 0; i < Children.Length; i++)
             {
                 uint childAddressBit = (uint)(1 << i);
-                Children[i].ChildAddressBit = childAddressBit;
-                FinalizedFlag |= childAddressBit;
+                Children[i]._childAddressBit = childAddressBit;
+                _finalizedFlag |= childAddressBit;
             }
 
             // todo - remove this when dynamic branching is created
             if (Children.Length == 0)
             {
-                FinalizedFlag = 1;
+                _finalizedFlag = 1;
             }
         }
 
@@ -125,8 +121,10 @@ namespace Benchmarking.ByteTree
         object _obj = new object();
 
         // todo - change to quicker implementation
-        public void Update(byte newValue, uint finalizedBit)
+        public void Update(AlfaBetaByteNode node)
         {
+            var newValue = node.Result;
+
             lock (_obj)
             {
                 if (IsMaxPlayer)
@@ -145,17 +143,25 @@ namespace Benchmarking.ByteTree
                     IsCutOff = true;
                 }
 
-                FinalizedFlag &= ~finalizedBit;
+                _finalizedFlag &= ~node._childAddressBit;
             }
         }
 
         object _obj2 = new object();
-        public void UpdateFinalizedFlag(uint finalizedBit)
+        public void UpdateFinalizedFlag(AlfaBetaByteNode node)
         {
+            var finalizedBit = node._childAddressBit;
+
             lock (_obj2)
             {
-                FinalizedFlag &= ~finalizedBit;
+                _finalizedFlag &= ~finalizedBit;
             }
+        }
+
+        public void UpdateTerminalNode(byte result)
+        {
+            Result = result;
+            _finalizedFlag = 0;
         }
 
         public void UpdateAlfaBeta(byte alfa, byte beta)
@@ -179,6 +185,13 @@ namespace Benchmarking.ByteTree
             {
                 IsCutOff = true;
             }
+        }
+
+        public void Clear()
+        {
+            Alfa = byte.MinValue;
+            Beta = byte.MaxValue;
+            Result = 0;
         }
     }
 }

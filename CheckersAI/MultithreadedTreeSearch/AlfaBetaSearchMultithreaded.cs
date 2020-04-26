@@ -48,8 +48,7 @@ namespace CheckersAI.MultithreadedTreeSearch
         {
             foreach (var node in tree)
             {
-                node.Alfa = minValue;
-                node.Beta = maxValue;
+                node.Clear();
             }
         }
 
@@ -60,16 +59,10 @@ namespace CheckersAI.MultithreadedTreeSearch
             if (node.Children.Length != 0)
             {
                 // use iterative approach to save stack for huge trees
-                while (currentNode != null && node.FinalizedFlag != 0)
+                while (currentNode != null && !node.IsFinalized)
                 {
                     currentNode = NextNode(currentNode, maxDepth);
                 }
-            }
-            else
-            {
-                var res = _evaluator.Evaluate(node);
-                node.Alfa = res;
-                node.Beta = res;
             }
         }
 
@@ -77,14 +70,14 @@ namespace CheckersAI.MultithreadedTreeSearch
         {
             Interlocked.Increment(ref opCount);
 
-            if (node.FinalizedFlag == 0)
+            if (node.IsFinalized)
             {
                 return UpdateParent(node);
             }
 
             if (node.IsCutOff)
             {
-                node.Parent.UpdateFinalizedFlag(node.ChildAddressBit);
+                node.Parent.UpdateFinalizedFlag(node);
                 return node.Parent;
             }
 
@@ -97,13 +90,13 @@ namespace CheckersAI.MultithreadedTreeSearch
             {
                 node.IsAnnounced = true;
                 var res = _evaluator.Evaluate(node);
-                node.Update(res, 1);
+                node.UpdateTerminalNode(res);
                 return UpdateParent(node);
             }
 
             foreach (var child in node.Children)
             {
-                if (child.FinalizedFlag != 0 && !child.IsCutOff)
+                if (!child.IsFinalized && !child.IsCutOff)
                 {
                     if (!child.IsAnnounced)
                     {
@@ -120,7 +113,7 @@ namespace CheckersAI.MultithreadedTreeSearch
         private TNode UpdateParent(TNode node)
         {
             var parent = node.Parent;
-            parent.Update(node.Result, node.ChildAddressBit);
+            parent.Update(node);
             return parent;
         }
     }
