@@ -1,6 +1,6 @@
 ﻿using CheckersAI.Tree;
 
-namespace CheckersAI.AsyncTreeSearch
+namespace CheckersAI.MultithreadedTreeSearch
 {
     internal interface IAlfaBetaNode<TNode, TValue, TMetric> : INode<TNode, TValue>
         where TNode : IAlfaBetaNode<TNode, TValue, TMetric> 
@@ -11,17 +11,11 @@ namespace CheckersAI.AsyncTreeSearch
 
         TMetric Beta { get; set; }
 
-        bool IsFinalized { get; set; }
-
         bool IsAnnounced { get; set; }
 
         bool IsCutOff { get; set; }
 
         TNode Parent { get; set; }
-
-        TNode BestMove { get; set; }
-
-        byte ChildrenPropagatedCount { get; set; }
 
         uint FinalizedFlag { get; set; }
 

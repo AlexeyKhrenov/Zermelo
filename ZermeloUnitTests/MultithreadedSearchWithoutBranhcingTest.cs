@@ -1,9 +1,6 @@
 ﻿using Benchmarking;
 using Benchmarking.ByteTree;
-using CheckersAI.AsyncTreeSearch;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using CheckersAI.MultithreadedTreeSearch;
 using Xunit;
 
 namespace ZermeloUnitTests

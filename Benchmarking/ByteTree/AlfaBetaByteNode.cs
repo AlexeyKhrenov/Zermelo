@@ -2,7 +2,7 @@
 
 namespace Benchmarking.ByteTree
 {
-    public class AlfaBetaByteNode : CheckersAI.AsyncTreeSearch.IAlfaBetaNode<AlfaBetaByteNode, byte, byte>
+    public class AlfaBetaByteNode : CheckersAI.MultithreadedTreeSearch.IAlfaBetaNode<AlfaBetaByteNode, byte, byte>
     {
         public byte Alfa { get; set; }
 
@@ -19,10 +19,6 @@ namespace Benchmarking.ByteTree
         public AlfaBetaByteNode BestMove { get; set; }
 
         public bool IsFinalizedDuringSearch { get; set; }
-
-        public byte ChildrenPropagatedCount { get; set; }
-
-        public bool IsFinalized { get; set; }
 
         public byte Result { get; set; }
 
@@ -55,7 +51,6 @@ namespace Benchmarking.ByteTree
             }
 
             IsFinalizedDuringSearch = false;
-            ChildrenPropagatedCount = 0;
 
             for (var i = 0; i < Children.Length; i++)
             {

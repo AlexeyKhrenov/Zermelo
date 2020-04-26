@@ -9,7 +9,7 @@ namespace Benchmarking.ByteTree
 {
     internal class BrancherMock :
         CheckersAI.TreeSearch.IBrancher<ByteNode, byte>,
-        CheckersAI.AsyncTreeSearch.IBrancher<AlfaBetaByteNode, byte, byte>
+        CheckersAI.MultithreadedTreeSearch.IBrancher<AlfaBetaByteNode, byte, byte>
     {
         public void Branch(ByteNode node)
         {

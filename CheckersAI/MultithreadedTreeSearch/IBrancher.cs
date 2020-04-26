@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CheckersAI.AsyncTreeSearch
+namespace CheckersAI.MultithreadedTreeSearch
 {
-    internal interface IEvaluator<TNode, TValue, TMetric>
+    internal interface IBrancher<TNode, TValue, TMetric>
         where TNode : IAlfaBetaNode<TNode, TValue, TMetric>
         where TValue : struct
         where TMetric : struct
     {
-        TMetric Evaluate(TNode node);
+        Task Branch(TNode node);
     }
 }

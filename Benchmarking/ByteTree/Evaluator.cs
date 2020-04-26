@@ -5,7 +5,7 @@ namespace Benchmarking.ByteTree
 {
     internal class Evaluator :
         CheckersAI.TreeSearch.IEvaluator<ByteNode, byte, byte>,
-        CheckersAI.AsyncTreeSearch.IEvaluator<AlfaBetaByteNode, byte, byte>
+        CheckersAI.MultithreadedTreeSearch.IEvaluator<AlfaBetaByteNode, byte, byte>
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public byte Evaluate(ByteNode node)

@@ -10,12 +10,12 @@ namespace Benchmarking
     {
         static void Main(string[] args)
         {
-            //var r = new AlfaBetaSearchBenchmark();
-            ////var r1 = r.EvaluateTree();
-            ////var r2 = r.EvaluateTreeAsync();
-            //var r3 = r.EvaluateTreeMultithreaded();
+            var r = new AlfaBetaSearchBenchmark();
+            //var r1 = r.EvaluateTree();
+            //var r2 = r.EvaluateTreeAsync();
+            var r3 = r.EvaluateTreeMultithreaded();
 
-            BenchmarkRunner.Run<AlfaBetaSearchBenchmark>();
+            //BenchmarkRunner.Run<AlfaBetaSearchBenchmark>();
         }
     }
 }

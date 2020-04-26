@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 
-namespace CheckersAI.AsyncTreeSearch
+namespace CheckersAI.MultithreadedTreeSearch
 {
     internal class AlfaBetaSearchMultithreaded<TNode, TValue, TMetric>
         where TValue : struct
