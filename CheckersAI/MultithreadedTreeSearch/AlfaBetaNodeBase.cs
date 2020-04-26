@@ -17,7 +17,7 @@ namespace CheckersAI.MultithreadedTreeSearch
 
         public TNode Parent { get; set; }
 
-        public bool IsFinalized { get; }
+        public abstract bool IsFinalized { get; }
 
         public int Depth { get; set; }
 

@@ -67,11 +67,11 @@ namespace CheckersAI.MultithreadedTreeSearch
         {
             Interlocked.Increment(ref opCount);
 
-            //var parentCutOff = node.CheckIfAnyParentNodesCuttedOff();
-            //if (parentCutOff != null)
-            //{
-            //    return parentCutOff;
-            //}
+            var parentCutOff = node.CheckIfAnyParentNodesCuttedOff();
+            if (parentCutOff != null)
+            {
+                return parentCutOff;
+            }
 
             if (node.IsFinalized)
             {

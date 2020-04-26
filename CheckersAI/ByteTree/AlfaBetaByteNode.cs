@@ -40,6 +40,8 @@ namespace CheckersAI.ByteTree
             }
         }
 
+        public override bool IsFinalized => _finalizedFlag == 0;
+
         public void LinkBackChildren()
         {
             foreach (var child in Children)
