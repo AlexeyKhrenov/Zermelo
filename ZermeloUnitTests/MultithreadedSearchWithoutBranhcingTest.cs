@@ -32,7 +32,7 @@ namespace ZermeloUnitTests
         {
             var tree = TreeGenerator.ParseAsAlfaBetaTree(treeStr, 2);
             _search.Search(tree, depth);
-            var actual = tree.IsMaxPlayer ? tree.Alfa : tree.Beta;
+            var actual = tree.Result;
             Assert.Equal(expected, actual);
         }
     }

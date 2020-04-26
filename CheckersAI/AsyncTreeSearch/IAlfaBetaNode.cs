@@ -29,8 +29,12 @@ namespace CheckersAI.AsyncTreeSearch
 
         int Depth { get; set; }
 
-        void UpdateAlfaBeta(TMetric newValue);
+        TMetric Result { get; set; }
+
+        void Update(TMetric newValue, uint finalizedBit);
 
         void UpdateFinalizedFlag(uint address);
+
+        void UpdateAlfaBeta(TMetric alfa, TMetric beta);
     }
 }

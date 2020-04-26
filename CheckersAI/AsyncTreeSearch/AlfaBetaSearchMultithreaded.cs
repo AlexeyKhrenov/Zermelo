@@ -27,7 +27,7 @@ namespace CheckersAI.AsyncTreeSearch
 
         public void Search(TNode tree, int depth)
         {
-            var threads = new Thread[Environment.ProcessorCount];
+            var threads = new Thread[8];
 
             for (var i = 0; i < threads.Length; i++)
             {
@@ -85,7 +85,6 @@ namespace CheckersAI.AsyncTreeSearch
             if (node.IsCutOff)
             {
                 node.Parent.UpdateFinalizedFlag(node.ChildAddressBit);
-
                 return node.Parent;
             }
 
@@ -96,49 +95,33 @@ namespace CheckersAI.AsyncTreeSearch
 
             if (node.Depth == maxDepth || node.Children.Length == 0)
             {
+                node.IsAnnounced = true;
                 var res = _evaluator.Evaluate(node);
-                node.Alfa = res;
-                node.Beta = res;
-                
-                var parent = UpdateParent(node);
-                node.FinalizedFlag = 0;
-
-                return parent;
+                node.Update(res, 1);
+                return UpdateParent(node);
             }
 
             foreach (var child in node.Children)
             {
                 if (child.FinalizedFlag != 0 && !child.IsCutOff)
                 {
-                    return child;
+                    if (!child.IsAnnounced)
+                    {
+                        child.UpdateAlfaBeta(node.Alfa, node.Beta);
+                        return child;
+                    }
                 }
             }
 
+            node.IsAnnounced = true;
             return node.Parent;
         }
 
         private TNode UpdateParent(TNode node)
         {
             var parent = node.Parent;
-            var newResult = GetResult(node);
-
-            parent.UpdateAlfaBeta(newResult);
-
-            parent.UpdateFinalizedFlag(node.ChildAddressBit);
-
-            CheckNodeCutOff(parent);
-
+            parent.Update(node.Result, node.ChildAddressBit);
             return parent;
-        }
-
-        private void CheckNodeCutOff(TNode node)
-        {
-            node.IsCutOff = _comparator.IsBigger(node.Alfa, node.Beta);
-        }
-
-        private TMetric GetResult(TNode node)
-        {
-            return node.IsMaxPlayer ? node.Alfa : node.Beta;
         }
     }
 }

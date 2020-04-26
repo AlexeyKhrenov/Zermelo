@@ -24,6 +24,8 @@ namespace Benchmarking.ByteTree
 
         public bool IsFinalized { get; set; }
 
+        public byte Result { get; set; }
+
         public bool IsAnnounced { get; set; }
 
         public bool IsCutOff { get; set; }
@@ -42,6 +44,15 @@ namespace Benchmarking.ByteTree
 
             Alfa = byte.MinValue;
             Beta = byte.MaxValue;
+
+            if (IsMaxPlayer)
+            {
+                Result = byte.MinValue;
+            }
+            else
+            {
+                Result = byte.MaxValue;
+            }
 
             IsFinalizedDuringSearch = false;
             ChildrenPropagatedCount = 0;
@@ -119,33 +130,59 @@ namespace Benchmarking.ByteTree
         object _obj = new object();
 
         // todo - change to quicker implementation
-        public void UpdateAlfaBeta(byte newValue)
+        public void Update(byte newValue, uint finalizedBit)
         {
             lock (_obj)
             {
                 if (IsMaxPlayer)
                 {
-                    if (newValue > Alfa)
-                    {
-                        Alfa = newValue;
-                    }
+                    if (newValue > Result) Result = newValue;
+                    if (newValue > Alfa) Alfa = newValue;
                 }
                 else
                 {
-                    if (newValue < Beta)
-                    {
-                        Beta = newValue;
-                    }
+                    if (newValue < Result) Result = newValue;
+                    if (newValue < Beta) Beta = newValue;
                 }
+
+                if (Alfa > Beta)
+                {
+                    IsCutOff = true;
+                }
+
+                FinalizedFlag &= ~finalizedBit;
             }
         }
 
         object _obj2 = new object();
-        public void UpdateFinalizedFlag(uint address)
+        public void UpdateFinalizedFlag(uint finalizedBit)
         {
             lock (_obj2)
             {
-                FinalizedFlag &= ~address;
+                FinalizedFlag &= ~finalizedBit;
+            }
+        }
+
+        public void UpdateAlfaBeta(byte alfa, byte beta)
+        {
+            if (IsMaxPlayer)
+            {
+                if (beta < Beta)
+                {
+                    Beta = beta;
+                }
+            }
+            else
+            {
+                if (alfa > Alfa)
+                {
+                    Alfa = alfa;
+                }
+            }
+
+            if (Alfa > Beta)
+            {
+                IsCutOff = true;
             }
         }
     }

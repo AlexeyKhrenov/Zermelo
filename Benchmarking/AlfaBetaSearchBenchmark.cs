@@ -57,7 +57,7 @@ namespace Benchmarking
         public byte EvaluateTreeMultithreaded()
         {
             _multiThreaded.Search(_multiThreadedTree, _multiThreadedTree.GetDepth());
-            var result = _multiThreadedTree.IsMaxPlayer ? _multiThreadedTree.Alfa : _multiThreadedTree.Beta;
+            var result = _multiThreadedTree.Result;
             _multiThreaded.ClearTree(_multiThreadedTreeToArray, byte.MaxValue, byte.MinValue);
             return result;
         }
