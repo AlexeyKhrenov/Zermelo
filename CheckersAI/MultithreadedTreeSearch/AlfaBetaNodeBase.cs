@@ -7,6 +7,11 @@ namespace CheckersAI.MultithreadedTreeSearch
         where TValue : struct
         where TMetric : struct
     {
+        protected uint _childAddressBit;
+        protected uint _finalizedFlag;
+
+        public bool IsFinalized => _finalizedFlag == 0;
+
         public TMetric Alfa { get; set; }
 
         public TMetric Beta { get; set; }
@@ -17,8 +22,6 @@ namespace CheckersAI.MultithreadedTreeSearch
 
         public TNode Parent { get; set; }
 
-        public abstract bool IsFinalized { get; }
-
         public int Depth { get; set; }
 
         public TMetric Result { get; set; }
@@ -27,18 +30,44 @@ namespace CheckersAI.MultithreadedTreeSearch
 
         public TNode[] Children { get; set; }
 
-        public bool IsMaxPlayer { get; set; }
+        public bool IsMaxPlayer { get; protected set; }
 
         public abstract void Update(TNode node);
-
-        public abstract void UpdateFinalizedFlag(TNode node);
 
         public abstract void UpdateAlfaBeta(TMetric alfa, TMetric beta);
 
         public abstract void Clear();
 
-        public abstract void UpdateTerminalNode(TMetric result);
+        public TNode CheckIfAnyParentNodesCuttedOff()
+        {
+            var parent = Parent;
+            while (parent != null)
+            {
+                if (parent.IsCutOff)
+                {
+                    return parent;
+                }
+                parent = parent.Parent;
+            }
 
-        public abstract TNode CheckIfAnyParentNodesCuttedOff();
+            return null;
+        }
+
+        private object _obj2 = new object();
+        public void UpdateFinalizedFlag(TNode node)
+        {
+            var finalizedBit = node._childAddressBit;
+
+            lock (_obj2)
+            {
+                _finalizedFlag &= ~finalizedBit;
+            }
+        }
+
+        public void UpdateTerminalNode(TMetric result)
+        {
+            Result = result;
+            _finalizedFlag = 0;
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CheckersAI.TreeSearch;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
@@ -22,13 +23,13 @@ namespace CheckersAI.MultithreadedTreeSearch
             _brancher = brancher;
         }
 
-        public void Search(TNode tree, int depth)
+        public void Search(TNode tree, int marDepth)
         {
             var threads = new Thread[Environment.ProcessorCount];
 
             for (var i = 0; i < threads.Length; i++)
             {
-                threads[i] = new Thread(() => Traverse(tree, depth));
+                threads[i] = new Thread(() => Traverse(tree, marDepth));
                 threads[i].Start();
             }
 

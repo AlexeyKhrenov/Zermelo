@@ -11,6 +11,6 @@ namespace CheckersAI.Tree
 
         TNode[] Children { get; set; }
 
-        bool IsMaxPlayer { get; set; }
+        bool IsMaxPlayer { get; }
     }
 }

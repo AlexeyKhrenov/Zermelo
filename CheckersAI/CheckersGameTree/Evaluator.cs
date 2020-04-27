@@ -1,9 +1,12 @@
 ﻿using Checkers.Minifications;
+using Checkers.Primitives;
 using System.Collections.Generic;
 
 namespace CheckersAI.CheckersGameTree
 {
-    internal class Evaluator : MultithreadedTreeSearch.IEvaluator<GameNode, sbyte, sbyte>
+    internal class Evaluator :
+        CheckersAI.TreeSearch.IEvaluator<GameNode, Move, sbyte>,
+        CheckersAI.MultithreadedTreeSearch.IEvaluator<GameNode, Move, sbyte>
     {
         private bool _playsFor1Player;
 

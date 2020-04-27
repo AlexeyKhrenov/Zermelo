@@ -5,9 +5,6 @@ namespace CheckersAI.ByteTree
 {
     internal class AlfaBetaByteNode : MultithreadedTreeSearch.AlfaBetaNodeBase<AlfaBetaByteNode, sbyte, sbyte>
     {
-        private uint _childAddressBit;
-        private uint _finalizedFlag;
-
         public AlfaBetaByteNode(sbyte value, bool isMaxPlayer, params AlfaBetaByteNode[] children)
         {
             Value = value;
@@ -39,8 +36,6 @@ namespace CheckersAI.ByteTree
                 _finalizedFlag = 1;
             }
         }
-
-        public override bool IsFinalized => _finalizedFlag == 0;
 
         public void LinkBackChildren()
         {
@@ -129,23 +124,6 @@ namespace CheckersAI.ByteTree
             }
         }
 
-        object _obj2 = new object();
-        public override void UpdateFinalizedFlag(AlfaBetaByteNode node)
-        {
-            var finalizedBit = node._childAddressBit;
-
-            lock (_obj2)
-            {
-                _finalizedFlag &= ~finalizedBit;
-            }
-        }
-
-        public override void UpdateTerminalNode(sbyte result)
-        {
-            Result = result;
-            _finalizedFlag = 0;
-        }
-
         public override void UpdateAlfaBeta(sbyte alfa, sbyte beta)
         {
             if (IsMaxPlayer)
@@ -174,21 +152,6 @@ namespace CheckersAI.ByteTree
             Alfa = sbyte.MinValue;
             Beta = sbyte.MaxValue;
             Result = 0;
-        }
-
-        public override AlfaBetaByteNode CheckIfAnyParentNodesCuttedOff()
-        {
-            var parent = Parent;
-            while (parent != null)
-            {
-                if (parent.IsCutOff)
-                {
-                    return parent;
-                }
-                parent = parent.Parent;
-            }
-
-            return null;
         }
     }
 }

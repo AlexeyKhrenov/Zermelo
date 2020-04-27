@@ -5,14 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="CheckersGameTree\Evaluator.cs" />
-    <Compile Remove="CheckersGameTree\GameNode.cs" />
     <Compile Remove="PracticeBoard.cs" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="CheckersGameTree\Evaluator.cs" />
-    <None Include="CheckersGameTree\GameNode.cs" />
     <None Include="PracticeBoard.cs" />
   </ItemGroup>
 
