@@ -1,32 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Drawing;
+﻿using System.Collections.Generic;
 using System.Linq;
-
+using Game.Primitives;
 using Game.PublicInterfaces;
 
 namespace ZermeloCheckers.ViewModels
 {
     public class FigureViewModel : IFigure
     {
-        public int X { get; set; }
+        public byte X { get; set; }
 
-        public int Y { get; set; }
+        public byte Y { get; set; }
 
         public string Type { get; set; }
 
-        public delegate void FigureMovedHandler(object sender, int x0, int y0, int x1, int y1);
+        public delegate void FigureMovedHandler(object sender, byte x0, byte y0, byte x1, byte y1);
         public event FigureMovedHandler FigureMoved;
 
-        public List<Point> AvailableMoves { get; set; }
+        public List<Cell> AvailableMoves { get; set; }
 
         public bool HasCoordinates(int x, int y)
         {
             return X == x && Y == y;
         }
          
-        public bool TryMoveFigure(int x1, int y1)
+        public bool TryMoveFigure(byte x1, byte y1)
         {
             if (IsMoveAllowed(x1, y1))
             {

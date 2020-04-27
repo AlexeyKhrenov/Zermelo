@@ -1,15 +1,11 @@
-﻿using CheckersAI;
-using Game.Implementations;
+﻿using Game.Implementations;
+using Game.Primitives;
 using Game.PublicInterfaces;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Drawing;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Windows.Documents;
 using System.Windows.Input;
 
 namespace ZermeloCheckers.ViewModels
@@ -58,9 +54,9 @@ namespace ZermeloCheckers.ViewModels
             }
         }
 
-        public void OnFigureMoved(object sender, int x0, int y0, int x1, int y1)
+        public void OnFigureMoved(object sender, byte x0, byte y0, byte x1, byte y1)
         {
-            Game.Move(x0, y0, x1, y1);
+            Game.Move(new Move(x0, y0, x1, y1));
             UpdateFigures(Game.Board.GetFigures(), Figures);
             RaisePropertyChanged(nameof(ActivePlayer));
         }

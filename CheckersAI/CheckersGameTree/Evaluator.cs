@@ -1,5 +1,5 @@
 ﻿using Checkers.Minifications;
-using Checkers.Primitives;
+using Game.Primitives;
 using System.Collections.Generic;
 
 namespace CheckersAI.CheckersGameTree

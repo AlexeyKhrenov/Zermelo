@@ -46,9 +46,9 @@ namespace ZermeloUnitTests.Mocks
             var player1Figures = new List<Piece>();
             var player2Figures = new List<Piece>();
 
-            for (var i = 0; i < boardStr.Length; i++)
+            for (byte i = 0; i < boardStr.Length; i++)
             {
-                for (var j = 0; j < boardStr.Length; j++)
+                for (byte j = 0; j < boardStr.Length; j++)
                 {
                     switch (boardStr[i][j])
                     {

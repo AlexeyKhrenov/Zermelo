@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Text;
+﻿using Game.Primitives;
 
 namespace Game.PublicInterfaces
 {
@@ -13,9 +10,7 @@ namespace Game.PublicInterfaces
 
         bool IsKill { get; set; }
 
-        Point From { get; }
-
-        Point To { get; }
+        Move Move { get; set; }
 
         IFigure Captured { get; set; }
     }

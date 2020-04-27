@@ -1,7 +1,7 @@
 ﻿using System;
 using Checkers.Minifications;
-using Checkers.Primitives;
 using CheckersAI.MultithreadedTreeSearch;
+using Game.Primitives;
 
 namespace CheckersAI.CheckersGameTree
 {

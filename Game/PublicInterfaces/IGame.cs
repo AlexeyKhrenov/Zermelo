@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Game.Primitives;
 
 namespace Game.PublicInterfaces
 {
@@ -8,7 +6,7 @@ namespace Game.PublicInterfaces
     {
         int Size { get; }
 
-        void Move(int x0, int y0, int x1, int y1);
+        void Move(Move move);
 
         void Undo();
 

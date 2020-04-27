@@ -22,9 +22,9 @@ namespace Checkers.Rules
 
             // positioning pieces
             var isWhite = !changedSides;
-            for (var y = size - 1; y > size / 2; y--)
+            for (byte y = (byte)(size - 1); y > size / 2; y--)
             {
-                var startX = 1 - y % 2;
+                var startX = (byte)(1 - y % 2);
                 for (var x = startX; x < size; x += 2)
                 {
                     var piece = new PieceMinified(x, y, isWhite, true, false);
@@ -33,9 +33,9 @@ namespace Checkers.Rules
                 }
             }
 
-            for (var y = 0; y < size / 2 - 1; y++)
+            for (byte y = 0; y < size / 2 - 1; y++)
             {
-                var startX = 1 - y % 2;
+                var startX = (byte)(1 - y % 2);
                 for (var x = startX; x < size; x += 2)
                 {
                     var piece = new PieceMinified(x, y, !isWhite, false, true);

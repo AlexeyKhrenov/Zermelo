@@ -1,10 +1,5 @@
 ﻿using Checkers.Minifications;
-using Game.PublicInterfaces;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
+using Game.Primitives;
 
 namespace Checkers.Rules
 {
@@ -26,7 +21,6 @@ namespace Checkers.Rules
         {
             foreach (var figure in board.ActiveSet)
             {
-                // todo - remove this cast
                 var piece = board.Pieces[figure.X, figure.Y];
                 var size = board.GetSize();
 
@@ -64,7 +58,7 @@ namespace Checkers.Rules
         {
             if (pieces[piece.X + directionRight, piece.Y + directionDown] == null)
             {
-                piece.AvailableMoves.Add(new Point(piece.X + directionRight, piece.Y + directionDown));
+                piece.AvailableMoves.Add(new Cell((byte)(piece.X + directionRight), (byte)(piece.Y + directionDown)));
             }
         }
     }

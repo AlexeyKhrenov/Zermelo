@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Text;
 
 using Game.Implementations;
+using Game.Primitives;
 using Game.PublicInterfaces;
 
 namespace Game.Implementations
@@ -34,13 +34,13 @@ namespace Game.Implementations
             Rules.PlaceFigures(Board);
         }
 
-        public void Move(int x0, int y0, int x1, int y1)
+        public void Move(Move move)
         {
-            var move = new HistoryItem(Board.ActivePlayer, new Point(x0, y0), new Point(x1, y1));
-            _history.Push(move);
+            var historyItem = new HistoryItem(Board.ActivePlayer, move);
+            _history.Push(historyItem);
 
             // make return type IHistoryItem
-            Rules.MakeMove(Board, move);
+            Rules.MakeMove(Board, historyItem);
         }
 
         public void Undo()

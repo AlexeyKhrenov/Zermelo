@@ -110,9 +110,9 @@ namespace ZermeloCheckers
                 this.RowDefinitions.Add(new RowDefinition() { Height = gridLength });
             }
 
-            for (var y = 0; y < gameSize; y++)
+            for (byte y = 0; y < gameSize; y++)
             {
-                for (var x = 0; x < gameSize; x++)
+                for (byte x = 0; x < gameSize; x++)
                 {
                     var square = new BoardSquare();
                     square.X = x;
@@ -129,7 +129,7 @@ namespace ZermeloCheckers
             }
         }
 
-        private bool TryMoveFigure(FigureViewModel figure, int targetX, int targetY)
+        private bool TryMoveFigure(FigureViewModel figure, byte targetX, byte targetY)
         {
             return figure.TryMoveFigure(targetX, targetY);
         }

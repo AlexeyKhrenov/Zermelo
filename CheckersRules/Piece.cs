@@ -1,19 +1,16 @@
-﻿using Game.PublicInterfaces;
-using System;
+﻿using Game.Primitives;
+using Game.PublicInterfaces;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
-using System.Text;
 
 namespace Checkers
 {
     internal class Piece : IFigure
     {
-        public int X { get; set; }
+        public byte X { get; set; }
 
-        public int Y { get; set; }
+        public byte Y { get; set; }
 
-        public List<Point> AvailableMoves { get; set; }
+        public List<Cell> AvailableMoves { get; set; }
 
         public bool CanGoUp { get; set; }
 
@@ -52,24 +49,24 @@ namespace Checkers
             }
         }
 
-        public Piece(int x, int y, bool isWhite, bool canGoUp, bool canGoDown)
+        public Piece(byte x, byte y, bool isWhite, bool canGoUp, bool canGoDown)
         {
             X = x;
             Y = y;
             IsWhite = isWhite;
             CanGoDown = canGoDown;
             CanGoUp = canGoUp;
-            AvailableMoves = new List<Point>();
+            AvailableMoves = new List<Cell>();
         }
 
-        public Piece(int x, int y, bool isWhite, bool canGoUp, bool canGoDown, bool isQueen)
+        public Piece(byte x, byte y, bool isWhite, bool canGoUp, bool canGoDown, bool isQueen)
         {
             X = x;
             Y = y;
             IsWhite = isWhite;
             CanGoDown = canGoDown;
             CanGoUp = canGoUp;
-            AvailableMoves = new List<Point>();
+            AvailableMoves = new List<Cell>();
             IsQueen = isQueen;
         }
 

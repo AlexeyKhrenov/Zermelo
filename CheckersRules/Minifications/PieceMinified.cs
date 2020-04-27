@@ -1,16 +1,16 @@
-﻿using System;
+﻿using Game.Primitives;
+using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Text;
 
 namespace Checkers.Minifications
 {
     internal class PieceMinified : IMementoMinification<Piece>
     {
-        public int X;
-        public int Y;
+        public byte X;
+        public byte Y;
 
-        public List<Point> AvailableMoves { get; set; }
+        public List<Cell> AvailableMoves { get; set; }
 
         public bool CanGoUp { get; set; }
 
@@ -40,12 +40,12 @@ namespace Checkers.Minifications
 
         public PieceMinified()
         {
-            AvailableMoves = new List<Point>();
+            AvailableMoves = new List<Cell>();
         }
 
-        public PieceMinified(int x, int y, bool isWhite, bool canGoUp, bool canGoDown)
+        public PieceMinified(byte x, byte y, bool isWhite, bool canGoUp, bool canGoDown)
         {
-            AvailableMoves = new List<Point>();
+            AvailableMoves = new List<Cell>();
 
             X = x;
             Y = y;

@@ -22,9 +22,9 @@ namespace ZermeloCheckers
         public event RoutedEventHandler OnMouseClick;
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public int X;
+        public byte X;
 
-        public int Y;
+        public byte Y;
 
         public bool IsBlack { get; set; }
 

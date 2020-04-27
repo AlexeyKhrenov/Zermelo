@@ -1,7 +1,7 @@
 ﻿
 using Checkers;
-using Checkers.Primitives;
 using CheckersAI.MultithreadedTreeSearch;
+using Game.Primitives;
 using Game.PublicInterfaces;
 using System.Threading.Tasks;
 

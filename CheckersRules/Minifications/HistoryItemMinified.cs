@@ -1,8 +1,6 @@
-﻿using Game.PublicInterfaces;
+﻿using Game.Primitives;
+using Game.PublicInterfaces;
 using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Text;
 
 namespace Checkers.Minifications
 {
@@ -12,16 +10,16 @@ namespace Checkers.Minifications
         public bool Player { get; set; }
         public bool IsPieceChangeType { get; set; }
         public bool IsKill { get; set; }
-        public Point From { get; set; }
-        public Point To { get; set; }
+        public Cell From { get; set; }
+        public Cell To { get; set; }
         public PieceMinified Captured { get; set; }
 
         public void Minify(IHistoryItem fromMaximizedSource)
         {
             IsKill = fromMaximizedSource.IsKill;
             IsPieceChangeType = fromMaximizedSource.IsPieceChangeType;
-            From = fromMaximizedSource.From;
-            To = fromMaximizedSource.To;
+            From = fromMaximizedSource.Move.From;
+            To = fromMaximizedSource.Move.To;
 
             if (fromMaximizedSource.Captured != null)
             {

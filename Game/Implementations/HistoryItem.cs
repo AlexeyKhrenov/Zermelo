@@ -1,8 +1,5 @@
-﻿using Game.PublicInterfaces;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Text;
+﻿using Game.Primitives;
+using Game.PublicInterfaces;
 
 namespace Game.Implementations
 {
@@ -10,9 +7,7 @@ namespace Game.Implementations
     {
         public IPlayer Player { get; private set; }
 
-        public Point From { get; private set; }
-
-        public Point To { get; private set; }
+        public Move Move { get;set; }
 
         public bool IsPieceChangeType { get; set; }
 
@@ -20,20 +15,19 @@ namespace Game.Implementations
 
         public IFigure Captured { get; set; }
 
-        public HistoryItem(IPlayer player, Point from, Point to)
+        public HistoryItem(IPlayer player, Move move)
         {
             IsPieceChangeType = false;
             IsKill = false;
             Captured = null;
 
             Player = player;
-            From = from;
-            To = to;
+            Move = move;
         }
 
         public override string ToString()
         {
-            return $"{From.X}, {From.Y} -> {To.X}, {To.Y}";
+            return $"{Move.From.X}, {Move.From.Y} -> {Move.To.X}, {Move.To.Y}";
         }
     }
 }

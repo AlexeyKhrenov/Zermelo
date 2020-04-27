@@ -1,4 +1,5 @@
 ﻿using Checkers.Minifications;
+using Game.Primitives;
 using Game.PublicInterfaces;
 using System;
 using System.Collections.Generic;
@@ -84,7 +85,7 @@ namespace Checkers.Rules
             {
                 if (pieces[piece.X + 2 * directionRight, piece.Y + 2 * directionDown] == null)
                 {
-                    piece.AvailableMoves.Add(new System.Drawing.Point(piece.X + 2 * directionRight, piece.Y + 2 * directionDown));
+                    piece.AvailableMoves.Add(new Cell((byte)(piece.X + 2 * directionRight), (byte)(piece.Y + 2 * directionDown)));
                     return true;
                 }
             }

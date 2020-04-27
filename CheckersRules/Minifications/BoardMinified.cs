@@ -29,9 +29,9 @@ namespace Checkers.Minifications
         }
 
         // todo - create property
-        public int GetSize()
+        public byte GetSize()
         {
-            return Pieces.GetLength(0);
+            return (byte)Pieces.GetLength(0);
         }
 
         public PieceMinified RemovePiece(int x, int y, bool player)
@@ -54,7 +54,7 @@ namespace Checkers.Minifications
             }
         }
 
-        public void MovePiece(int x0, int y0, int x1, int y1)
+        public void MovePiece(byte x0, byte y0, byte x1, byte y1)
         {
             Pieces[x1, y1] = Pieces[x0, y0];
             Pieces[x0, y0] = null;
