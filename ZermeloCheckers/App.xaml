@@ -4,6 +4,9 @@
              x:Class="ZermeloCheckers.App"
              Startup="AppStartup">
     <Application.Resources>
-         
+        <Style TargetType="Button" x:Key="MButton" >
+            <Setter Property="Margin" Value="2,3,3,2"/>
+            <Setter Property="Height" Value="30"/>
+        </Style>
     </Application.Resources>
 </Application>

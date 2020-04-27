@@ -26,11 +26,24 @@ namespace ZermeloCheckers.ViewModels
             }
         }
 
+        private bool _isStopThinkingEnabled = false;
+        public bool IsStopThinkingEnabled
+        {
+            get { return _isStopThinkingEnabled; }
+            set
+            {
+                _isStopThinkingEnabled = value;
+                RaisePropertyChanged();
+            }
+        }
+
         private ObservableCollection<FigureViewModel> _figures;
 
         public string ActivePlayer => Game?.Board.ActivePlayer.Name;
 
         public ICommand UndoMoveCommand { get; set; }
+
+        public ICommand StopThinking { get; set; }
 
         private IGameFactory GameFactory;
 
