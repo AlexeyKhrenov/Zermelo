@@ -39,8 +39,8 @@ namespace ZermeloUnitTests.Mocks
         {
             InvertedCoordinates = invertedCoordinates;
             Size = size;
-            Player1 = new PlayerMock();
-            Player2 = new PlayerMock();
+            Player1 = new PlayerMock("player1");
+            Player2 = new PlayerMock("player2");
             ActivePlayer = Player1;
 
             var player1Figures = new List<Piece>();
@@ -56,17 +56,20 @@ namespace ZermeloUnitTests.Mocks
                             player1Figures.Add(new Piece(j, i, true, !invertedCoordinates, invertedCoordinates, false));
                             break;
                         case 'W':
-                            player1Figures.Add(new Piece(j, i, true, !invertedCoordinates, invertedCoordinates, true));
+                            player1Figures.Add(new Piece(j, i, true, true, true, true));
                             break;
                         case 'b':
                             player2Figures.Add(new Piece(j, i, false, invertedCoordinates, !invertedCoordinates, false));
                             break;
                         case 'B':
-                            player2Figures.Add(new Piece(j, i, false, invertedCoordinates, !invertedCoordinates, true));
+                            player2Figures.Add(new Piece(j, i, false, true, true, true));
                             break;
                     }
                 }
             }
+
+            Player1.Figures = player1Figures;
+            Player2.Figures = player2Figures;
         }
     }
 }
