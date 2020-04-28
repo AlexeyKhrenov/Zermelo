@@ -2,18 +2,18 @@
 {
     // the implementation may have different output range and therefore different return type
     internal class AlfaBetaSearch<TNode, TMetric> 
-        where TNode : INode<TNode, TMetric>
+        where TNode : INode<TNode>
         where TMetric : struct
     {
         private IEvaluator<TNode, TMetric> _evaluator;
-        private IBrancher<TNode, TMetric> _brancher;
+        private IBrancher<TNode> _brancher;
         private IComparator<TMetric> _comparator;
         private TMetric _maxValue;
         private TMetric _minValue;
 
         public AlfaBetaSearch(
             IEvaluator<TNode, TMetric> evaluator,
-            IBrancher<TNode, TMetric> brancher,
+            IBrancher<TNode> brancher,
             IComparator<TMetric> comparator,
             TMetric maxValue,
             TMetric minValue

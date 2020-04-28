@@ -2,7 +2,7 @@
 
 namespace CheckersAI.ByteTree
 {
-    internal class ByteNode : INode<ByteNode, sbyte>
+    internal class ByteNode : INode<ByteNode>
     {
         public sbyte Value { get; set; }
 

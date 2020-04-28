@@ -1,0 +1,15 @@
+﻿1>------ Rebuild All started: Project: Game, Configuration: Debug Any CPU ------
+1>Game -> C:\dev\Zermelo\Zermelo\Game\bin\Debug\netstandard2.0\Game.dll
+2>------ Rebuild All started: Project: Checkers, Configuration: Debug Any CPU ------
+2>Checkers -> C:\dev\Zermelo\Zermelo\CheckersRules\bin\Debug\netstandard2.0\Checkers.dll
+3>------ Rebuild All started: Project: CheckersAI, Configuration: Debug Any CPU ------
+3>CheckersAI -> C:\dev\Zermelo\Zermelo\CheckersAI\bin\Debug\netstandard2.0\CheckersAI.dll
+4>------ Rebuild All started: Project: Benchmarking, Configuration: Debug Any CPU ------
+5>------ Rebuild All started: Project: ZermeloCheckers, Configuration: Debug Any CPU ------
+4>AlfaBetaSearchBenchmark.cs(14,26,14,37): warning CS0649: Field 'AlfaBetaSearchBenchmark._serialTree' is never assigned to, and will always have its default value null
+4>Benchmarking -> C:\dev\Zermelo\Zermelo\Benchmarking\bin\Debug\netcoreapp3.1\Benchmarking.dll
+4>Done building project "Benchmarking.csproj".
+6>------ Rebuild All started: Project: ZermeloUnitTests, Configuration: Debug Any CPU ------
+6>ZermeloUnitTests -> C:\dev\Zermelo\Zermelo\ZermeloUnitTests\bin\Debug\netcoreapp3.1\ZermeloUnitTests.dll
+5>ZermeloCheckers -> C:\dev\Zermelo\Zermelo\ZermeloCheckers\bin\Debug\netcoreapp3.1\ZermeloCheckers.dll
+========== Rebuild All: 6 succeeded, 0 failed, 0 skipped ==========

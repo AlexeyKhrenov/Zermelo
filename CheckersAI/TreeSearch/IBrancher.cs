@@ -1,6 +1,6 @@
 ﻿namespace CheckersAI.TreeSearch
 {
-    internal interface IBrancher<TNode, TMetric> where TNode : INode<TNode, TMetric> where TMetric : struct
+    internal interface IBrancher<TNode> where TNode : INode<TNode>
     {
         void Branch(TNode node);
     }

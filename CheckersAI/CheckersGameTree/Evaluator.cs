@@ -4,8 +4,7 @@ using System.Collections.Generic;
 
 namespace CheckersAI.CheckersGameTree
 {
-    internal class Evaluator :
-        CheckersAI.TreeSearch.IEvaluator<GameNode, Move, sbyte>
+    internal class Evaluator : TreeSearch.IEvaluator<GameNode, sbyte>
     {
         private bool _playsFor1Player;
 

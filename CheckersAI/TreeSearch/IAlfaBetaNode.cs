@@ -1,7 +1,7 @@
 ﻿namespace CheckersAI.TreeSearch
 {
-    internal interface IAlfaBetaNode<TNode, TMetric> : INode<TNode, TMetric> 
-        where TNode : INode<TNode, TMetric>
+    internal interface IAlfaBetaNode<TNode, TMetric> : INode<TNode> 
+        where TNode : INode<TNode>
         where TMetric : struct
     {
         TMetric Alfa { get; set; }

@@ -7,11 +7,13 @@
   <ItemGroup>
     <Compile Remove="CheckersGameTree\Brancher.cs" />
     <Compile Remove="CheckersGameTree\Evaluator.cs" />
+    <Compile Remove="CheckersGameTree\GameNode.cs" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="CheckersGameTree\Brancher.cs" />
     <None Include="CheckersGameTree\Evaluator.cs" />
+    <None Include="CheckersGameTree\GameNode.cs" />
   </ItemGroup>
 
   <ItemGroup>
