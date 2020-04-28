@@ -10,6 +10,8 @@ namespace ZermeloUnitTests.Mocks
     {
         public IPlayer ActivePlayer { get; private set; }
 
+        public IPlayer AwaitingPlayer { get; private set; }
+
         public IPlayer Player1 { get; private set; }
 
         public IPlayer Player2 { get; private set; }
@@ -28,10 +30,12 @@ namespace ZermeloUnitTests.Mocks
             if (ActivePlayer == Player1)
             {
                 ActivePlayer = Player2;
+                AwaitingPlayer = Player1;
             }
             else
             {
                 ActivePlayer = Player1;
+                AwaitingPlayer = Player2;
             }
         }
 

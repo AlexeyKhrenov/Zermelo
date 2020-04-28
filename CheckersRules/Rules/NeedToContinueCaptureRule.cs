@@ -35,7 +35,7 @@ namespace Checkers.Rules
 
                 NeedToCaptureRule.Check(piece, board.Pieces);
 
-                if (board.ActivePlayer == lastMoveBeforeUndo.Player)
+                if (board.ActivePlayer != lastMoveBeforeUndo.Player)
                 {
                     board.SwitchPlayers();
                 }

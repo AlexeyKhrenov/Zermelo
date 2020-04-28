@@ -4,19 +4,18 @@ using System;
 
 namespace Checkers.Minifications
 {
-    internal class HistoryItemMinified : IMementoMinification<IHistoryItem>
+    internal class HistoryItemMinified
     {
         // todo - minify this class
         public bool Player { get; set; }
         public bool IsPieceChangeType { get; set; }
-        public bool IsKill { get; set; }
+        public bool IsKill => From.X - To.X > 1 || To.X - From.X > 1;
         public Cell From { get; set; }
         public Cell To { get; set; }
         public PieceMinified Captured { get; set; }
 
-        public void Minify(IHistoryItem fromMaximizedSource)
+        public void Minify(IHistoryItem fromMaximizedSource, IBoard board)
         {
-            IsKill = fromMaximizedSource.IsKill;
             IsPieceChangeType = fromMaximizedSource.IsPieceChangeType;
             From = fromMaximizedSource.Move.From;
             To = fromMaximizedSource.Move.To;
@@ -26,11 +25,16 @@ namespace Checkers.Minifications
                 Captured = new PieceMinified();
                 Captured.Minify((Piece)fromMaximizedSource.Captured);
             }
+
+            Player = board.Player1 == fromMaximizedSource.Player;
         }
 
         public void Maximize(IHistoryItem toMaximizedTarget)
         {
-            throw new InvalidOperationException();
+            if (Captured != null)
+            {
+                toMaximizedTarget.Captured = Captured.ToPiece();
+            }
         }
     }
 }

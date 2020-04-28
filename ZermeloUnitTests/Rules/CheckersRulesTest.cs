@@ -10,12 +10,10 @@ using System.Text;
 using Xunit;
 using ZermeloUnitTests.Mocks;
 
-namespace ZermeloUnitTests
+namespace ZermeloUnitTests.Rules
 {
-    public class CheckersRulesTest
+    public class CheckersRulesTest : RulesTestBase
     {
-        IGameRules rules = new CheckersRules(4);
-
         [Fact]
         public void CheckersRulesTest_1()
         {
@@ -46,7 +44,7 @@ namespace ZermeloUnitTests
             var move = new HistoryItem(sourceBoard.ActivePlayer, new Move(new Cell(2, 3), new Cell(3, 2)));
 
             // ACT
-            rules.MakeMove(sourceBoard, move);
+            _rules.MakeMove(sourceBoard, move);
 
             // ASSERT
             AssertBoardsAreEqual(targetBoard, sourceBoard);
@@ -82,7 +80,7 @@ namespace ZermeloUnitTests
             var move = new HistoryItem(sourceBoard.ActivePlayer, new Move(new Cell(0, 3), new Cell(2, 1)));
 
             // ACT
-            rules.MakeMove(sourceBoard, move);
+            _rules.MakeMove(sourceBoard, move);
 
             // ASSERT
             AssertBoardsAreEqual(sourceBoard, targetBoard);
@@ -116,7 +114,7 @@ namespace ZermeloUnitTests
             var move = new HistoryItem(sourceBoard.ActivePlayer, new Move(new Cell(3, 2), new Cell(1, 0)));
 
             // ACT
-            rules.MakeMove(sourceBoard, move);
+            _rules.MakeMove(sourceBoard, move);
 
             // ASSERT
             AssertBoardsAreEqual(sourceBoard, targetBoard);
@@ -150,7 +148,7 @@ namespace ZermeloUnitTests
             var move = new HistoryItem(sourceBoard.ActivePlayer, new Move(new Cell(3, 2), new Cell(2, 3)));
 
             // ACT
-            rules.MakeMove(sourceBoard, move);
+            _rules.MakeMove(sourceBoard, move);
 
             // ASSERT
             AssertBoardsAreEqual(sourceBoard, targetBoard);
@@ -185,23 +183,10 @@ namespace ZermeloUnitTests
             var move = new HistoryItem(sourceBoard.ActivePlayer, new Move(new Cell(2, 4), new Cell(0, 2)));
 
             // ACT
-            rules.MakeMove(sourceBoard, move);
+            _rules.MakeMove(sourceBoard, move);
 
             // ASSERT
             AssertBoardsAreEqual(sourceBoard, targetBoard);
-        }
-
-        private void AssertBoardsAreEqual(BoardMock a, BoardMock b)
-        {
-            a.Player1.Figures
-                .Should()
-                .BeEquivalentTo(b.Player1.Figures);
-            
-            a.Player2.Figures
-                .Should()
-                .BeEquivalentTo(b.Player2.Figures);
-
-            a.ActivePlayer.Name.Should().BeEquivalentTo(b.ActivePlayer.Name);
         }
     }
 }

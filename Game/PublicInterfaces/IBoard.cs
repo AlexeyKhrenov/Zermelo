@@ -8,6 +8,8 @@ namespace Game.PublicInterfaces
     {
         IPlayer ActivePlayer { get; }
 
+        IPlayer AwaitingPlayer { get; }
+
         IPlayer Player1 { get; }
 
         IPlayer Player2 { get; }

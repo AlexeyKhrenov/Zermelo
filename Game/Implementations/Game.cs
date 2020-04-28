@@ -48,7 +48,7 @@ namespace Game.Implementations
             var move = _history.Pop();
             var lastMoveBeforeUndo = _history.Latest;
 
-            //Rules.Undo(this, move, lastMoveBeforeUndo);
+            Rules.Undo(Board, move, lastMoveBeforeUndo);
         }
     }
 }

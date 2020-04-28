@@ -45,10 +45,11 @@ namespace Checkers
             minBoard.Minify(board);
 
             var minMove = new HistoryItemMinified();
-            minMove.Minify(move);
+            minMove.Minify(move, board);
 
             ChainOfRules.ApplyRule(minBoard, minMove);
             minBoard.Maximize(board);
+            minMove.Maximize(move);
         }
 
         public void Undo(IBoard board, IHistoryItem toUndo, IHistoryItem lastMoveBeforeUndo)
@@ -57,12 +58,18 @@ namespace Checkers
             minBoard.Minify(board);
 
             var minToUndo = new HistoryItemMinified();
-            minToUndo.Minify(toUndo);
+            minToUndo.Minify(toUndo, board);
 
-            var minLastMove = new HistoryItemMinified();
-            minLastMove.Minify(toUndo);
+
+            HistoryItemMinified minLastMove = null;
+            if (lastMoveBeforeUndo != null)
+            {
+                minLastMove = new HistoryItemMinified();
+                minLastMove.Minify(lastMoveBeforeUndo, board);
+            }
 
             ChainOfRules.UndoRule(minBoard, minToUndo, minLastMove);
+            minBoard.Maximize(board);
         }
     }
 }

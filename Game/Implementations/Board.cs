@@ -14,6 +14,8 @@ namespace Game.Implementations
 
         public IPlayer ActivePlayer { get; set; }
 
+        public IPlayer AwaitingPlayer { get; set; }
+
         public int Size { get; private set; }
 
         public bool InvertedCoordinates { get; private set; }
@@ -39,10 +41,12 @@ namespace Game.Implementations
             if (ActivePlayer == Player1)
             {
                 ActivePlayer = Player2;
+                AwaitingPlayer = Player1;
             }
             else
             {
                 ActivePlayer = Player1;
+                AwaitingPlayer = Player2;
             }
         }
     }

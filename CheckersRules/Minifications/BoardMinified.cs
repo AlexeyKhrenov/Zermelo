@@ -7,7 +7,7 @@ using System.Text;
 namespace Checkers.Minifications
 {
     // todo - this should become a struct with methods
-    internal class BoardMinified : IMementoMinification<IBoard>
+    internal class BoardMinified
     {
         public PieceMinified[,] Pieces { get; set; }
 
@@ -59,18 +59,17 @@ namespace Checkers.Minifications
             Pieces[x1, y1] = Pieces[x0, y0];
             Pieces[x0, y0] = null;
 
-            if (ActivePlayer)
+            // todo - optimize it along with Linq removal and collections
+            var piece = Player1Pieces.FirstOrDefault(f => f.X == x0 && f.Y == y0);
+
+
+            if (piece == null)
             {
-                var piece = Player1Pieces.First(f => f.X == x0 && f.Y == y0);
-                piece.X = x1;
-                piece.Y = y1;
+                piece = Player2Pieces.First(f => f.X == x0 && f.Y == y0);
             }
-            else
-            {
-                var piece = Player2Pieces.First(f => f.X == x0 && f.Y == y0);
-                piece.X = x1;
-                piece.Y = y1;
-            }
+
+            piece.X = x1;
+            piece.Y = y1;
         }
 
         internal void RestorePiece(PieceMinified captured, bool player)

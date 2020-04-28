@@ -11,8 +11,6 @@ namespace Checkers.Rules
     {
         public override void ApplyRule(BoardMinified board, HistoryItemMinified latestMove)
         {
-            latestMove.IsKill = latestMove.From.X - latestMove.To.X > 1 || latestMove.From.X - latestMove.To.X < -1;
-
             if (latestMove.IsKill)
             {
                 var capturedPieceX = (latestMove.From.X + latestMove.To.X) / 2;
