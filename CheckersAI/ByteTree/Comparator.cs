@@ -2,9 +2,7 @@
 
 namespace CheckersAI.ByteTree
 {
-    internal class Comparator :
-        CheckersAI.TreeSearch.IComparator<sbyte>,
-        CheckersAI.MultithreadedTreeSearch.IComparator<sbyte>
+    internal class Comparator : TreeSearch.IComparator<sbyte>
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool IsBigger(sbyte a, sbyte b)

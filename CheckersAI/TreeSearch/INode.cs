@@ -2,13 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace CheckersAI.Tree
+namespace CheckersAI.TreeSearch
 {
     // such generic arguments to avoid unboxing
-    internal interface INode<TNode, TValue> where TNode : INode<TNode, TValue> where TValue : struct
+    internal interface INode<TNode, TMetric> where TMetric : struct where TNode : INode<TNode, TMetric>
     {
-        TValue Value { get; set; }
-
         TNode[] Children { get; set; }
 
         bool IsMaxPlayer { get; }

@@ -11,8 +11,7 @@ namespace Benchmarking
         static void Main(string[] args)
         {
             var r = new AlfaBetaSearchBenchmark();
-            var r1 = r.EvaluateTree();
-            var r3 = r.EvaluateTreeMultithreaded();
+            var r1 = r.EvaluateTreeSerial();
 
             BenchmarkRunner.Run<AlfaBetaSearchBenchmark>();
         }

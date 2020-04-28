@@ -5,19 +5,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="PracticeBoard.cs" />
+    <Compile Remove="CheckersGameTree\Brancher.cs" />
+    <Compile Remove="CheckersGameTree\Evaluator.cs" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="PracticeBoard.cs" />
+    <None Include="CheckersGameTree\Brancher.cs" />
+    <None Include="CheckersGameTree\Evaluator.cs" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\CheckersRules\Checkers.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Tree\" />
   </ItemGroup>
 
 </Project>

@@ -1,11 +1,6 @@
-﻿using CheckersAI.Tree;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace CheckersAI.TreeSearch
+﻿namespace CheckersAI.TreeSearch
 {
-    internal interface IBrancher<TNode, TValue> where TNode : INode<TNode, TValue> where TValue : struct
+    internal interface IBrancher<TNode, TMetric> where TNode : INode<TNode, TMetric> where TMetric : struct
     {
         void Branch(TNode node);
     }
