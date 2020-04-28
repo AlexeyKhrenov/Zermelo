@@ -20,6 +20,7 @@ namespace Benchmarking
             var evaluator = new Evaluator();
             
             _serial = new AlfaBetaSearch<ByteNode, sbyte>(evaluator, brancher, comparator, sbyte.MaxValue, sbyte.MinValue);
+            _serialTree = TreeGenerator.ReadTree();
         }
 
         [Benchmark]

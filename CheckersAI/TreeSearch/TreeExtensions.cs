@@ -18,9 +18,9 @@ namespace CheckersAI.TreeSearch
             }
 
             var next = root;
-            int count = -1;
+            int count = 0;
 
-            while (next != null)
+            while (next.Children != null && next.Children.Length != 0)
             {
                 next = next.Children[0];
                 count++;
