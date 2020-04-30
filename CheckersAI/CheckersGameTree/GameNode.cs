@@ -1,11 +1,18 @@
 ﻿using CheckersAI.TreeSearch;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using Game.Primitives;
 
 namespace CheckersAI.CheckersGameTree
 {
-    public class GameNode : INode<GameNode, sbyte>
+    public class GameNode : INode<GameNode>
     {
+        public GameNode[] Children { get; set; }
+
+        public Move Move{ get; set; }
+
+        public bool IsMaxPlayer { get; set; }
+
+        public GameNode(bool isMaxPlayer)
+        {
+        }
     }
 }

@@ -5,19 +5,19 @@ namespace Checkers.Rules
 {
     internal class DetectAvailableMovesRule : AbstractRule
     {
-        public override void ApplyRule(BoardMinified board, HistoryItemMinified latestMove)
+        public override BoardMinified ApplyRule(BoardMinified board, HistoryItemMinified latestMove)
         {
             CheckRule(board, latestMove);
-            Next(board, latestMove);
+            return Next(board, latestMove);
         }
 
-        public override void UndoRule(BoardMinified board, HistoryItemMinified toUndo, HistoryItemMinified lastMoveBeforeUndo)
+        public override BoardMinified UndoRule(BoardMinified board, HistoryItemMinified toUndo, HistoryItemMinified lastMoveBeforeUndo)
         {
             CheckRule(board, toUndo);
-            NextUndo(board, toUndo, lastMoveBeforeUndo);
+            return NextUndo(board, toUndo, lastMoveBeforeUndo);
         }
 
-        private void CheckRule(BoardMinified board, HistoryItemMinified latestMove)
+        private BoardMinified CheckRule(BoardMinified board, HistoryItemMinified latestMove)
         {
             foreach (var figure in board.ActiveSet)
             {
@@ -52,6 +52,8 @@ namespace Checkers.Rules
                     }
                 }
             }
+
+            return board;
         }
 
         public void Check(PieceMinified piece, PieceMinified[,] pieces, int directionDown, int directionRight)

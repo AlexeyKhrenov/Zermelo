@@ -7,7 +7,7 @@ using System.Text;
 namespace Checkers.Minifications
 {
     // todo - this should become a struct with methods
-    internal class BoardMinified
+    internal struct BoardMinified
     {
         public PieceMinified[,] Pieces { get; set; }
 

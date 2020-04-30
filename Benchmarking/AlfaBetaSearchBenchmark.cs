@@ -10,7 +10,7 @@ namespace Benchmarking
     [RankColumn]
     public class AlfaBetaSearchBenchmark
     {
-        private AlfaBetaSearch<ByteNode, sbyte> _serial;
+        private AlfaBetaSearch<ByteNode, sbyte, sbyte> _serial;
         private ByteNode _serialTree;
 
         public AlfaBetaSearchBenchmark()
@@ -18,8 +18,15 @@ namespace Benchmarking
             var comparator = new Comparator();
             var brancher = new BrancherMock();
             var evaluator = new Evaluator();
+            var stateTransitions = new StateTransitions();
             
-            _serial = new AlfaBetaSearch<ByteNode, sbyte>(evaluator, brancher, comparator, sbyte.MaxValue, sbyte.MinValue);
+            _serial = new AlfaBetaSearch<ByteNode, sbyte, sbyte>(
+                evaluator,
+                brancher,
+                comparator,
+                stateTransitions,
+                sbyte.MaxValue,
+                sbyte.MinValue);
             _serialTree = TreeGenerator.ReadTree();
         }
 
@@ -30,7 +37,8 @@ namespace Benchmarking
                 _serialTree,
                 _serialTree.GetDepth<ByteNode, sbyte>(),
                 sbyte.MinValue,
-                sbyte.MaxValue
+                sbyte.MaxValue,
+                0
             );
         }
     }

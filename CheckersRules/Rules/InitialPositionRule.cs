@@ -8,7 +8,7 @@ namespace Checkers.Rules
 {
     internal class InitialPositionRule : AbstractRule
     {
-        public override void ApplyRule(BoardMinified board, HistoryItemMinified latestMove)
+        public override BoardMinified ApplyRule(BoardMinified board, HistoryItemMinified latestMove)
         {
             var size = board.GetSize();
             var changedSides = board.InvertedCoordinates;
@@ -47,10 +47,10 @@ namespace Checkers.Rules
             board.Player1Pieces = player1Figures;
             board.Player2Pieces = player2Figures;
 
-            Next(board, null);
+            return Next(board, null);
         }
 
-        public override void UndoRule(BoardMinified board, HistoryItemMinified toUndo, HistoryItemMinified lastMoveBeforeUndo)
+        public override BoardMinified UndoRule(BoardMinified board, HistoryItemMinified toUndo, HistoryItemMinified lastMoveBeforeUndo)
         {
             throw new InvalidOperationException();
         }

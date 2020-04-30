@@ -2,12 +2,12 @@
 
 namespace CheckersAI.ByteTree
 {
-    internal class Evaluator : TreeSearch.IEvaluator<ByteNode, sbyte>
+    internal class Evaluator : TreeSearch.IEvaluator<sbyte, sbyte>
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public sbyte Evaluate(ByteNode node)
+        public sbyte Evaluate(sbyte state)
         {
-            return node.Value;
+            return state;
         }
     }
 }

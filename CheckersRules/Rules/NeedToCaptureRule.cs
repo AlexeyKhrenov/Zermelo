@@ -10,7 +10,7 @@ namespace Checkers.Rules
 {
     internal class NeedToCaptureRule : AbstractRule
     {
-        public override void ApplyRule(BoardMinified board, HistoryItemMinified latestMove)
+        public override BoardMinified ApplyRule(BoardMinified board, HistoryItemMinified latestMove)
         {
             var needToPassControl = true;
 
@@ -21,11 +21,13 @@ namespace Checkers.Rules
 
             if (needToPassControl)
             {
-                Next(board, latestMove);
+                return Next(board, latestMove);
             }
+
+            return board;
         }
 
-        public override void UndoRule(BoardMinified board, HistoryItemMinified toUndo, HistoryItemMinified lastMoveBeforeUndo)
+        public override BoardMinified UndoRule(BoardMinified board, HistoryItemMinified toUndo, HistoryItemMinified lastMoveBeforeUndo)
         {
             var needToPassControl = true;
 
@@ -36,8 +38,10 @@ namespace Checkers.Rules
 
             if (needToPassControl)
             {
-                NextUndo(board, toUndo, lastMoveBeforeUndo);
+                return NextUndo(board, toUndo, lastMoveBeforeUndo);
             }
+
+            return board;
         }
 
         // returns true if a piece to capture was detected

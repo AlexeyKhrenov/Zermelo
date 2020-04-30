@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace CheckersAI.CheckersGameTree
 {
-    internal class Evaluator : TreeSearch.IEvaluator<GameNode, sbyte>
+    internal class Evaluator : TreeSearch.IEvaluator<BoardMinified, sbyte>
     {
         private bool _playsFor1Player;
 
@@ -13,14 +13,15 @@ namespace CheckersAI.CheckersGameTree
             _playsFor1Player = playsFor1Player;
         }
 
-        public sbyte Evaluate(GameNode node)
+        public sbyte Evaluate(BoardMinified board)
         {
             // simply count available moves and checks if winning position
             return _playsFor1Player
-                ? Count(node.Board.Player1Pieces, node.Board.Player2Pieces)
-                : Count(node.Board.Player2Pieces, node.Board.Player1Pieces);
+                ? Count(board.Player1Pieces, board.Player2Pieces)
+                : Count(board.Player2Pieces, board.Player1Pieces);
         }
 
+        // todo - perfomance arch valuable point
         private sbyte Count(List<PieceMinified> myPieces, List<PieceMinified> hisPieces)
         {
             if (hisPieces.Count == 0)

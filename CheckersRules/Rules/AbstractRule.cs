@@ -5,9 +5,9 @@ namespace Checkers.Rules
 {
     internal abstract class AbstractRule
     {
-        public abstract void ApplyRule(BoardMinified board, HistoryItemMinified move);
+        public abstract BoardMinified ApplyRule(BoardMinified board, HistoryItemMinified move);
 
-        public abstract void UndoRule(BoardMinified board, HistoryItemMinified toUndo, HistoryItemMinified lastMoveBeforeUndo);
+        public abstract BoardMinified UndoRule(BoardMinified board, HistoryItemMinified toUndo, HistoryItemMinified lastMoveBeforeUndo);
 
         private AbstractRule NextRule;
 
@@ -23,14 +23,28 @@ namespace Checkers.Rules
             }
         }
 
-        protected void Next(BoardMinified board, HistoryItemMinified latestMove)
+        protected BoardMinified Next(BoardMinified board, HistoryItemMinified latestMove)
         {
-            NextRule?.ApplyRule(board, latestMove);
+            if (NextRule != null)
+            {
+                return NextRule.ApplyRule(board, latestMove);
+            }
+            else
+            {
+                return board;
+            }
         }
 
-        protected void NextUndo(BoardMinified board, HistoryItemMinified toUndo, HistoryItemMinified lastMoveBeforeUndo)
+        protected BoardMinified NextUndo(BoardMinified board, HistoryItemMinified toUndo, HistoryItemMinified lastMoveBeforeUndo)
         {
-            NextRule?.UndoRule(board, toUndo, lastMoveBeforeUndo);
+            if (NextRule != null)
+            {
+                return NextRule.UndoRule(board, toUndo, lastMoveBeforeUndo);
+            }
+            else
+            {
+                return board;
+            }
         }
     }
 }

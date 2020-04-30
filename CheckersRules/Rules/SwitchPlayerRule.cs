@@ -8,20 +8,20 @@ namespace Checkers.Rules
 {
     internal class SwitchPlayerRule : AbstractRule
     {
-        public override void ApplyRule(BoardMinified board, HistoryItemMinified latestMove)
+        public override BoardMinified ApplyRule(BoardMinified board, HistoryItemMinified latestMove)
         {
             board.SwitchPlayers();
-            Next(board, latestMove);
+            return Next(board, latestMove);
         }
 
-        public override void UndoRule(BoardMinified board, HistoryItemMinified toUndo, HistoryItemMinified lastMoveBeforeUndo)
+        public override BoardMinified UndoRule(BoardMinified board, HistoryItemMinified toUndo, HistoryItemMinified lastMoveBeforeUndo)
         {
             if (board.ActivePlayer != toUndo.Player)
             {
                 board.SwitchPlayers();
             }
             
-            NextUndo(board, toUndo, lastMoveBeforeUndo);
+            return NextUndo(board, toUndo, lastMoveBeforeUndo);
         }
     }
 }

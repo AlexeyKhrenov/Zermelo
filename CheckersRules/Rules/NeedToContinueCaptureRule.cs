@@ -8,7 +8,7 @@ namespace Checkers.Rules
 {
     internal class NeedToContinueCaptureRule : AbstractRule
     {
-        public override void ApplyRule(BoardMinified board, HistoryItemMinified latestMove)
+        public override BoardMinified ApplyRule(BoardMinified board, HistoryItemMinified latestMove)
         {
             if (latestMove.IsKill)
             {
@@ -16,14 +16,14 @@ namespace Checkers.Rules
 
                 if (NeedToCaptureRule.Check(piece, board.Pieces))
                 {
-                    return;
+                    return board;
                 }
             }
 
-            Next(board, latestMove);
+            return Next(board, latestMove);
         }
 
-        public override void UndoRule(BoardMinified board, HistoryItemMinified toUndo, HistoryItemMinified lastMoveBeforeUndo)
+        public override BoardMinified UndoRule(BoardMinified board, HistoryItemMinified toUndo, HistoryItemMinified lastMoveBeforeUndo)
         {
             if (
                 lastMoveBeforeUndo != null &&
@@ -40,11 +40,11 @@ namespace Checkers.Rules
                     board.SwitchPlayers();
                 }
 
-                return;
+                return board;
             }
             else
             {
-                NextUndo(board, toUndo, lastMoveBeforeUndo);
+                return NextUndo(board, toUndo, lastMoveBeforeUndo);
             }
         }
     }

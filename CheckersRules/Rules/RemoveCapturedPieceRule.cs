@@ -9,7 +9,7 @@ namespace Checkers.Rules
 {
     internal class RemoveCapturedPieceRule : AbstractRule
     {
-        public override void ApplyRule(BoardMinified board, HistoryItemMinified latestMove)
+        public override BoardMinified ApplyRule(BoardMinified board, HistoryItemMinified latestMove)
         {
             if (latestMove.IsKill)
             {
@@ -19,10 +19,10 @@ namespace Checkers.Rules
                 latestMove.Captured = board.RemovePiece(capturedPieceX, capturedPieceY, !board.ActivePlayer);
             }
 
-            Next(board, latestMove);
+            return Next(board, latestMove);
         }
 
-        public override void UndoRule(BoardMinified board, HistoryItemMinified toUndo, HistoryItemMinified lastMoveBeforeUndo)
+        public override BoardMinified UndoRule(BoardMinified board, HistoryItemMinified toUndo, HistoryItemMinified lastMoveBeforeUndo)
         {
             if (toUndo.IsKill)
             {
@@ -30,7 +30,7 @@ namespace Checkers.Rules
                 board.RestorePiece(captured, !toUndo.Player);
             }
 
-            NextUndo(board, toUndo, lastMoveBeforeUndo);
+            return NextUndo(board, toUndo, lastMoveBeforeUndo);
         }
     }
 }

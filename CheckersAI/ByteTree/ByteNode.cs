@@ -4,15 +4,15 @@ namespace CheckersAI.ByteTree
 {
     internal class ByteNode : INode<ByteNode>
     {
-        public sbyte Value { get; set; }
+        public sbyte ValueChange { get; set; }
 
         public ByteNode[] Children { get; set; }
 
         public bool IsMaxPlayer { get; set; }
 
-        public ByteNode(sbyte value, bool isMaxPlayer, params ByteNode[] children)
+        public ByteNode(sbyte valueChange, bool isMaxPlayer, params ByteNode[] children)
         {
-            Value = value;
+            ValueChange = valueChange;
             IsMaxPlayer = isMaxPlayer;
             Children = children;
         }
