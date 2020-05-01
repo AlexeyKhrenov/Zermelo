@@ -10,7 +10,7 @@ namespace Benchmarking
     {
         public static void GenerateTree()
         {
-            var randomTree = GenerateTree(1024 * 1024);
+            var randomTree = GenerateTree(20);
             File.WriteAllText("../../../RandomByteTree.txt", randomTree);
         }
 
@@ -20,21 +20,26 @@ namespace Benchmarking
             return ParseByteTree(randomTree, 4);
         }
 
-        public static string GenerateTree(int size)
+        public static string GenerateTree(int depth)
         {
             var rand = new Random();
-            var buffer = new byte[size];
-            rand.NextBytes(buffer);
-
             var builder = new StringBuilder();
-            builder.Append(buffer[0]);
-
-            for (var i = 1; i < buffer.Length; i++)
+            
+            while (depth >= 0)
             {
-                builder.Append(' ');
-                builder.Append((sbyte)buffer[i]);
-            }
+                var buffer = new byte[(int) Math.Pow(2, depth)];
+                rand.NextBytes(buffer);
 
+                builder.Append(buffer[0]);
+                for (var i = 1; i < buffer.Length; i++)
+                {
+                    builder.Append(' ');
+                    builder.Append((sbyte)buffer[i]);
+                }
+
+                depth--;
+            }
+            
             return builder.ToString();
         }
 
@@ -42,32 +47,50 @@ namespace Benchmarking
         {
             var bytes = tree.Split(' ');
 
-            var depth = Math.Log(bytes.Length, branchingFactor);
+            var depth = -1;
+            var sum = 0;
 
-            if (depth % 1 != 0)
+            while (sum < bytes.Length)
             {
-                throw new ArgumentException("Invalid branching factor");
+                depth++;
+                sum += (int) Math.Pow(branchingFactor, depth);
             }
 
-            var isMaxPlayer = depth % 2 == 0;
-
+            if (sum != bytes.Length)
+            {
+                throw new ArgumentException("Tree of unequal depth");
+            }
+            
             var queue = new Queue<ByteNode>();
+            var startDequeue = false;
+            var bottomLevel = (int) Math.Pow(branchingFactor, depth);
 
-            foreach (var b in bytes)
+            for (var i = bytes.Length - 1; i >= 0; i--)
             {
-                queue.Enqueue(new ByteNode(sbyte.Parse(b), isMaxPlayer));
-            }
+                ByteNode node;
 
-            while (queue.Count != 1)
-            {
-                var nodes = new ByteNode[branchingFactor];
-
-                for (var i = 0; i < branchingFactor; i++)
+                if (queue.Count == bottomLevel)
                 {
-                    nodes[i] = queue.Dequeue();
+                    startDequeue = true;
                 }
 
-                queue.Enqueue(new ByteNode(0, !nodes[0].IsMaxPlayer, nodes));
+                if (startDequeue)
+                {
+                    var children = new ByteNode[branchingFactor];
+                    for (var j = 0; j < branchingFactor; j++)
+                    {
+                        children[j] = queue.Dequeue();
+                    }
+                    
+                    node = new ByteNode(sbyte.Parse(bytes[i]), !children[0].IsMaxPlayer, children);
+                }
+                else
+                {
+                    var children = new ByteNode[0];
+                    node = new ByteNode(sbyte.Parse(bytes[i]), depth % 2 == 0, children);
+                }
+                    
+                queue.Enqueue(node);
             }
 
             return queue.Dequeue();

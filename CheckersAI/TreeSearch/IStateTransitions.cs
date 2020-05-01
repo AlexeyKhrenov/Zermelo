@@ -4,9 +4,10 @@ using System.Text;
 
 namespace CheckersAI.TreeSearch
 {
-    internal interface IStateTransitions<TState, TNode>
-        where TNode : INode<TNode>
+    internal interface IStateTransitions<TState, TNode, TMetric>
+        where TNode : INode<TNode, TMetric>
         where TState : struct
+        where TMetric : struct
     {
         TState GoUp(TState state, TNode node);
 

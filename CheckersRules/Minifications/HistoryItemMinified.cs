@@ -14,6 +14,17 @@ namespace Checkers.Minifications
         public Cell To { get; set; }
         public PieceMinified Captured { get; set; }
 
+        public HistoryItemMinified()
+        {
+        }
+
+        public HistoryItemMinified(Cell from, Cell to, bool activePlayer)
+        {
+            From = from;
+            To = to;
+            Player = activePlayer;
+        }
+
         public void Minify(IHistoryItem fromMaximizedSource, IBoard board)
         {
             IsPieceChangeType = fromMaximizedSource.IsPieceChangeType;

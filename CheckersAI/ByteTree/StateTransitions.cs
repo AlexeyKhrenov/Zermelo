@@ -5,7 +5,7 @@ using System.Text;
 
 namespace CheckersAI.ByteTree
 {
-    internal class StateTransitions : IStateTransitions<sbyte, ByteNode>
+    internal class StateTransitions : IStateTransitions<sbyte, ByteNode, sbyte>
     {
         public sbyte GoDown(sbyte state, ByteNode node)
         {

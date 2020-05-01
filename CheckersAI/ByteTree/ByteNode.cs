@@ -2,8 +2,10 @@
 
 namespace CheckersAI.ByteTree
 {
-    internal class ByteNode : INode<ByteNode>
+    internal class ByteNode : INode<ByteNode, sbyte>
     {
+        public sbyte Result { get; set; }
+
         public sbyte ValueChange { get; set; }
 
         public ByteNode[] Children { get; set; }

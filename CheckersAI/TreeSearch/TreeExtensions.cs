@@ -10,7 +10,8 @@ namespace CheckersAI.TreeSearch
         /// shows the depth of the left branch of the tree
         /// </summary>
         public static int GetDepth<TNode, TMetric>(this TNode root)
-            where TNode : INode<TNode>
+            where TNode : INode<TNode, TMetric>
+            where TMetric : struct
         {
             if (root == null)
             {
@@ -28,8 +29,9 @@ namespace CheckersAI.TreeSearch
             return count;
         }
 
-        public static List<TNode> ToList<TNode>(this TNode root)
-            where TNode : INode<TNode>
+        public static List<TNode> ToList<TNode, TMetric>(this TNode root)
+            where TNode : INode<TNode, TMetric>
+            where TMetric : struct
         {
             if (root == null)
             {

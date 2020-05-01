@@ -5,9 +5,9 @@ using CheckersAI.TreeSearch;
 
 namespace CheckersAI.ByteTree
 {
-    internal class BrancherMock : IBrancher<ByteNode>
+    internal class Brancher : IBrancher<ByteNode, sbyte, sbyte>
     {
-        public void Branch(ByteNode node)
+        public void Branch(ByteNode node, sbyte state)
         {
             if (node.Children != null && node.Children.Length > 0)
             {

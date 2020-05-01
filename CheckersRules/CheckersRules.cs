@@ -10,15 +10,12 @@ namespace Checkers
     // todo - checkers rules appender or host or assembler
     internal class CheckersRules : IGameRules
     {
-        private int _size;
-
         //todo - create several chains of responsibility for different situations
         private AbstractRule ChainOfRules;
         private AbstractRule InitialPositionRules;
 
-        public CheckersRules(int Size)
+        public CheckersRules()
         {
-            _size = Size;
             ChainOfRules = new AppendMoveRule();
             ChainOfRules.AddNext(new RemoveCapturedPieceRule());
             ChainOfRules.AddNext(new ChangePieceTypeRule());
@@ -47,7 +44,7 @@ namespace Checkers
             var minMove = new HistoryItemMinified();
             minMove.Minify(move, board);
 
-            minBoard = ChainOfRules.ApplyRule(minBoard, minMove);
+            minBoard = MakeMove(minBoard, minMove);
             minBoard.Maximize(board);
             minMove.Maximize(move);
         }
@@ -60,7 +57,6 @@ namespace Checkers
             var minToUndo = new HistoryItemMinified();
             minToUndo.Minify(toUndo, board);
 
-
             HistoryItemMinified minLastMove = null;
             if (lastMoveBeforeUndo != null)
             {
@@ -70,6 +66,16 @@ namespace Checkers
 
             minBoard = ChainOfRules.UndoRule(minBoard, minToUndo, minLastMove);
             minBoard.Maximize(board);
+        }
+
+        internal BoardMinified MakeMove(BoardMinified board, HistoryItemMinified move)
+        {
+            return ChainOfRules.ApplyRule(board, move);
+        }
+
+        internal BoardMinified UndoMove(BoardMinified board, HistoryItemMinified move, HistoryItemMinified undoMove)
+        {
+            return ChainOfRules.UndoRule(board, move, undoMove);
         }
     }
 }

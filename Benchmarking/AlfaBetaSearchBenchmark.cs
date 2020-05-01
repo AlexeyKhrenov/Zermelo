@@ -16,7 +16,7 @@ namespace Benchmarking
         public AlfaBetaSearchBenchmark()
         {
             var comparator = new Comparator();
-            var brancher = new BrancherMock();
+            var brancher = new Brancher();
             var evaluator = new Evaluator();
             var stateTransitions = new StateTransitions();
             

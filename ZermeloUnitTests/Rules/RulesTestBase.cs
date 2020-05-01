@@ -7,8 +7,7 @@ namespace ZermeloUnitTests.Rules
 {
     public class RulesTestBase
     {
-        // todo - do we really need rules have size?
-        protected IGameRules _rules = new CheckersRules(4);
+        protected IGameRules _rules = new CheckersRules();
 
         protected void AssertBoardsAreEqual(BoardMock targetBoard, BoardMock sourceBoard)
         {

@@ -12,7 +12,7 @@ namespace ZermeloUnitTests.Search
         public SearchWithoutBranchingTest()
         {
             var comparator = new Comparator();
-            var brancher = new BrancherMock();
+            var brancher = new Brancher();
             var evaluator = new Evaluator();
             var stateTransitions = new StateTransitions();
             _search = new AlfaBetaSearch<ByteNode, sbyte, sbyte>(
@@ -26,17 +26,16 @@ namespace ZermeloUnitTests.Search
         }
 
         [Theory]
-        [InlineData("1", 1, 0)]
-        [InlineData("2 1", 2, 1)]
-        [InlineData("2 7 1 8", 2, 2)]
-        [InlineData("1 3 5 1 1 1 0 9", 3, 3)]
-        [InlineData("8 7 3 9 9 8 2 4 1 8 8 9 9 9 3 4", 8, 4)]
-        public void SearchWithoutBranchingTheory(string treeStr, sbyte expected, int depth)
+        [InlineData("1", 4, 0, 3)]
+        [InlineData("7 -2 -3", 3, 1, -2)]
+        [InlineData("1 -2 0 -6 8 1 0", 1, 2, 0)]
+        [InlineData("2 -1 -3 -4 0 7 2 1 1 13 -5 0 -6 -7 3", 9, 3, 5)]
+        public void SearchWithoutBranchingTheory(string treeStr, sbyte expected, int depth, sbyte startState)
         {
             var tree = TreeGenerator.ParseByteTree(treeStr, 2);
 
             // todo - add start value
-            var actual = _search.Search(tree, depth, sbyte.MinValue, sbyte.MaxValue, 0);
+            var actual = _search.Search(tree, depth, sbyte.MinValue, sbyte.MaxValue, startState);
             Assert.Equal(expected, actual);
         }
     }
