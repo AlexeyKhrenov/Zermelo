@@ -113,6 +113,20 @@ namespace Checkers.Minifications
             }
         }
 
+        // todo - remove after it becomes a structure
+        public void ClearMoves()
+        {
+            foreach (var figure in Player1Pieces)
+            {
+                figure.AvailableMoves.Clear();
+            }
+
+            foreach (var figure in Player2Pieces)
+            {
+                figure.AvailableMoves.Clear();
+            }
+        }
+
         public void Maximize(IBoard to)
         {
             to.Player1.Figures = Player1Pieces.Select(x => x.ToPiece()).ToList();

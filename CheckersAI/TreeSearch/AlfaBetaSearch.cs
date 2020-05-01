@@ -32,16 +32,16 @@
 
         public TMetric Search(TNode node, int depth, TMetric alfa, TMetric beta, TState state)
         {
-            if (depth == 0)
+            if (node.Children == null && depth > 0)
+            {
+                _brancher.Branch(node, state);
+            }
+
+            if (depth == 0 || node.Children.Length == 0)
             {
                 var result = _evaluator.Evaluate(state);
                 node.Result = result;
                 return result;
-            }
-
-            if ((node.Children == null || node.Children.Length == 0) && depth > 0)
-            {
-                _brancher.Branch(node, state);
             }
 
             if (node.IsMaxPlayer)

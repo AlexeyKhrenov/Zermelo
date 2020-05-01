@@ -9,6 +9,8 @@ namespace Game.PublicInterfaces
     {
         string Name { get; }
 
+        bool IsComputerPlayer { get; }
+
         void MakeMove(IBoard board, IGame rules, CancellationToken cancellationToken);
 
         IEnumerable<IFigure> Figures { get; set; }

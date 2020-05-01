@@ -17,5 +17,10 @@
             From = from;
             To = to;
         }
+
+        public override string ToString()
+        {
+            return $"{From.X}, {From.Y} -> {To.X}, {To.Y}";
+        }
     }
 }

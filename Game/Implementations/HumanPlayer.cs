@@ -11,6 +11,8 @@ namespace Game.Implementations
         private string _name;
         public string Name => _name + " (human)";
 
+        public bool IsComputerPlayer => false;
+
         public IEnumerable<IFigure> Figures { get; set; }
 
         public HumanPlayer(string name)

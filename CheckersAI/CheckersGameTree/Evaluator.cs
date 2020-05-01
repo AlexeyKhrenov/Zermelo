@@ -29,6 +29,11 @@ namespace CheckersAI.CheckersGameTree
                 return sbyte.MaxValue;
             }
 
+            if (myPieces.Count == 0)
+            {
+                return sbyte.MinValue;
+            }
+
             sbyte result = 0;
 
             foreach (var piece in myPieces)

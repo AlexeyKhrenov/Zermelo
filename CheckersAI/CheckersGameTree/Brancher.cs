@@ -8,11 +8,8 @@ namespace CheckersAI.CheckersGameTree
 {
     internal class Brancher : IBrancher<GameNode, BoardMinified, sbyte>
     {
-        private CheckersRules _rules;
-
-        public Brancher(CheckersRules rules)
+        public Brancher()
         {
-            _rules = rules;
         }
 
         public void Branch(GameNode node, BoardMinified practiceBoard)
@@ -27,7 +24,7 @@ namespace CheckersAI.CheckersGameTree
                     child.Move = new HistoryItemMinified(new Cell(piece.X, piece.Y), move, practiceBoard.ActivePlayer);
 
                     // todo - remove - duplicated information
-                    child.IsMaxPlayer = practiceBoard.ActivePlayer;
+                    child.IsMaxPlayer = !practiceBoard.ActivePlayer;
                     child.Parent = node;
                     children.Add(child);
                 }

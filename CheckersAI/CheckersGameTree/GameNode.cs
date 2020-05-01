@@ -38,5 +38,10 @@ namespace CheckersAI.CheckersGameTree
 
             throw new InvalidOperationException("A node is not evaluated yet");
         }
+
+        public override string ToString()
+        {
+            return $"{Move.From.X},{Move.From.Y}->{Move.To.X},{Move.To.Y}  Result:{Result}";
+        }
     }
 }

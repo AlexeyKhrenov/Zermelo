@@ -11,6 +11,8 @@ namespace ZermeloUnitTests.Mocks
     {
         public string Name { get; private set; }
 
+        public bool IsComputerPlayer => false;
+
         public IEnumerable<IFigure> Figures { get; set; }
 
         public PlayerMock(string name)

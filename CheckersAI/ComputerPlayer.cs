@@ -13,7 +13,9 @@ namespace CheckersAI
     public class ComputerPlayer : IPlayer
     {
         private string _name;
-        public string Name => _name + " (computer)"; 
+        public string Name => _name + " (computer)";
+
+        public bool IsComputerPlayer => true;
 
         public IEnumerable<IFigure> Figures { get; set; }
 
@@ -37,14 +39,6 @@ namespace CheckersAI
             var figure = Figures.First(x => x.AvailableMoves.Contains(move));
 
             game.Move(new Move(figure.X, figure.Y, move.X, move.Y));
-        }
-
-        public void ClearAvailableMoves()
-        {
-            foreach (var figure in Figures)
-            {
-                figure.AvailableMoves.Clear();
-            }
         }
     }
 }
