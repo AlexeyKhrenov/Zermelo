@@ -19,6 +19,15 @@ namespace CheckersAI
 
         public IEnumerable<IFigure> Figures { get; set; }
 
+        public int MaxPly { get; }
+
+        public int TimeToThinkMs { get; set; }
+
+        // this is not a good idea to implement INotifyPropertyChanged for a single property or
+        // to extend class with a wrapper
+        public delegate void MaxPlyChangedHandler(int newValue);
+        public event MaxPlyChangedHandler MaxPlyChanged;
+
         public ComputerPlayer(string name)
         {
             _name = name;

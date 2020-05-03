@@ -10,10 +10,13 @@ using System.Windows.Input;
 
 namespace ZermeloCheckers.ViewModels
 {
-    class BoardViewModel : INotifyPropertyChanged
+    public class MainViewModel : INotifyPropertyChanged
     {
         // TODO - remove hard-coded value
         public int Size = 8;
+
+        public PlayerViewModel Player1;
+        public PlayerViewModel Player2;
 
         private bool _isUndoEnabled = false;
         public bool IsUndoEnabled
@@ -26,17 +29,6 @@ namespace ZermeloCheckers.ViewModels
             }
         }
 
-        private bool _isStopThinkingEnabled = false;
-        public bool IsStopThinkingEnabled
-        {
-            get { return _isStopThinkingEnabled; }
-            set
-            {
-                _isStopThinkingEnabled = value;
-                RaisePropertyChanged();
-            }
-        }
-
         private ObservableCollection<FigureViewModel> _figures;
 
         public string ActivePlayer => Game?.Board.ActivePlayer.Name;
@@ -45,13 +37,15 @@ namespace ZermeloCheckers.ViewModels
 
         public ICommand StopThinking { get; set; }
 
-        private IGameFactory GameFactory;
-
         private IGame Game;
 
-        public BoardViewModel()
+        public MainViewModel()
         {
-             
+            UndoMoveCommand = new RelayCommand(obj => OnUndoMoveCommand());
+            IsUndoEnabled = false;
+
+            Player1 = new PlayerViewModel("Computer player 1");
+            Player2 = new PlayerViewModel("Computer player 2");
         }
 
         public ObservableCollection<FigureViewModel> Figures
@@ -109,15 +103,20 @@ namespace ZermeloCheckers.ViewModels
             IsUndoEnabled = Game.HistoryLength != 0;
         }
 
-        public BoardViewModel(IGameFactory gameFactory)
+        public void FromModel(IGame game)
         {
-            GameFactory = gameFactory;
+            Game = game;
 
-            var player1 = new HumanPlayer("Player 1");
-            var player2 = new HumanPlayer("Player 2");
+            // still better then iterating through whole board
+            if (Figures != null)
+            {
+                for (var i = Figures.Count - 1; i >= 0; i--)
+                {
+                    Figures.Remove(Figures[i]);
+                }
+            }
 
-            // move size of the game to the config
-            Game = GameFactory.CreateGame(6, false, player1, player2);
+            // todo - change this
             _figures = new ObservableCollection<FigureViewModel>(Game.Board.GetFigures().Select(x => x.ToViewModel()).ToList());
 
             foreach (var figure in _figures)
@@ -125,8 +124,11 @@ namespace ZermeloCheckers.ViewModels
                 figure.FigureMoved += OnFigureMoved;
             }
 
-            UndoMoveCommand = new RelayCommand(obj => OnUndoMoveCommand());
-            IsUndoEnabled = false;
+            Player1.FromModel(Game.Board.Player1);
+            Player2.FromModel(Game.Board.Player2);
+
+            RaisePropertyChanged("Figures");
+            RaisePropertyChanged("ActivePlayer");
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

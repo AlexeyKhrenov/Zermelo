@@ -50,7 +50,6 @@ namespace ZermeloUnitTests.Search
 
             var root = new GameNode();
             root.Move = new HistoryItemMinified(new Cell(1, 1), new Cell(0, 0), false);
-            root.IsMaxPlayer = true;
 
             var practiceBoard = new BoardMinified();
             practiceBoard.Minify(sourceBoard);
@@ -79,7 +78,6 @@ namespace ZermeloUnitTests.Search
 
             var root = new GameNode();
             root.Move = new HistoryItemMinified(new Cell(0, 0), new Cell(1, 1), false);
-            root.IsMaxPlayer = true;
 
             var practiceBoard = new BoardMinified();
             practiceBoard.Minify(sourceBoard);
@@ -107,7 +105,6 @@ namespace ZermeloUnitTests.Search
 
             var root = new GameNode();
             root.Move = null;
-            root.IsMaxPlayer = true;
 
             var practiceBoard = new BoardMinified();
             practiceBoard.Minify(sourceBoard);

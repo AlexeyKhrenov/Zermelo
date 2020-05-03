@@ -6,24 +6,16 @@
         xmlns:local="clr-namespace:ZermeloCheckers"
         xmlns:viewModels="clr-namespace:ZermeloCheckers.ViewModels"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800"
+        Title="MainWindow"
+        ResizeMode="NoResize"
+        Name="MainWindow1"
+        SizeToContent="WidthAndHeight"
 >
     <Window.DataContext>
-        <viewModels:BoardViewModel/>
+        <viewModels:MainViewModel/>
     </Window.DataContext>
 
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="120"/>
-            <ColumnDefinition Width="120"/>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
+    <DockPanel>
         <local:Board
             Grid.Column="0"
             Grid.Row="0"
@@ -31,21 +23,35 @@
             x:Name="gameBoard"
             Height="400"
             Width="400"
+            Margin="60"
             Figures="{Binding Figures}"
         >
         </local:Board>
-        <GroupBox Grid.Column="1" Grid.Row="0"
-                  Grid.ColumnSpan="2"
-                  Header="Computer player" Margin="5" Padding="20">
-            <StackPanel Orientation="Vertical">
-                <TextBlock Margin="2,3,3,2">Max evaluation time, ms:</TextBlock>
-                <TextBox Margin="2,3,3,2"/>
-                <Button Style="{StaticResource MButton}" IsEnabled="{Binding IsStopThinkingEnabled}" Command="{Binding StopThinking}">Stop thinking</Button>
-            </StackPanel>
-        </GroupBox>
-        <TextBlock Margin="4,4,4,6" VerticalAlignment="Center" Grid.Column="1" Grid.Row="1" TextWrapping="Wrap">Active player:</TextBlock>
-        <TextBlock Margin="4,4,4,6" VerticalAlignment="Center" Grid.Column="2" FontWeight="Bold" Grid.Row="1" TextWrapping="Wrap" Text="{Binding ActivePlayer}" />
-        <Button Grid.Column="1" Grid.Row="2" Style="{StaticResource MButton}" IsEnabled="{Binding IsUndoEnabled}"  Command="{Binding UndoMoveCommand}">Undo</Button>
-        <Button Grid.Column="2" Grid.Row="2" Style="{StaticResource MButton}">New game</Button>
-    </Grid>
+        <DockPanel DockPanel.Dock="Right" LastChildFill="False">
+            <local:ComputerPlayerControl
+                DataContext="{Binding Path=Player1}"
+                DockPanel.Dock="Top"
+                Margin="10"
+                MaxPly="{Binding MaxPly}"
+                Title="{Binding Name}"
+                IsEnabled="{Binding IsEnabled}"
+                TimeToThink="{Binding TimeToThink}"
+                x:Name="ComputerPlayerControl1"/>
+            <local:ComputerPlayerControl
+                DockPanel.Dock="Top"
+                Margin="10"
+                DataContext="{Binding ElementName=MainWindow1, Path=DataContext.Player1}"
+                MaxPly="{Binding MaxPly}"
+                Title="{Binding Name}"
+                IsEnabled="{Binding IsEnabled}"
+                TimeToThink="{Binding TimeToThink}"
+                x:Name="ComputerPlayerControl2"/>
+            <Button DockPanel.Dock="Bottom" Grid.Column="2" Margin="10" Grid.Row="3" Style="{StaticResource MButton}" Click="NewGameButtonClick">New game</Button>
+            <DockPanel LastChildFill="False" Margin="10" DockPanel.Dock="Bottom">
+                <TextBlock Margin="4,4,4,6" VerticalAlignment="Center" DockPanel.Dock="Left" Grid.Column="1" Grid.Row="2" TextWrapping="Wrap">Active player:</TextBlock>
+                <TextBlock Margin="4,4,4,6" Width="100" VerticalAlignment="Center" DockPanel.Dock="Left" FontWeight="Bold" TextWrapping="Wrap" Text="{Binding ActivePlayer}" />
+                <Button Grid.Column="1" Width="60" DockPanel.Dock="Right" Style="{StaticResource MButton}" IsEnabled="{Binding IsUndoEnabled}"  Command="{Binding UndoMoveCommand}">Undo</Button>
+            </DockPanel>
+        </DockPanel>
+    </DockPanel>
 </Window>

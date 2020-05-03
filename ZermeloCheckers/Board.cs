@@ -78,6 +78,11 @@ namespace ZermeloCheckers
                     AddFigure(item as FigureViewModel);
                 }
             }
+
+            if (selectedFigure != null)
+            {
+                DeselectFigure(selectedFigure);
+            }
         }
 
         private void RemoveFigure(FigureViewModel figure)
@@ -136,6 +141,11 @@ namespace ZermeloCheckers
 
         private void SelectFigure(BoardSquare square)
         {
+            if (Figures == null)
+            {
+                return;
+            }
+
             var figure = Figures.FirstOrDefault(x => x.HasCoordinates(square.X, square.Y));
 
             if (figure != null)

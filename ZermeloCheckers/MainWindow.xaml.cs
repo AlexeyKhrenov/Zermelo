@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using ZermeloCheckers.GameFactory;
 
 namespace ZermeloCheckers
 {
@@ -20,10 +21,18 @@ namespace ZermeloCheckers
     /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindow()
+        public MainWindow(int boardSize)
         {
             InitializeComponent();
-            gameBoard.Initialize(6);
+
+            // todo - move to config or to common place
+            gameBoard.Initialize(boardSize);
+        }
+
+        public event Action NewGameButtonClickEvent;
+        private void NewGameButtonClick(object sender, RoutedEventArgs e)
+        {
+            NewGameButtonClickEvent();
         }
     }
 }

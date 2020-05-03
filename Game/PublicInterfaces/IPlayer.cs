@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.ComponentModel;
 using System.Threading;
 
 namespace Game.PublicInterfaces
@@ -9,6 +9,9 @@ namespace Game.PublicInterfaces
     {
         string Name { get; }
 
+        /// <summary>
+        /// defines behavior of IGame when undoing moves
+        /// </summary>
         bool IsComputerPlayer { get; }
 
         void MakeMove(IBoard board, IGame rules, CancellationToken cancellationToken);

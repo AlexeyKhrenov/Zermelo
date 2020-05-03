@@ -19,6 +19,7 @@ namespace CheckersAI.CheckersGameTree
 
         public GameNode()
         {
+            IsMaxPlayer = true;
             Result = sbyte.MinValue;
         }
 

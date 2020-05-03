@@ -15,6 +15,10 @@ namespace ZermeloUnitTests.Mocks
 
         public IEnumerable<IFigure> Figures { get; set; }
 
+        public int MaxPly => throw new NotImplementedException();
+
+        public int TimeToThinkMs { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
         public PlayerMock(string name)
         {
             Name = name;
