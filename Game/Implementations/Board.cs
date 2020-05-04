@@ -18,6 +18,8 @@ namespace Game.Implementations
 
         public int Size { get; private set; }
 
+        public IEnumerable<IFigure> Figures => Player1.Figures.Union(Player2.Figures);
+
         public bool InvertedCoordinates { get; private set; }
 
         public Board(IPlayer player1, IPlayer player2, int size, bool invertedCoordinates)
@@ -29,11 +31,6 @@ namespace Game.Implementations
 
             // by default
             ActivePlayer = player1;
-        }
-
-        public IEnumerable<IFigure> GetFigures()
-        {
-            return Player1.Figures.Union(Player2.Figures);
         }
 
         public void SwitchPlayers()

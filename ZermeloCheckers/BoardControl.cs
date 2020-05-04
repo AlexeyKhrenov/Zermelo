@@ -17,7 +17,7 @@ using ZermeloCheckers.ViewModels;
 
 namespace ZermeloCheckers
 {
-    public class Board : Grid
+    public class BoardControl : Grid
     {
         public static DependencyProperty FiguresProperty;
 
@@ -30,17 +30,17 @@ namespace ZermeloCheckers
             set { SetValue(FiguresProperty, value); }
         }
 
-        static Board()
+        static BoardControl()
         {
             FiguresProperty = DependencyProperty.Register(
-                "Figures", typeof(ObservableCollection<FigureViewModel>), typeof(Board),
+                "Figures", typeof(ObservableCollection<FigureViewModel>), typeof(BoardControl),
                 new FrameworkPropertyMetadata(new PropertyChangedCallback(WholeSetOfFiguresChanged))
             );
         }
 
         private static void WholeSetOfFiguresChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var board = (Board)d;
+            var board = (BoardControl)d;
             var newValue = (ObservableCollection<FigureViewModel>)e.NewValue;
 
             newValue.CollectionChanged += board.Figures_CollectionChanged;
@@ -54,7 +54,7 @@ namespace ZermeloCheckers
             }
         }
 
-        public Board()
+        public BoardControl()
         {
         }
 

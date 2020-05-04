@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Game.PublicInterfaces
 {
@@ -14,7 +15,7 @@ namespace Game.PublicInterfaces
         /// </summary>
         bool IsComputerPlayer { get; }
 
-        void MakeMove(IBoard board, IGame rules, CancellationToken cancellationToken);
+        Task MakeMove(IGame game, CancellationToken cancellationToken);
 
         IEnumerable<IFigure> Figures { get; set; }
     }

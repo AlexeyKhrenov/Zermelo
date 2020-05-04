@@ -20,10 +20,7 @@ namespace ZermeloUnitTests.Mocks
 
         public bool InvertedCoordinates { get; private set; }
 
-        public IEnumerable<IFigure> GetFigures()
-        {
-            throw new NotImplementedException();
-        }
+        public IEnumerable<IFigure> Figures => throw new NotImplementedException();
 
         public void SwitchPlayers()
         {

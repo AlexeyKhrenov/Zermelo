@@ -19,7 +19,7 @@ namespace ZermeloCheckers
 
         public static DependencyProperty TimeToThinkProperty;
 
-        public static DependencyProperty MaxPlyProperty;
+        public static DependencyProperty PlyProperty;
 
         public string Title
         {
@@ -33,10 +33,10 @@ namespace ZermeloCheckers
             set { SetValue(TimeToThinkProperty, value); }
         }
 
-        public int MaxPly
+        public int Ply
         {
-            get { return (int)GetValue(MaxPlyProperty); }
-            set { SetValue(MaxPlyProperty, value); }
+            get { return (int)GetValue(PlyProperty); }
+            set { SetValue(PlyProperty, value); }
         }
 
         static ComputerPlayerControl()
@@ -45,8 +45,8 @@ namespace ZermeloCheckers
                 "TimeToThink", typeof(int), typeof(ComputerPlayerControl)
             );
 
-            MaxPlyProperty = DependencyProperty.Register(
-                "MaxPly", typeof(int), typeof(ComputerPlayerControl)
+            PlyProperty = DependencyProperty.Register(
+                "Ply", typeof(int), typeof(ComputerPlayerControl)
             );
 
             TitleProperty = DependencyProperty.Register(

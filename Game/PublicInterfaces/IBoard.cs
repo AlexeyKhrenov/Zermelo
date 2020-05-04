@@ -18,7 +18,7 @@ namespace Game.PublicInterfaces
 
         bool InvertedCoordinates { get; }
 
-        IEnumerable<IFigure> GetFigures();
+        IEnumerable<IFigure> Figures { get; }
 
         void SwitchPlayers();
     }

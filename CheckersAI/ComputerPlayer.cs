@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
+using System.Threading.Tasks;
 
 [assembly: InternalsVisibleTo("Benchmarking")]
 [assembly: InternalsVisibleTo("ZermeloUnitTests")]
@@ -19,26 +20,20 @@ namespace CheckersAI
 
         public IEnumerable<IFigure> Figures { get; set; }
 
-        public int MaxPly { get; }
-
-        public int TimeToThinkMs { get; set; }
-
-        // this is not a good idea to implement INotifyPropertyChanged for a single property or
-        // to extend class with a wrapper
-        public delegate void MaxPlyChangedHandler(int newValue);
-        public event MaxPlyChangedHandler MaxPlyChanged;
+        public int Ply { get; }
 
         public ComputerPlayer(string name)
         {
             _name = name;
         }
 
-        public void MakeMove(IBoard board, IGame game, CancellationToken cancellationToken)
+        public Task MakeMove(IGame game, CancellationToken cancellationToken)
         {
-            cancellationToken.Register(() => StopThinking(board, game));
+            cancellationToken.Register(() => StopThinking(game));
+            return Task.CompletedTask;
         }
 
-        private void StopThinking(IBoard board, IGame game)
+        private void StopThinking(IGame game)
         {
             var availableMoves = Figures.Select(x => x.AvailableMoves).SelectMany(x => x).ToList();
 

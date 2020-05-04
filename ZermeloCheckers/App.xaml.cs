@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using ZermeloCheckers.GameFactory;
+using ZermeloCheckers.Models;
 using ZermeloCheckers.ViewModels;
 
 namespace ZermeloCheckers
@@ -48,7 +49,8 @@ namespace ZermeloCheckers
             if (newGameWindow.ShowDialog() == true)
             {
                 var game = _factory.CreateGame(gameRequest);
-                _mainViewModel.FromModel(game);
+                var gameModel = new GameModel(game);
+                _mainViewModel.FromModel(gameModel);
             }
         }
     }

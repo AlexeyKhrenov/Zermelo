@@ -7,42 +7,32 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
+using ZermeloCheckers.Models;
 
 namespace ZermeloCheckers.ViewModels
 {
     public class MainViewModel : INotifyPropertyChanged
     {
-        // TODO - remove hard-coded value
-        public int Size = 8;
-
         public PlayerViewModel Player1;
         public PlayerViewModel Player2;
 
-        private bool _isUndoEnabled = false;
-        public bool IsUndoEnabled
-        {
-            get { return _isUndoEnabled; }
-            set
-            {
-                _isUndoEnabled = value;
-                RaisePropertyChanged();
-            }
-        }
+        private GameModel _model;
 
         private ObservableCollection<FigureViewModel> _figures;
 
-        public string ActivePlayer => Game?.Board.ActivePlayer.Name;
+        public string ActivePlayer => _model?.ActivePlayer;
+
+        public bool IsUndoEnabled => _model?.IsUndoEnabled ?? false;
 
         public ICommand UndoMoveCommand { get; set; }
 
         public ICommand StopThinking { get; set; }
 
-        private IGame Game;
-
         public MainViewModel()
         {
             UndoMoveCommand = new RelayCommand(obj => OnUndoMoveCommand());
-            IsUndoEnabled = false;
+
+            Figures = new ObservableCollection<FigureViewModel>();
 
             Player1 = new PlayerViewModel("Computer player 1");
             Player2 = new PlayerViewModel("Computer player 2");
@@ -63,20 +53,19 @@ namespace ZermeloCheckers.ViewModels
 
         public void OnFigureMoved(object sender, byte x0, byte y0, byte x1, byte y1)
         {
-            Game.Move(new Move(x0, y0, x1, y1));
-            UpdateFigures(Game.Board.GetFigures(), Figures);
-            RaisePropertyChanged(nameof(ActivePlayer));
+            _model.Move(new Move(x0, y0, x1, y1));
         }
 
         public void OnUndoMoveCommand()
         {
-            Game.Undo();
-            UpdateFigures(Game.Board.GetFigures(), Figures);
-            RaisePropertyChanged(nameof(ActivePlayer));
+            _model.Undo();
         }
 
-        public void UpdateFigures(IEnumerable<IFigure> modelFigures, ObservableCollection<FigureViewModel> uiFigures)
+        public void OnFiguresUpdated()
         {
+            var modelFigures = _model.Figures;
+            var uiFigures = Figures;
+
             var toBeRemoved = uiFigures.Except(modelFigures).ToList();
 
             // todo - refactor this
@@ -99,13 +88,11 @@ namespace ZermeloCheckers.ViewModels
             {
                 u.Value.AvailableMoves = u.Key.AvailableMoves;
             }
-
-            IsUndoEnabled = Game.HistoryLength != 0;
         }
 
-        public void FromModel(IGame game)
+        public void FromModel(GameModel model)
         {
-            Game = game;
+            _model = model;
 
             // still better then iterating through whole board
             if (Figures != null)
@@ -116,16 +103,11 @@ namespace ZermeloCheckers.ViewModels
                 }
             }
 
-            // todo - change this
-            _figures = new ObservableCollection<FigureViewModel>(Game.Board.GetFigures().Select(x => x.ToViewModel()).ToList());
+            OnFiguresUpdated();
+            model.FigureUpdatedEvent += OnFiguresUpdated;
 
-            foreach (var figure in _figures)
-            {
-                figure.FigureMoved += OnFigureMoved;
-            }
-
-            Player1.FromModel(Game.Board.Player1);
-            Player2.FromModel(Game.Board.Player2);
+            Player1.FromModel(model.Player1Model);
+            Player2.FromModel(model.Player2Model);
 
             RaisePropertyChanged("Figures");
             RaisePropertyChanged("ActivePlayer");

@@ -16,7 +16,7 @@
     </Window.DataContext>
 
     <DockPanel>
-        <local:Board
+        <local:BoardControl
             Grid.Column="0"
             Grid.Row="0"
             Grid.RowSpan="4"
@@ -25,14 +25,15 @@
             Width="400"
             Margin="60"
             Figures="{Binding Figures}"
+            IsEnabled="False"
         >
-        </local:Board>
+        </local:BoardControl>
         <DockPanel DockPanel.Dock="Right" LastChildFill="False">
             <local:ComputerPlayerControl
                 DataContext="{Binding Path=Player1}"
                 DockPanel.Dock="Top"
                 Margin="10"
-                MaxPly="{Binding MaxPly}"
+                Ply="{Binding Ply}"
                 Title="{Binding Name}"
                 IsEnabled="{Binding IsEnabled}"
                 TimeToThink="{Binding TimeToThink}"
@@ -41,7 +42,7 @@
                 DockPanel.Dock="Top"
                 Margin="10"
                 DataContext="{Binding ElementName=MainWindow1, Path=DataContext.Player1}"
-                MaxPly="{Binding MaxPly}"
+                Ply="{Binding Ply}"
                 Title="{Binding Name}"
                 IsEnabled="{Binding IsEnabled}"
                 TimeToThink="{Binding TimeToThink}"

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Game.Implementations
 {
@@ -20,8 +21,9 @@ namespace Game.Implementations
             _name = name;
         }
 
-        public void MakeMove(IBoard board, IGame rules, CancellationToken cancellationToken)
+        public Task MakeMove(IGame game, CancellationToken cancellationToken)
         {
+            return Task.CompletedTask;
         }
     }
 }
