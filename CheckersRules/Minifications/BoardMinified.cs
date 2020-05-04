@@ -136,6 +136,9 @@ namespace Checkers.Minifications
             {
                 to.SwitchPlayers();
             }
+
+            to.ActivePlayer.IsActive = true;
+            to.AwaitingPlayer.IsActive = false;
         }
     }
 }

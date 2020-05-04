@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using ZermeloCheckers.Misc;
 using ZermeloCheckers.ViewModels;
 
 namespace ZermeloCheckers
@@ -43,7 +44,8 @@ namespace ZermeloCheckers
             var board = (BoardControl)d;
             var newValue = (ObservableCollection<FigureViewModel>)e.NewValue;
 
-            newValue.CollectionChanged += board.Figures_CollectionChanged;
+            newValue.CollectionChanged += (sender, e) =>
+                board.Dispatcher.Invoke(() => board.Figures_CollectionChanged(sender, e));
 
             foreach (var item in newValue)
             {

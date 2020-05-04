@@ -31,6 +31,7 @@ namespace Game.Implementations
 
             // by default
             ActivePlayer = player1;
+            AwaitingPlayer = player2;
         }
 
         public void SwitchPlayers()
@@ -45,6 +46,9 @@ namespace Game.Implementations
                 ActivePlayer = Player1;
                 AwaitingPlayer = Player2;
             }
+
+            ActivePlayer.IsActive = true;
+            AwaitingPlayer.IsActive = false;
         }
     }
 }

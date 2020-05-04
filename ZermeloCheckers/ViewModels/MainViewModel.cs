@@ -7,11 +7,12 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
+using ZermeloCheckers.Misc;
 using ZermeloCheckers.Models;
 
 namespace ZermeloCheckers.ViewModels
 {
-    public class MainViewModel : INotifyPropertyChanged
+    public class MainViewModel : BaseViewModel
     {
         public PlayerViewModel Player1;
         public PlayerViewModel Player2;
@@ -19,10 +20,6 @@ namespace ZermeloCheckers.ViewModels
         private GameModel _model;
 
         private ObservableCollection<FigureViewModel> _figures;
-
-        public string ActivePlayer => _model?.ActivePlayer;
-
-        public bool IsUndoEnabled => _model?.IsUndoEnabled ?? false;
 
         public ICommand UndoMoveCommand { get; set; }
 
@@ -111,13 +108,6 @@ namespace ZermeloCheckers.ViewModels
 
             RaisePropertyChanged("Figures");
             RaisePropertyChanged("ActivePlayer");
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        
-        public void RaisePropertyChanged([CallerMemberName] string memberName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(memberName));
         }
     }
 }

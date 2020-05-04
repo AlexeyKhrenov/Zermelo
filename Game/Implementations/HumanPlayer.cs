@@ -16,6 +16,8 @@ namespace Game.Implementations
 
         public IEnumerable<IFigure> Figures { get; set; }
 
+        public bool IsActive { get; set; }
+
         public HumanPlayer(string name)
         {
             _name = name;

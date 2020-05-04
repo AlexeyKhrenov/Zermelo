@@ -5,7 +5,7 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 using ZermeloCheckers.ViewModels;
 
-namespace ZermeloCheckers
+namespace ZermeloCheckers.Misc
 {
     public static class Helper
     {

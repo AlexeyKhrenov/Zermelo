@@ -25,7 +25,6 @@
             Width="400"
             Margin="60"
             Figures="{Binding Figures}"
-            IsEnabled="False"
         >
         </local:BoardControl>
         <DockPanel DockPanel.Dock="Right" LastChildFill="False">
@@ -35,8 +34,13 @@
                 Margin="10"
                 Ply="{Binding Ply}"
                 Title="{Binding Name}"
-                IsEnabled="{Binding IsEnabled}"
                 TimeToThink="{Binding TimeToThink}"
+                IsActive="{Binding IsActive}"
+                IsStopThinkingButtonEnabled="{Binding IsStopThinkingButtonEnabled}"
+                IsSliderEnabled="{Binding IsSliderEnabled}"
+                IsUndoButtonEnabled="{Binding IsUndoButtonEnabled}"
+                IsComputerPlayer="{Binding IsComputerPlayer}"
+                IsHumanPlayer="{Binding IsHumanPlayer}"
                 x:Name="ComputerPlayerControl1"/>
             <local:ComputerPlayerControl
                 DockPanel.Dock="Top"
@@ -44,15 +48,15 @@
                 DataContext="{Binding ElementName=MainWindow1, Path=DataContext.Player1}"
                 Ply="{Binding Ply}"
                 Title="{Binding Name}"
-                IsEnabled="{Binding IsEnabled}"
                 TimeToThink="{Binding TimeToThink}"
+                IsActive="{Binding IsActive}"
+                IsStopThinkingButtonEnabled="{Binding IsStopThinkingButtonEnabled}"
+                IsSliderEnabled="{Binding IsSliderEnabled}"
+                IsUndoButtonEnabled="{Binding IsUndoButtonEnabled}"
+                IsComputerPlayer="{Binding IsComputerPlayer}"
+                IsHumanPlayer="{Binding IsHumanPlayer}"
                 x:Name="ComputerPlayerControl2"/>
             <Button DockPanel.Dock="Bottom" Grid.Column="2" Margin="10" Grid.Row="3" Style="{StaticResource MButton}" Click="NewGameButtonClick">New game</Button>
-            <DockPanel LastChildFill="False" Margin="10" DockPanel.Dock="Bottom">
-                <TextBlock Margin="4,4,4,6" VerticalAlignment="Center" DockPanel.Dock="Left" Grid.Column="1" Grid.Row="2" TextWrapping="Wrap">Active player:</TextBlock>
-                <TextBlock Margin="4,4,4,6" Width="100" VerticalAlignment="Center" DockPanel.Dock="Left" FontWeight="Bold" TextWrapping="Wrap" Text="{Binding ActivePlayer}" />
-                <Button Grid.Column="1" Width="60" DockPanel.Dock="Right" Style="{StaticResource MButton}" IsEnabled="{Binding IsUndoEnabled}"  Command="{Binding UndoMoveCommand}">Undo</Button>
-            </DockPanel>
         </DockPanel>
     </DockPanel>
 </Window>

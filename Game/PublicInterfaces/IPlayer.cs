@@ -15,6 +15,8 @@ namespace Game.PublicInterfaces
         /// </summary>
         bool IsComputerPlayer { get; }
 
+        bool IsActive { get; set; }
+
         Task MakeMove(IGame game, CancellationToken cancellationToken);
 
         IEnumerable<IFigure> Figures { get; set; }

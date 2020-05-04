@@ -7,7 +7,7 @@ using ZermeloCheckers.GameFactory;
 
 namespace ZermeloCheckers.ViewModels
 {
-    public class NewGameViewModel : INotifyPropertyChanged
+    public class NewGameViewModel : BaseViewModel
     {
         private bool _isPlayer1Computer;
         public bool IsPlayer1Computer
@@ -80,13 +80,6 @@ namespace ZermeloCheckers.ViewModels
             Player1Name = "Player 1";
             Player2Name = "Player 2";
             IsPlayer2Computer = true;
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public void RaisePropertyChanged([CallerMemberName] string memberName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(memberName));
         }
 
         private void CheckOkButtonEnabled()

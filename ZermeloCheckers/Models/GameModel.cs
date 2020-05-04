@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace ZermeloCheckers.Models
 {
     // todo - remove INotifyPropertyChanged if not needed
-    public class GameModel : INotifyPropertyChanged
+    public class GameModel : BaseModel
     {
         public PlayerModel Player1Model;
 
@@ -32,17 +32,20 @@ namespace ZermeloCheckers.Models
             set { _activePlayer = value; RaisePropertyChanged(); }
         }
 
-        public GameModel(IGame game)
+        public GameModel(IGame game, int defaultTimeToThink)
         {
             _game = game;
-            Player1Model = new PlayerModel(game.Board.Player1);
-            Player2Model = new PlayerModel(game.Board.Player2);
+            Player1Model = new PlayerModel(game.Board.Player1, defaultTimeToThink);
+            Player2Model = new PlayerModel(game.Board.Player2, defaultTimeToThink);
+
+            NextMove();
         }
 
         public void Move(Move move)
         {
             _game.Move(move);
             InvokeUiUpdate();
+            NextMove();
         }
 
         public void Undo()
@@ -61,11 +64,10 @@ namespace ZermeloCheckers.Models
             if (activePlayerModel.IsComputerPlayer)
             {
                 activePlayerModel.Act(_game).ContinueWith(task => NextMove());
-                // lock ui here
             }
             else
             {
-                // unlock ui here
+                activePlayerModel.Act(_game).Wait();
             }
 
             InvokeUiUpdate();
@@ -76,13 +78,6 @@ namespace ZermeloCheckers.Models
             // update board UI after move
             FigureUpdatedEvent?.Invoke();
             ActivePlayer = _game.Board.ActivePlayer.Name;
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public void RaisePropertyChanged([CallerMemberName] string memberName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(memberName));
         }
     }
 }

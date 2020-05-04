@@ -18,6 +18,8 @@ namespace CheckersAI
 
         public bool IsComputerPlayer => true;
 
+        public bool IsActive { get; set; }
+
         public IEnumerable<IFigure> Figures { get; set; }
 
         public int Ply { get; }
@@ -29,8 +31,19 @@ namespace CheckersAI
 
         public Task MakeMove(IGame game, CancellationToken cancellationToken)
         {
-            cancellationToken.Register(() => StopThinking(game));
+            // add registration to abort threads
+            StartProgressiveDeepening(cancellationToken);
+            StopThinking(game);
             return Task.CompletedTask;
+        }
+
+        public void StartProgressiveDeepening(CancellationToken cancellationToken)
+        {
+            while (!cancellationToken.IsCancellationRequested)
+            {
+                var Rand = new Random();
+                var rn = Rand.NextDouble();
+            }
         }
 
         private void StopThinking(IGame game)

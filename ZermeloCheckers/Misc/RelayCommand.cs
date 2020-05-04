@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
 
-namespace ZermeloCheckers
+namespace ZermeloCheckers.Misc
 {
     public class RelayCommand : ICommand
     {

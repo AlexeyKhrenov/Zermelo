@@ -49,7 +49,7 @@ namespace ZermeloCheckers
             if (newGameWindow.ShowDialog() == true)
             {
                 var game = _factory.CreateGame(gameRequest);
-                var gameModel = new GameModel(game);
+                var gameModel = new GameModel(game, 2000);
                 _mainViewModel.FromModel(gameModel);
             }
         }
