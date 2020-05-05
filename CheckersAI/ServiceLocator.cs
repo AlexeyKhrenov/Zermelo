@@ -21,7 +21,7 @@ namespace CheckersAI
             var rules = new CheckersRules();
 
             var comparator = new Comparator();
-            var brancher = new Brancher();
+            var brancher = new Brancher(rules);
             var evaluator = new Evaluator(true);
             var stateTransitions = new StateTransitions(rules);
 

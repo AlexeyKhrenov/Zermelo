@@ -14,6 +14,7 @@ namespace Checkers
         //todo - create several chains of responsibility for different situations
         private AbstractRule ChainOfRules;
         private AbstractRule InitialPositionRules;
+        private AbstractRule FastForwardAvailableMovesRules;
 
         public CheckersRules()
         {
@@ -27,6 +28,9 @@ namespace Checkers
 
             InitialPositionRules = new InitialPositionRule();
             InitialPositionRules.AddNext(new DetectAvailableMovesRule());
+
+            FastForwardAvailableMovesRules = new NeedToCaptureRule();
+            FastForwardAvailableMovesRules.AddNext(new DetectAvailableMovesRule());
         }
 
         public void PlaceFigures(IBoard board)
@@ -77,6 +81,11 @@ namespace Checkers
         internal BoardMinified UndoMove(BoardMinified board, HistoryItemMinified move, HistoryItemMinified undoMove)
         {
             return ChainOfRules.UndoRule(board, move, undoMove);
+        }
+
+        internal BoardMinified FastForwardAvailableMoves(BoardMinified board)
+        {
+            return FastForwardAvailableMovesRules.ApplyRule(board, null);
         }
     }
 }

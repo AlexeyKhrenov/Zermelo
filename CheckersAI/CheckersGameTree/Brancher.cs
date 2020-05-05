@@ -8,14 +8,20 @@ namespace CheckersAI.CheckersGameTree
 {
     internal class Brancher : IBrancher<GameNode, BoardMinified, sbyte>
     {
-        public Brancher()
+        CheckersRules _rules;
+
+        public Brancher(CheckersRules rules)
         {
+            _rules = rules;
         }
 
         public void Branch(GameNode node, BoardMinified practiceBoard)
         {
             // remove list to speed up perfomance
             var children = new List<GameNode>();
+
+            practiceBoard = _rules.FastForwardAvailableMoves(practiceBoard);
+
             foreach (var piece in practiceBoard.ActiveSet)
             {
                 foreach (var move in piece.AvailableMoves)

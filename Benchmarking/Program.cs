@@ -11,21 +11,7 @@ namespace Benchmarking
     {
         static void Main(string[] args)
         {
-            //var r = new AlfaBetaSearchBenchmark();
-            //var r1 = r.EvaluateTreeSerial();
-
-            //BenchmarkRunner.Run<AlfaBetaSearchBenchmark>();
-            var s = new struct1();
-
-            //int size = Marshal.SizeOf(new struct1());
+            BenchmarkRunner.Run<SerialGameTreeSearchBenchmark>();
         }
-    }
-
-    public struct struct1
-    {
-        public byte a; // 1 byte
-        public int b; // 4 bytes
-        public short c; // 2 bytes
-        public byte d; // 1 byte
     }
 }
