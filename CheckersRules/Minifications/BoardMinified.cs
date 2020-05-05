@@ -100,6 +100,7 @@ namespace Checkers.Minifications
             {
                 var minPiece = new PieceMinified();
                 minPiece.Minify((Piece)figure);
+                minPiece.AvailableMoves = figure.AvailableMoves;
                 Player1Pieces.Add(minPiece);
                 Pieces[figure.X, figure.Y] = minPiece;
             }
@@ -108,6 +109,7 @@ namespace Checkers.Minifications
             {
                 var minPiece = new PieceMinified();
                 minPiece.Minify((Piece)figure);
+                minPiece.AvailableMoves = figure.AvailableMoves;
                 Player2Pieces.Add(minPiece);
                 Pieces[figure.X, figure.Y] = minPiece;
             }
