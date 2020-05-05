@@ -18,7 +18,8 @@ namespace ZermeloUnitTests.Mocks
 
         public int MaxPly => throw new NotImplementedException();
 
-        public int TimeToThinkMs { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public int TimeToThinkMs { get; set; }
+        public bool IsActive { get; set; }
 
         public PlayerMock(string name)
         {

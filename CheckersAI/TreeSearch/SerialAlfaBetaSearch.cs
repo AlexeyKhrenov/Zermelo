@@ -1,7 +1,11 @@
-﻿namespace CheckersAI.TreeSearch
+﻿using CheckersAI.InternalInterfaces;
+using System;
+using System.Collections.Generic;
+using System.Threading;
+
+namespace CheckersAI.TreeSearch
 {
-    // the implementation may have different output range and therefore different return type
-    internal class AlfaBetaSearch<TNode, TMetric, TState> 
+    internal class SerialAlfaBetaSearch<TNode, TMetric, TState> : ISearch<TNode, TMetric, TState>
         where TNode : INode<TNode, TMetric>
         where TMetric : struct
         where TState : struct
@@ -13,7 +17,7 @@
         private TMetric _maxValue;
         private TMetric _minValue;
 
-        public AlfaBetaSearch(
+        public SerialAlfaBetaSearch(
             IEvaluator<TState, TMetric> evaluator,
             IBrancher<TNode, TState, TMetric> brancher,
             IComparator<TMetric> comparator,
@@ -30,8 +34,10 @@
             _maxValue = maxValue;
         }
 
-        public TMetric Search(TNode node, int depth, TMetric alfa, TMetric beta, TState state)
+        public TMetric Search(TNode node, int depth, TMetric alfa, TMetric beta, TState state, CancellationToken ct)
         {
+            ct.ThrowIfCancellationRequested();
+
             if (node.Children == null && depth > 0)
             {
                 _brancher.Branch(node, state);
@@ -50,11 +56,15 @@
                 foreach (var child in node.Children)
                 {
                     var childState = _stateTransitions.GoDown(state, child);
-                    var result = Search(child, depth - 1, alfa, beta, childState);
+                    var result = Search(child, depth - 1, alfa, beta, childState, ct);
                     // todo - remove this state undo after everything becomes struct
                     childState = _stateTransitions.GoUp(state, child);
 
-                    maxVal = _comparator.IsBigger(result, maxVal) ? result : maxVal;
+                    if (!_comparator.IsBigger(maxVal, result))
+                    {
+                        maxVal = result;
+                        node.BestChild = child;
+                    }
 
                     if (!_comparator.IsBigger(beta, result))
                     {
@@ -74,11 +84,15 @@
                 foreach (var child in node.Children)
                 {
                     var childState = _stateTransitions.GoDown(state, child);
-                    var result = Search(child, depth - 1, alfa, beta, childState);
+                    var result = Search(child, depth - 1, alfa, beta, childState, ct);
                     // todo - remove this state undo after everything becomes struct
                     childState = _stateTransitions.GoUp(state, child);
 
-                    minVal = !_comparator.IsBigger(result, minVal) ? result : minVal;
+                    if (!_comparator.IsBigger(result, minVal))
+                    {
+                        minVal = result;
+                        node.BestChild = child;
+                    }
 
                     if (!_comparator.IsBigger(result, alfa))
                     {
@@ -92,6 +106,57 @@
                 node.Result = minVal;
                 return minVal;
             }
+        }
+
+        public void ClearTree(TNode node)
+        {
+            var queue = new Queue<TNode>();
+            queue.Enqueue(node);
+
+            while (queue.Count > 0)
+            {
+                var next = queue.Dequeue();
+                next.Clear();
+                if (next.Children != null)
+                {
+                    foreach (var child in next.Children)
+                    {
+                        queue.Enqueue(child);
+                    }
+                }
+            }
+        }
+
+        public Queue<TNode> DoProgressiveDeepening(TNode node, TState state, TMetric alfa, TMetric beta, CancellationToken ct)
+        {
+            var depth = 0;
+            var result = new Queue<TNode>();
+
+            ClearTree(node);
+
+            while (!ct.IsCancellationRequested)
+            {
+                try
+                {
+                    Search(node, depth, alfa, beta, state, ct);
+
+                    result.Clear();
+                    var nextNode = node;
+                    while (nextNode.BestChild != null && nextNode.BestChild.IsMaxPlayer == nextNode.IsMaxPlayer)
+                    {
+                        result.Enqueue(nextNode.BestChild);
+                        nextNode = nextNode.BestChild;
+                    }
+
+                    ClearTree(node);
+                    depth++;
+                }
+                catch (OperationCanceledException)
+                {
+                }
+            }
+
+            return result;
         }
     }
 }

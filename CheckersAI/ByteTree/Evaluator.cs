@@ -1,8 +1,9 @@
-﻿using System.Runtime.CompilerServices;
+﻿using CheckersAI.InternalInterfaces;
+using System.Runtime.CompilerServices;
 
 namespace CheckersAI.ByteTree
 {
-    internal class Evaluator : TreeSearch.IEvaluator<sbyte, sbyte>
+    internal class Evaluator : IEvaluator<sbyte, sbyte>
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public sbyte Evaluate(sbyte state)

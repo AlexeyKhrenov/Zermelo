@@ -1,13 +1,15 @@
 using Benchmarking;
 using CheckersAI.ByteTree;
 using CheckersAI.TreeSearch;
+using System.Threading;
 using Xunit;
 
 namespace ZermeloUnitTests.Search
 {
     public class SearchWithoutBranchingTest
     {
-        private AlfaBetaSearch<ByteNode, sbyte, sbyte> _search;
+        private SerialAlfaBetaSearch<ByteNode, sbyte, sbyte> _search;
+        private CancellationTokenSource _cts;
 
         public SearchWithoutBranchingTest()
         {
@@ -15,7 +17,7 @@ namespace ZermeloUnitTests.Search
             var brancher = new Brancher();
             var evaluator = new Evaluator();
             var stateTransitions = new StateTransitions();
-            _search = new AlfaBetaSearch<ByteNode, sbyte, sbyte>(
+            _search = new SerialAlfaBetaSearch<ByteNode, sbyte, sbyte>(
                 evaluator,
                 brancher,
                 comparator,
@@ -23,6 +25,8 @@ namespace ZermeloUnitTests.Search
                 sbyte.MaxValue,
                 sbyte.MinValue
             );
+
+            _cts = new CancellationTokenSource();
         }
 
         [Theory]
@@ -35,7 +39,7 @@ namespace ZermeloUnitTests.Search
             var tree = TreeGenerator.ParseByteTree(treeStr, 2);
 
             // todo - add start value
-            var actual = _search.Search(tree, depth, sbyte.MinValue, sbyte.MaxValue, startState);
+            var actual = _search.Search(tree, depth, sbyte.MinValue, sbyte.MaxValue, startState, _cts.Token);
             Assert.Equal(expected, actual);
         }
     }

@@ -1,4 +1,8 @@
-﻿using Game.Primitives;
+﻿using Checkers.Minifications;
+using CheckersAI.CheckersGameTree;
+using CheckersAI.InternalInterfaces;
+using CheckersAI.TreeSearch;
+using Game.Primitives;
 using Game.PublicInterfaces;
 using System;
 using System.Collections.Generic;
@@ -13,7 +17,6 @@ namespace CheckersAI
 {
     public class ComputerPlayer : IPlayer
     {
-        private string _name;
         public string Name => _name + " (computer)";
 
         public bool IsComputerPlayer => true;
@@ -24,29 +27,53 @@ namespace CheckersAI
 
         public int Ply { get; }
 
-        public ComputerPlayer(string name)
+        private string _name;
+        private ISearch<GameNode, sbyte, BoardMinified> _search;
+        private ITreeManager<GameNode, sbyte> _treeManager;
+
+        internal ComputerPlayer(string name,
+            ISearch<GameNode, sbyte, BoardMinified> search,
+            ITreeManager<GameNode, sbyte> treeManager)
         {
             _name = name;
+            _search = search;
+            _treeManager = treeManager;
         }
 
-        public Task MakeMove(IGame game, CancellationToken cancellationToken)
+        public Task MakeMove(IGame game, CancellationToken ct)
         {
+            var latestMove = game.LatestMove;
+
+            var practiceBoard = new BoardMinified();
+            practiceBoard.Minify(game.Board);
+
+            var root = new GameNode(latestMove, game.Board);
+            root = _treeManager.GoDownToNode(root);
+
             // add registration to abort threads
-            StartProgressiveDeepening(cancellationToken);
-            StopThinking(game);
+            var plannedMoves = _search.DoProgressiveDeepening(root, practiceBoard, sbyte.MinValue, sbyte.MaxValue, ct);
+
+            StopThinking(game, plannedMoves);
             return Task.CompletedTask;
         }
 
-        public void StartProgressiveDeepening(CancellationToken cancellationToken)
+        private void StopThinking(IGame game, Queue<GameNode> plannedMoves)
         {
-            while (!cancellationToken.IsCancellationRequested)
+            while (game.Board.ActivePlayer == this)
             {
-                var Rand = new Random();
-                var rn = Rand.NextDouble();
+                if (plannedMoves == null || plannedMoves.Count == 0)
+                {
+                    MakeRandomNextMove(game);
+                }
+                else
+                {
+                    var nextMove = plannedMoves.Dequeue();
+                    game.Move(new Move(nextMove.Move.From, nextMove.Move.To));
+                }
             }
         }
 
-        private void StopThinking(IGame game)
+        private void MakeRandomNextMove(IGame game)
         {
             var availableMoves = Figures.Select(x => x.AvailableMoves).SelectMany(x => x).ToList();
 

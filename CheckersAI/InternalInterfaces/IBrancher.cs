@@ -1,4 +1,4 @@
-﻿namespace CheckersAI.TreeSearch
+﻿namespace CheckersAI.InternalInterfaces
 {
     internal interface IBrancher<TNode, TState, TMetric>
         where TNode : INode<TNode, TMetric>

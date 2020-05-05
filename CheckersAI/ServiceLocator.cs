@@ -1,0 +1,42 @@
+﻿using Checkers;
+using Checkers.Minifications;
+using CheckersAI.CheckersGameTree;
+using CheckersAI.InternalInterfaces;
+using CheckersAI.TreeSearch;
+using Game.PublicInterfaces;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace CheckersAI
+{
+    public static class ServiceLocator
+    {
+        public static IPlayer CreateComputerPlayer(string name)
+        {
+            var treeManager = new TreeManager<GameNode, sbyte>();
+            var search = CreateSerialGameTreeSearch();
+
+            return new ComputerPlayer(name, search, treeManager);
+        }
+
+        internal static SerialAlfaBetaSearch<GameNode, sbyte, BoardMinified> CreateSerialGameTreeSearch()
+        {
+            var rules = new CheckersRules();
+
+            var comparator = new Comparator();
+            var brancher = new Brancher();
+            var evaluator = new Evaluator(true);
+            var stateTransitions = new StateTransitions(rules);
+
+            return new SerialAlfaBetaSearch<GameNode, sbyte, BoardMinified>(
+                evaluator,
+                brancher,
+                comparator,
+                stateTransitions,
+                sbyte.MaxValue,
+                sbyte.MinValue
+            );
+        }
+    }
+}

@@ -6,9 +6,9 @@ namespace Game.PublicInterfaces
 {
     public interface IBoard
     {
-        IPlayer ActivePlayer { get; }
+        IPlayer ActivePlayer { get; set; }
 
-        IPlayer AwaitingPlayer { get; }
+        IPlayer AwaitingPlayer { get; set; }
 
         IPlayer Player1 { get; }
 

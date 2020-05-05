@@ -1,4 +1,4 @@
-﻿namespace CheckersAI.TreeSearch
+﻿namespace CheckersAI.InternalInterfaces
 {
     interface IComparator<T> where T : struct
     {

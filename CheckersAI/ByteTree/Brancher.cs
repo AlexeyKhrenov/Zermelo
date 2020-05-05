@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Threading.Tasks;
-
-using CheckersAI.TreeSearch;
+using CheckersAI.InternalInterfaces;
 
 namespace CheckersAI.ByteTree
 {

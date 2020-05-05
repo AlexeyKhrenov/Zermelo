@@ -1,6 +1,6 @@
 ﻿using Checkers;
 using Checkers.Minifications;
-using CheckersAI.TreeSearch;
+using CheckersAI.InternalInterfaces;
 using Game.Primitives;
 using System.Collections.Generic;
 

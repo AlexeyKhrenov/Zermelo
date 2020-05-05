@@ -2,6 +2,7 @@
 
 using CheckersAI.ByteTree;
 using CheckersAI.TreeSearch;
+using System.Threading;
 
 namespace Benchmarking
 {
@@ -10,8 +11,9 @@ namespace Benchmarking
     [RankColumn]
     public class AlfaBetaSearchBenchmark
     {
-        private AlfaBetaSearch<ByteNode, sbyte, sbyte> _serial;
+        private SerialAlfaBetaSearch<ByteNode, sbyte, sbyte> _serial;
         private ByteNode _serialTree;
+        private CancellationTokenSource _cts;
 
         public AlfaBetaSearchBenchmark()
         {
@@ -20,14 +22,17 @@ namespace Benchmarking
             var evaluator = new Evaluator();
             var stateTransitions = new StateTransitions();
             
-            _serial = new AlfaBetaSearch<ByteNode, sbyte, sbyte>(
+            _serial = new SerialAlfaBetaSearch<ByteNode, sbyte, sbyte>(
                 evaluator,
                 brancher,
                 comparator,
                 stateTransitions,
                 sbyte.MaxValue,
                 sbyte.MinValue);
+
             _serialTree = TreeGenerator.ReadTree();
+
+            _cts = new CancellationTokenSource();
         }
 
         [Benchmark]
@@ -38,7 +43,8 @@ namespace Benchmarking
                 _serialTree.GetDepth<ByteNode, sbyte>(),
                 sbyte.MinValue,
                 sbyte.MaxValue,
-                0
+                0,
+                _cts.Token
             );
         }
     }

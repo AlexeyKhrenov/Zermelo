@@ -1,4 +1,4 @@
-﻿using CheckersAI.TreeSearch;
+﻿using CheckersAI.InternalInterfaces;
 
 namespace CheckersAI.ByteTree
 {
@@ -12,11 +12,30 @@ namespace CheckersAI.ByteTree
 
         public bool IsMaxPlayer { get; set; }
 
+        public ByteNode BestChild { get; set; }
+
         public ByteNode(sbyte valueChange, bool isMaxPlayer, params ByteNode[] children)
         {
             ValueChange = valueChange;
             IsMaxPlayer = isMaxPlayer;
             Children = children;
+        }
+
+        // todo - implement
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
+        public void Clear()
+        {
+            Result = sbyte.MinValue;
+            BestChild = null;
+        }
+
+        public bool Equals(ByteNode other)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

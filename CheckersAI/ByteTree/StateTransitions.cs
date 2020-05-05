@@ -1,7 +1,4 @@
-﻿using CheckersAI.TreeSearch;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using CheckersAI.InternalInterfaces;
 
 namespace CheckersAI.ByteTree
 {

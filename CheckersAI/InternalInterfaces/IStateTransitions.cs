@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace CheckersAI.TreeSearch
+﻿namespace CheckersAI.InternalInterfaces
 {
     internal interface IStateTransitions<TState, TNode, TMetric>
         where TNode : INode<TNode, TMetric>

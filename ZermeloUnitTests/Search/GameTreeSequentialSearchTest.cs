@@ -6,33 +6,23 @@ using FluentAssertions;
 using Game.Primitives;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Xunit;
 using ZermeloUnitTests.Mocks;
 
 namespace ZermeloUnitTests.Search
 {
-    public class GameTreeSequentialSearch
+    public class GameTreeSequentialSearchTest
     {
-        private AlfaBetaSearch<GameNode, sbyte, BoardMinified> _search;
+        private SerialAlfaBetaSearch<GameNode, sbyte, BoardMinified> _search;
         private CheckersRules _rules;
+        private CancellationTokenSource _cts;
 
-        public GameTreeSequentialSearch()
+        public GameTreeSequentialSearchTest()
         {
+            _search = CheckersAI.ServiceLocator.CreateSerialGameTreeSearch();
             _rules = new CheckersRules();
-
-            var comparator = new Comparator();
-            var brancher = new Brancher();
-            var evaluator = new Evaluator(true);
-            var stateTransitions = new StateTransitions(_rules);
-
-            _search = new AlfaBetaSearch<GameNode, sbyte, BoardMinified>(
-                evaluator,
-                brancher,
-                comparator,
-                stateTransitions,
-                sbyte.MaxValue,
-                sbyte.MinValue
-            );
+            _cts = new CancellationTokenSource();
         }
 
         [Fact]
@@ -56,7 +46,7 @@ namespace ZermeloUnitTests.Search
 
             practiceBoard = _rules.MakeMove(practiceBoard, root.Move);
 
-            _search.Search(root, 2, sbyte.MinValue, sbyte.MaxValue, practiceBoard);
+            _search.Search(root, 2, sbyte.MinValue, sbyte.MaxValue, practiceBoard, _cts.Token);
             var bestMove = root.GetBestMove();
 
             bestMove.Should().BeEquivalentTo(new Move(2, 2, 3, 1));
@@ -84,7 +74,7 @@ namespace ZermeloUnitTests.Search
 
             practiceBoard = _rules.MakeMove(practiceBoard, root.Move);
 
-            _search.Search(root, 3, sbyte.MinValue, sbyte.MaxValue, practiceBoard);
+            _search.Search(root, 3, sbyte.MinValue, sbyte.MaxValue, practiceBoard, _cts.Token);
             var bestMove = root.GetBestMove();
 
             bestMove.Should().BeEquivalentTo(new Move(1, 3, 0, 2));
@@ -113,7 +103,7 @@ namespace ZermeloUnitTests.Search
             practiceBoard.Player1Pieces.First(f => f.X == 3 && f.Y == 3).AvailableMoves =
                 new List<Cell>() { new Cell(2, 2) };
 
-            _search.Search(root, 12, sbyte.MinValue, sbyte.MaxValue, practiceBoard);
+            _search.Search(root, 12, sbyte.MinValue, sbyte.MaxValue, practiceBoard, _cts.Token);
             var bestMove = root.GetBestMove();
 
             bestMove.Should().BeEquivalentTo(new Move(1, 3, 2, 2));

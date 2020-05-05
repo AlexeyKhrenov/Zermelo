@@ -1,5 +1,6 @@
 ﻿using Checkers;
 using Checkers.Minifications;
+using CheckersAI.InternalInterfaces;
 using CheckersAI.TreeSearch;
 using System;
 

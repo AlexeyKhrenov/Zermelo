@@ -8,9 +8,9 @@ namespace ZermeloUnitTests.Mocks
 {
     public class BoardMock : IBoard
     {
-        public IPlayer ActivePlayer { get; private set; }
+        public IPlayer ActivePlayer { get; set; }
 
-        public IPlayer AwaitingPlayer { get; private set; }
+        public IPlayer AwaitingPlayer { get; set; }
 
         public IPlayer Player1 { get; private set; }
 
@@ -43,6 +43,7 @@ namespace ZermeloUnitTests.Mocks
             Player1 = new PlayerMock("player1");
             Player2 = new PlayerMock("player2");
             ActivePlayer = Player1;
+            AwaitingPlayer = Player2;
 
             var player1Figures = new List<Piece>();
             var player2Figures = new List<Piece>();

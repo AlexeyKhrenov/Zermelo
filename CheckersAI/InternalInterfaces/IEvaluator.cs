@@ -1,4 +1,4 @@
-﻿namespace CheckersAI.TreeSearch
+﻿namespace CheckersAI.InternalInterfaces
 {
     // the implementation may have different output range and therefore different return type
     internal interface IEvaluator<TState, TMetric>

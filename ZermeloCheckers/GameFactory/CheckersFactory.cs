@@ -18,7 +18,7 @@ namespace ZermeloCheckers.GameFactory
 
             if (request.IsPlayer1ComputerPlayer)
             {
-                player1 = new ComputerPlayer(request.Player1Name);
+                player1 = CheckersAI.ServiceLocator.CreateComputerPlayer(request.Player1Name);
             }
             else
             {
@@ -27,7 +27,7 @@ namespace ZermeloCheckers.GameFactory
 
             if (request.IsPlayer2ComputerPlayer)
             {
-                player2 = new ComputerPlayer(request.Player2Name);
+                player2 = CheckersAI.ServiceLocator.CreateComputerPlayer(request.Player2Name);
             }
             else
             {

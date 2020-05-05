@@ -1,10 +1,10 @@
 ﻿using Checkers.Minifications;
-using Game.Primitives;
+using CheckersAI.InternalInterfaces;
 using System.Collections.Generic;
 
 namespace CheckersAI.CheckersGameTree
 {
-    internal class Evaluator : TreeSearch.IEvaluator<BoardMinified, sbyte>
+    internal class Evaluator : IEvaluator<BoardMinified, sbyte>
     {
         private bool _playsFor1Player;
 

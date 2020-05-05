@@ -1,6 +1,7 @@
 ﻿using Checkers.Minifications;
-using CheckersAI.TreeSearch;
+using CheckersAI.InternalInterfaces;
 using Game.Primitives;
+using Game.PublicInterfaces;
 using System;
 
 namespace CheckersAI.CheckersGameTree
@@ -13,6 +14,8 @@ namespace CheckersAI.CheckersGameTree
 
         public GameNode[] Children { get; set; }
 
+        public GameNode BestChild { get; set; }
+        
         public HistoryItemMinified Move { get; set; }
 
         public bool IsMaxPlayer { get; set; }
@@ -21,6 +24,15 @@ namespace CheckersAI.CheckersGameTree
         {
             IsMaxPlayer = true;
             Result = sbyte.MinValue;
+        }
+
+        public GameNode(IHistoryItem item, IBoard board)
+        {
+            if (item != null)
+            {
+                Move = new HistoryItemMinified();
+                Move.Minify(item, board);
+            }
         }
 
         // don't call this method often - not optimized
@@ -38,6 +50,23 @@ namespace CheckersAI.CheckersGameTree
             }
 
             throw new InvalidOperationException("A node is not evaluated yet");
+        }
+
+        // todo - implement
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
+        public bool Equals(GameNode other)
+        {
+            return other != null && Move == other.Move;
+        }
+
+        public void Clear()
+        {
+            BestChild = null;
+            Result = sbyte.MinValue;
         }
 
         public override string ToString()

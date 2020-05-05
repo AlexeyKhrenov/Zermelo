@@ -20,6 +20,8 @@ namespace Game.Implementations
 
         private IHistory _history { get; set; }
 
+        public IHistoryItem LatestMove => _history.Latest;
+
         public Game(IGameRules rules, IPlayer player1, IPlayer player2, IHistory history, int size, bool revertedSides)
         {
             // remove this intialization

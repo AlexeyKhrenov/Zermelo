@@ -13,5 +13,7 @@ namespace Game.PublicInterfaces
         int HistoryLength { get; }
 
         IBoard Board { get; }
+
+        IHistoryItem LatestMove { get; }
     }
 }
