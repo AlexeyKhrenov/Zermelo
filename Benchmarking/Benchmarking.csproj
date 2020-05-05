@@ -12,6 +12,7 @@
   <ItemGroup>
     <ProjectReference Include="..\CheckersAI\CheckersAI.csproj" />
     <ProjectReference Include="..\CheckersRules\Checkers.csproj" />
+    <ProjectReference Include="..\ZermeloUnitTests\ZermeloUnitTests.csproj" />
   </ItemGroup>
 
   <ItemGroup>

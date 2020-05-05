@@ -1,4 +1,3 @@
-using Benchmarking;
 using CheckersAI.ByteTree;
 using CheckersAI.TreeSearch;
 using System.Threading;

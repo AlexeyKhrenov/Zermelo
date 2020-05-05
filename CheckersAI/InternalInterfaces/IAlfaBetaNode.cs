@@ -7,7 +7,5 @@
         TMetric Alfa { get; set; }
 
         TMetric Beta { get; set; }
-
-        TMetric Result { get; set; }
     }
 }

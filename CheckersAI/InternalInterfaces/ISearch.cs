@@ -15,6 +15,6 @@ namespace CheckersAI.InternalInterfaces
         /// <summary>
         /// Returns chain of maximizing nodes
         /// </summary>
-        Queue<TNode> DoProgressiveDeepening(TNode node, TState state, TMetric alfa, TMetric beta, CancellationToken ct);
+        Queue<TNode> DoProgressiveDeepening(TNode node, TState state, TMetric alfa, TMetric beta, int maxDepth, CancellationToken ct);
     }
 }

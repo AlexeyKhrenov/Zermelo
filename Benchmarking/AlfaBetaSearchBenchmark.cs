@@ -3,6 +3,7 @@
 using CheckersAI.ByteTree;
 using CheckersAI.TreeSearch;
 using System.Threading;
+using ZermeloUnitTests.Search;
 
 namespace Benchmarking
 {

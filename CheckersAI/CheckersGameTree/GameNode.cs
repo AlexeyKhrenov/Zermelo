@@ -32,6 +32,11 @@ namespace CheckersAI.CheckersGameTree
             {
                 Move = new HistoryItemMinified();
                 Move.Minify(item, board);
+                IsMaxPlayer = Move.Player;
+            }
+            else
+            {
+                IsMaxPlayer = true;
             }
         }
 

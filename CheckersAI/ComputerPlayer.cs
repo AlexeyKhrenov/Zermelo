@@ -11,8 +11,6 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
-[assembly: InternalsVisibleTo("Benchmarking")]
-[assembly: InternalsVisibleTo("ZermeloUnitTests")]
 namespace CheckersAI
 {
     public class ComputerPlayer : IPlayer
@@ -51,7 +49,7 @@ namespace CheckersAI
             root = _treeManager.GoDownToNode(root);
 
             // add registration to abort threads
-            var plannedMoves = _search.DoProgressiveDeepening(root, practiceBoard, sbyte.MinValue, sbyte.MaxValue, ct);
+            var plannedMoves = _search.DoProgressiveDeepening(root, practiceBoard, sbyte.MinValue, sbyte.MaxValue, int.MaxValue, ct);
 
             StopThinking(game, plannedMoves);
             return Task.CompletedTask;

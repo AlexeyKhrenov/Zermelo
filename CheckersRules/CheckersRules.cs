@@ -5,6 +5,7 @@ using Game.PublicInterfaces;
 
 [assembly: InternalsVisibleTo("ZermeloUnitTests")]
 [assembly: InternalsVisibleTo("CheckersAI")]
+[assembly: InternalsVisibleTo("Benchmarking")]
 namespace Checkers
 {
     // todo - checkers rules appender or host or assembler

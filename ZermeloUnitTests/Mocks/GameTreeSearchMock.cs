@@ -15,7 +15,7 @@ namespace ZermeloUnitTests.Mocks
             throw new NotImplementedException();
         }
 
-        public Queue<GameNode> DoProgressiveDeepening(GameNode node, BoardMinified state, sbyte alfa, sbyte beta, CancellationToken ct)
+        public Queue<GameNode> DoProgressiveDeepening(GameNode node, BoardMinified state, sbyte alfa, sbyte beta, int maxDepth, CancellationToken ct)
         {
             return new Queue<GameNode>();
         }

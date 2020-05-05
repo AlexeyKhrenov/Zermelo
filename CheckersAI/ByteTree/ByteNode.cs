@@ -21,6 +21,10 @@ namespace CheckersAI.ByteTree
             Children = children;
         }
 
+        public ByteNode()
+        {
+        }
+
         // todo - implement
         public override int GetHashCode()
         {

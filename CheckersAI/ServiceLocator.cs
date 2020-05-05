@@ -1,12 +1,8 @@
 ﻿using Checkers;
 using Checkers.Minifications;
 using CheckersAI.CheckersGameTree;
-using CheckersAI.InternalInterfaces;
 using CheckersAI.TreeSearch;
 using Game.PublicInterfaces;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace CheckersAI
 {

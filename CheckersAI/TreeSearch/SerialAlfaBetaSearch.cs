@@ -127,7 +127,7 @@ namespace CheckersAI.TreeSearch
             }
         }
 
-        public Queue<TNode> DoProgressiveDeepening(TNode node, TState state, TMetric alfa, TMetric beta, CancellationToken ct)
+        public Queue<TNode> DoProgressiveDeepening(TNode node, TState state, TMetric alfa, TMetric beta, int maxDepth, CancellationToken ct)
         {
             var depth = 0;
             var result = new Queue<TNode>();
@@ -138,6 +138,11 @@ namespace CheckersAI.TreeSearch
             {
                 try
                 {
+                    if (depth > maxDepth)
+                    {
+                        break;
+                    }
+
                     Search(node, depth, alfa, beta, state, ct);
 
                     result.Clear();
