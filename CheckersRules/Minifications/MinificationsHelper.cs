@@ -1,6 +1,7 @@
 ﻿using Game.PublicInterfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Checkers.Minifications
@@ -16,9 +17,22 @@ namespace Checkers.Minifications
                 from.CanGoUp,
                 from.CanGoDown,
                 from.IsQueen);
-            min.AvailableMoves = from.AvailableMoves;
+
+            // todo - remove this cast
+            for (var i = 0; i < from.AvailableMoves.Count; i++)
+            {
+                min.AvailableMoves[i] = from.AvailableMoves[i];
+            }
 
             return min;
+        }
+
+        public static Piece ToMaximized(this PieceMinified min)
+        {
+            var piece = new Piece(min.X, min.Y, min.IsWhite, min.CanGoUp, min.CanGoDown);
+            piece.IsQueen = min.IsQueen;
+            piece.AvailableMoves = min.AvailableMoves.Where(x => x.IsNotNull).ToList();
+            return piece;
         }
 
         public static BoardMinified ToMinified(this IBoard from)
@@ -49,6 +63,20 @@ namespace Checkers.Minifications
             }
 
             return min;
+        }
+
+        public static void ToMaximized(this BoardMinified from, IBoard to)
+        {
+            to.Player1.Figures = from.Player1Pieces.Select(x => x.ToMaximized()).ToList();
+            to.Player2.Figures = from.Player2Pieces.Select(x => x.ToMaximized()).ToList();
+
+            if (to.ActivePlayer != (from.ActivePlayer ? to.Player1 : to.Player2))
+            {
+                to.SwitchPlayers();
+            }
+
+            to.ActivePlayer.IsActive = true;
+            to.AwaitingPlayer.IsActive = false;
         }
     }
 }

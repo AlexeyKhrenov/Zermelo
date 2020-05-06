@@ -38,12 +38,12 @@ namespace CheckersAI.CheckersGameTree
 
             foreach (var piece in myPieces)
             {
-                result += (sbyte) piece.AvailableMoves.Count;
+                result += (sbyte) piece.CountAvailableMoves();
             }
 
             foreach (var piece in hisPieces)
             {
-                result -= (sbyte) piece.AvailableMoves.Count;
+                result -= (sbyte) piece.CountAvailableMoves();
             }
 
             return result;

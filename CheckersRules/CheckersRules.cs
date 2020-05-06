@@ -37,7 +37,7 @@ namespace Checkers
         {
             var min = board.ToMinified();
             min = InitialPositionRules.ApplyRule(min, null);   
-            min.Maximize(board);
+            min.ToMaximized(board);
         }
 
         public void MakeMove(IBoard board, IHistoryItem move)
@@ -48,7 +48,7 @@ namespace Checkers
             minMove.Minify(move, board);
 
             minBoard = MakeMove(minBoard, minMove);
-            minBoard.Maximize(board);
+            minBoard.ToMaximized(board);
             minMove.Maximize(move);
         }
 
@@ -67,7 +67,7 @@ namespace Checkers
             }
 
             minBoard = ChainOfRules.UndoRule(minBoard, minToUndo, minLastMove);
-            minBoard.Maximize(board);
+            minBoard.ToMaximized(board);
         }
 
         internal BoardMinified MakeMove(BoardMinified board, HistoryItemMinified move)

@@ -96,9 +96,9 @@ namespace ZermeloUnitTests.Search
 
             var practiceBoard = sourceBoard.ToMinified();
             practiceBoard.Player1Pieces.First(f => f.X == 1 && f.Y == 3).AvailableMoves =
-                new List<Cell>() { new Cell(0, 2), new Cell(2, 2) };
+                new Cell[] { new Cell(0, 2), new Cell(2, 2) };
             practiceBoard.Player1Pieces.First(f => f.X == 3 && f.Y == 3).AvailableMoves =
-                new List<Cell>() { new Cell(2, 2) };
+                new Cell[] { new Cell(2, 2) };
 
             _search.Search(root, 12, sbyte.MinValue, sbyte.MaxValue, practiceBoard, _cts.Token);
             var bestMove = root.GetBestMove();

@@ -91,27 +91,13 @@ namespace Checkers.Minifications
         {
             foreach (var figure in Player1Pieces)
             {
-                figure.AvailableMoves.Clear();
+                figure.ClearMoves();
             }
 
             foreach (var figure in Player2Pieces)
             {
-                figure.AvailableMoves.Clear();
+                figure.ClearMoves();
             }
-        }
-
-        public void Maximize(IBoard to)
-        {
-            to.Player1.Figures = Player1Pieces.Select(x => x.ToPiece()).ToList();
-            to.Player2.Figures = Player2Pieces.Select(x => x.ToPiece()).ToList();
-
-            if (to.ActivePlayer != (ActivePlayer ? to.Player1 : to.Player2))
-            {
-                to.SwitchPlayers();
-            }
-
-            to.ActivePlayer.IsActive = true;
-            to.AwaitingPlayer.IsActive = false;
         }
     }
 }

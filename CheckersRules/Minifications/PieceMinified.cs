@@ -10,7 +10,7 @@ namespace Checkers.Minifications
         public byte X;
         public byte Y;
 
-        public List<Cell> AvailableMoves { get; set; }
+        public Cell[] AvailableMoves { get; set; }
 
         public bool CanGoUp { get; set; }
 
@@ -30,22 +30,9 @@ namespace Checkers.Minifications
             to.IsQueen = IsQueen;
         }
 
-        public Piece ToPiece()
-        {
-            var piece = new Piece(X, Y, IsWhite, CanGoUp, CanGoDown);
-            piece.IsQueen = IsQueen;
-            piece.AvailableMoves = AvailableMoves;
-            return piece;
-        }
-
-        public PieceMinified()
-        {
-            AvailableMoves = new List<Cell>();
-        }
-
         public PieceMinified(byte x, byte y, bool isWhite, bool canGoUp, bool canGoDown)
         {
-            AvailableMoves = new List<Cell>();
+            AvailableMoves = new Cell[4];
 
             X = x;
             Y = y;
@@ -56,7 +43,7 @@ namespace Checkers.Minifications
 
         public PieceMinified(byte x, byte y, bool isWhite, bool canGoUp, bool canGoDown, bool isQueen)
         {
-            AvailableMoves = new List<Cell>();
+            AvailableMoves = new Cell[4];
 
             X = x;
             Y = y;
@@ -64,6 +51,24 @@ namespace Checkers.Minifications
             CanGoDown = canGoDown;
             CanGoUp = canGoUp;
             IsQueen = isQueen;
+        }
+
+        public void ClearMoves()
+        {
+            AvailableMoves = new Cell[4];
+        }
+
+        public byte CountAvailableMoves()
+        {
+            byte result = 0;
+            foreach (var cell in AvailableMoves)
+            {
+                if (cell.IsNotNull)
+                {
+                    result++;
+                }
+            }
+            return result;
         }
     }
 }

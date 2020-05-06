@@ -9,8 +9,11 @@ namespace Benchmarking
     {
         static void Main(string[] args)
         {
-            BenchmarkRunner.Run<ByteTreeSearchBenchmarks>();
-
+            //BenchmarkRunner.Run<ByteTreeSearchBenchmarks>();
+            var t = new SerialGameTreeSearchBenchmark();
+            t.GlobalSetup();
+            t.RunSerialGameTreeSearchBenchmark();
+            BenchmarkRunner.Run<SerialGameTreeSearchBenchmark>();
             //var s = new ByteTreeSearchBenchmarks();
             //var r1 = s.SerialTreeSearch();
             //var r2 = s.DynamicTreeSearch();

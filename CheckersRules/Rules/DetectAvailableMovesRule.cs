@@ -60,7 +60,9 @@ namespace Checkers.Rules
         {
             if (pieces[piece.X + directionRight, piece.Y + directionDown] == null)
             {
-                piece.AvailableMoves.Add(new Cell((byte)(piece.X + directionRight), (byte)(piece.Y + directionDown)));
+                var i = directionDown > 0 ? 2 : 0;
+                var j = directionRight > 0 ? 1 : 0;
+                piece.AvailableMoves[i + j] = new Cell((byte)(piece.X + directionRight), (byte)(piece.Y + directionDown));
             }
         }
     }

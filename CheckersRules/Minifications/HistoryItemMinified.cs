@@ -43,7 +43,7 @@ namespace Checkers.Minifications
         {
             if (Captured != null)
             {
-                toMaximizedTarget.Captured = Captured.ToPiece();
+                toMaximizedTarget.Captured = Captured.ToMaximized();
             }
         }
     }
