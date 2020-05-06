@@ -37,8 +37,7 @@ namespace Benchmarking
             };
             var sourceBoard = new BoardMock(sourceBoardStr, 6, false);
 
-            practiceBoard = new BoardMinified();
-            practiceBoard.Minify(sourceBoard);
+            practiceBoard = sourceBoard.ToMinified();
 
             cts = new CancellationTokenSource();
 

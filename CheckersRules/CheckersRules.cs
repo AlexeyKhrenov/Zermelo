@@ -35,16 +35,14 @@ namespace Checkers
 
         public void PlaceFigures(IBoard board)
         {
-            var min = new BoardMinified();
-            min.Minify(board);
+            var min = board.ToMinified();
             min = InitialPositionRules.ApplyRule(min, null);   
             min.Maximize(board);
         }
 
         public void MakeMove(IBoard board, IHistoryItem move)
         {
-            var minBoard = new BoardMinified();
-            minBoard.Minify(board);
+            var minBoard = board.ToMinified();
 
             var minMove = new HistoryItemMinified();
             minMove.Minify(move, board);
@@ -56,8 +54,7 @@ namespace Checkers
 
         public void Undo(IBoard board, IHistoryItem toUndo, IHistoryItem lastMoveBeforeUndo)
         {
-            var minBoard = new BoardMinified();
-            minBoard.Minify(board);
+            var minBoard = board.ToMinified();
 
             var minToUndo = new HistoryItemMinified();
             minToUndo.Minify(toUndo, board);

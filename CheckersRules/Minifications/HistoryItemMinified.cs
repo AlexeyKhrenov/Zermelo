@@ -33,8 +33,7 @@ namespace Checkers.Minifications
 
             if (fromMaximizedSource.Captured != null)
             {
-                Captured = new PieceMinified();
-                Captured.Minify((Piece)fromMaximizedSource.Captured);
+                Captured = ((Piece)fromMaximizedSource.Captured).ToMinified();
             }
 
             Player = board.Player1 == fromMaximizedSource.Player;

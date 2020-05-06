@@ -86,35 +86,6 @@ namespace Checkers.Minifications
             Pieces[captured.X, captured.Y] = captured;
         }
 
-        public void Minify(IBoard from)
-        {
-            Player1Pieces = new List<PieceMinified>();
-            Player2Pieces = new List<PieceMinified>();
-
-            Pieces = new PieceMinified[from.Size, from.Size];
-            InvertedCoordinates = from.InvertedCoordinates;
-
-            ActivePlayer = from.ActivePlayer == from.Player1;
-
-            foreach (var figure in from.Player1.Figures)
-            {
-                var minPiece = new PieceMinified();
-                minPiece.Minify((Piece)figure);
-                minPiece.AvailableMoves = figure.AvailableMoves;
-                Player1Pieces.Add(minPiece);
-                Pieces[figure.X, figure.Y] = minPiece;
-            }
-
-            foreach (var figure in from.Player2.Figures)
-            {
-                var minPiece = new PieceMinified();
-                minPiece.Minify((Piece)figure);
-                minPiece.AvailableMoves = figure.AvailableMoves;
-                Player2Pieces.Add(minPiece);
-                Pieces[figure.X, figure.Y] = minPiece;
-            }
-        }
-
         // todo - remove after it becomes a structure
         public void ClearMoves()
         {

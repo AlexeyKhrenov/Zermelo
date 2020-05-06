@@ -41,8 +41,7 @@ namespace ZermeloUnitTests.Search
             var root = new GameNode();
             root.Move = new HistoryItemMinified(new Cell(1, 1), new Cell(0, 0), false);
 
-            var practiceBoard = new BoardMinified();
-            practiceBoard.Minify(sourceBoard);
+            var practiceBoard = sourceBoard.ToMinified();
 
             practiceBoard = _rules.MakeMove(practiceBoard, root.Move);
 
@@ -69,8 +68,7 @@ namespace ZermeloUnitTests.Search
             var root = new GameNode();
             root.Move = new HistoryItemMinified(new Cell(0, 0), new Cell(1, 1), false);
 
-            var practiceBoard = new BoardMinified();
-            practiceBoard.Minify(sourceBoard);
+            var practiceBoard = sourceBoard.ToMinified();
 
             practiceBoard = _rules.MakeMove(practiceBoard, root.Move);
 
@@ -96,8 +94,7 @@ namespace ZermeloUnitTests.Search
             var root = new GameNode();
             root.Move = null;
 
-            var practiceBoard = new BoardMinified();
-            practiceBoard.Minify(sourceBoard);
+            var practiceBoard = sourceBoard.ToMinified();
             practiceBoard.Player1Pieces.First(f => f.X == 1 && f.Y == 3).AvailableMoves =
                 new List<Cell>() { new Cell(0, 2), new Cell(2, 2) };
             practiceBoard.Player1Pieces.First(f => f.X == 3 && f.Y == 3).AvailableMoves =

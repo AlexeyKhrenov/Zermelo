@@ -54,14 +54,16 @@ namespace Checkers.Minifications
             CanGoUp = canGoUp;
         }
 
-        public void Minify(Piece from)
+        public PieceMinified(byte x, byte y, bool isWhite, bool canGoUp, bool canGoDown, bool isQueen)
         {
-            X = from.X;
-            Y = from.Y;
-            CanGoDown = from.CanGoDown;
-            CanGoUp = from.CanGoUp;
-            IsWhite = from.IsWhite;
-            IsQueen = from.IsQueen;
+            AvailableMoves = new List<Cell>();
+
+            X = x;
+            Y = y;
+            IsWhite = isWhite;
+            CanGoDown = canGoDown;
+            CanGoUp = canGoUp;
+            IsQueen = isQueen;
         }
     }
 }

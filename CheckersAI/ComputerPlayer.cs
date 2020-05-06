@@ -42,8 +42,7 @@ namespace CheckersAI
         {
             var latestMove = game.LatestMove;
 
-            var practiceBoard = new BoardMinified();
-            practiceBoard.Minify(game.Board);
+            var practiceBoard = game.Board.ToMinified();
 
             var root = new GameNode(latestMove, game.Board);
             root = _treeManager.GoDownToNode(root);
