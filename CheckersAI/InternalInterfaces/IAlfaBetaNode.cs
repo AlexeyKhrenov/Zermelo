@@ -7,5 +7,15 @@
         TMetric Alfa { get; set; }
 
         TMetric Beta { get; set; }
+
+        TNode Parent { get; }
+
+        bool TryLockNode(); //todo - rename
+
+        bool IsFinalized { get; }
+
+        void Update(TNode child);
+
+        void Update(TMetric result);
     }
 }

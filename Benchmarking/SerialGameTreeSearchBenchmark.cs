@@ -5,8 +5,6 @@ using CheckersAI.ByteTree;
 using CheckersAI.CheckersGameTree;
 using CheckersAI.TreeSearch;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using ZermeloUnitTests.Mocks;
 
