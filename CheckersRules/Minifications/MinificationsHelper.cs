@@ -24,6 +24,8 @@ namespace Checkers.Minifications
                 min.AvailableMoves[i] = from.AvailableMoves[i];
             }
 
+            min.IsCaptured = from.IsCaptured;
+
             return min;
         }
 

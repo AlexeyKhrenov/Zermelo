@@ -90,7 +90,7 @@ namespace Checkers.Minifications
             else
             {
                 Player2PiecesCount++;
-                RestorePiece(Player1Pieces, captured);
+                RestorePiece(Player2Pieces, captured);
             }
         }
 
@@ -101,6 +101,7 @@ namespace Checkers.Minifications
                 if (playersPieces[i].Equals(captured))
                 {
                     Pieces[captured.X, captured.Y] = new BoardCell(i, captured.IsWhite);
+                    playersPieces[i].IsCaptured = false;
                 }
             }
         }

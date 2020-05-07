@@ -1,4 +1,5 @@
 ﻿using Checkers;
+using FluentAssertions;
 using Game.Implementations;
 using Game.Primitives;
 using System;

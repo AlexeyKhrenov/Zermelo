@@ -1,4 +1,6 @@
-﻿using CheckersAI.InternalInterfaces;
+﻿using CheckersAI.CheckersGameTree;
+using CheckersAI.InternalInterfaces;
+using Game.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -58,7 +60,7 @@ namespace CheckersAI.TreeSearch
                     var childState = _stateTransitions.GoDown(state, child);
                     var result = Search(child, depth - 1, alfa, beta, childState, ct);
                     // todo - remove this state undo after everything becomes struct
-                    childState = _stateTransitions.GoUp(state, child);
+                    childState = _stateTransitions.GoUp(childState, child);
 
                     if (!_comparator.IsBigger(maxVal, result))
                     {
@@ -146,10 +148,14 @@ namespace CheckersAI.TreeSearch
                     Search(node, depth, alfa, beta, state, ct);
 
                     result.Clear();
-                    var nextNode = node;
-                    while (nextNode.BestChild != null && nextNode.BestChild.IsMaxPlayer == nextNode.IsMaxPlayer)
+                    var nextNode = node.BestChild;
+                    while (nextNode != null)
                     {
-                        result.Enqueue(nextNode.BestChild);
+                        result.Enqueue(nextNode);
+                        if (nextNode.IsMaxPlayer != node.IsMaxPlayer)
+                        {
+                            break;
+                        }
                         nextNode = nextNode.BestChild;
                     }
 
