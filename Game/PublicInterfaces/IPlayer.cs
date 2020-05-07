@@ -19,6 +19,6 @@ namespace Game.PublicInterfaces
 
         Task MakeMove(IGame game, CancellationToken cancellationToken);
 
-        IEnumerable<IFigure> Figures { get; set; }
+        List<IFigure> Figures { get; set; }
     }
 }

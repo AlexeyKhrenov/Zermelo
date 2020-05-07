@@ -12,7 +12,7 @@ namespace Checkers.Rules
         {
             if (latestMove.IsKill)
             {
-                var piece = board.Pieces[latestMove.To.X, latestMove.To.Y];
+                var piece = board.GetPiece(latestMove.To.X, latestMove.To.Y, latestMove.Player);
 
                 if (NeedToCaptureRule.Check(piece, board.Pieces))
                 {
@@ -31,7 +31,7 @@ namespace Checkers.Rules
                 lastMoveBeforeUndo.IsKill &&
                 toUndo.Player == lastMoveBeforeUndo.Player)
             {
-                var piece = board.Pieces[toUndo.From.X, toUndo.From.Y];
+                var piece = board.GetPiece(toUndo.From.X, toUndo.From.Y, toUndo.Player);
 
                 NeedToCaptureRule.Check(piece, board.Pieces);
 

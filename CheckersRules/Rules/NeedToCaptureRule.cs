@@ -1,10 +1,5 @@
 ﻿using Checkers.Minifications;
 using Game.Primitives;
-using Game.PublicInterfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Checkers.Rules
 {
@@ -16,6 +11,10 @@ namespace Checkers.Rules
 
             foreach (var figure in board.ActiveSet)
             {
+                if (figure.IsCaptured)
+                {
+                    continue;
+                }
                 needToPassControl &= !Check(figure, board.Pieces);
             }
 
@@ -33,6 +32,10 @@ namespace Checkers.Rules
 
             foreach (var figure in board.ActiveSet)
             {
+                if (figure.IsCaptured)
+                {
+                    continue;
+                }
                 needToPassControl &= !Check(figure, board.Pieces);
             }
 
@@ -45,12 +48,11 @@ namespace Checkers.Rules
         }
 
         // returns true if a piece to capture was detected
-        public static bool Check(PieceMinified figure, PieceMinified[,] pieces)
+        public static bool Check(PieceMinified piece, BoardCell[,] pieces)
         {
             var result = false;
 
             var size = pieces.GetLength(0);
-            var piece = pieces[figure.X, figure.Y];
             if (piece.Y > 1)
             {
                 // left
@@ -82,12 +84,12 @@ namespace Checkers.Rules
             return result;
         }
 
-        private static bool CheckDirection(PieceMinified piece, PieceMinified[,] pieces, int directionRight, int directionDown)
+        private static bool CheckDirection(PieceMinified piece, BoardCell[,] pieces, int directionRight, int directionDown)
         {
             var target = pieces[piece.X + directionRight, piece.Y + directionDown];
-            if (target != null && target.IsWhite != piece.IsWhite)
+            if (!target.IsEmpty() && target.IsWhite() != piece.IsWhite)
             {
-                if (pieces[piece.X + 2 * directionRight, piece.Y + 2 * directionDown] == null)
+                if (pieces[piece.X + 2 * directionRight, piece.Y + 2 * directionDown].IsEmpty())
                 {
                     var i = directionDown > 0 ? 2 : 0;
                     var j = directionRight > 0 ? 1 : 0;

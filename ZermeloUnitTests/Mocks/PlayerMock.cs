@@ -14,7 +14,7 @@ namespace ZermeloUnitTests.Mocks
 
         public bool IsComputerPlayer => false;
 
-        public IEnumerable<IFigure> Figures { get; set; }
+        public List<IFigure> Figures { get; set; }
 
         public int MaxPly => throw new NotImplementedException();
 

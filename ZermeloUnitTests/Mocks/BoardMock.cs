@@ -2,6 +2,7 @@
 using Game.PublicInterfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace ZermeloUnitTests.Mocks
@@ -70,8 +71,8 @@ namespace ZermeloUnitTests.Mocks
                 }
             }
 
-            Player1.Figures = player1Figures;
-            Player2.Figures = player2Figures;
+            Player1.Figures = player1Figures.Select(x => (IFigure)x).ToList();
+            Player2.Figures = player2Figures.Select(x => (IFigure)x).ToList();
         }
     }
 }

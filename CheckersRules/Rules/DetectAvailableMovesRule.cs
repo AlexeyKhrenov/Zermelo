@@ -19,9 +19,12 @@ namespace Checkers.Rules
 
         private BoardMinified CheckRule(BoardMinified board, HistoryItemMinified latestMove)
         {
-            foreach (var figure in board.ActiveSet)
+            foreach (var piece in board.ActiveSet)
             {
-                var piece = board.Pieces[figure.X, figure.Y];
+                if (piece.IsCaptured)
+                {
+                    continue;
+                }
                 var size = board.GetSize();
 
                 if (piece.CanGoUp && piece.Y > 0)
@@ -56,9 +59,9 @@ namespace Checkers.Rules
             return board;
         }
 
-        public void Check(PieceMinified piece, PieceMinified[,] pieces, int directionDown, int directionRight)
+        public void Check(PieceMinified piece, BoardCell[,] pieces, int directionDown, int directionRight)
         {
-            if (pieces[piece.X + directionRight, piece.Y + directionDown] == null)
+            if (pieces[piece.X + directionRight, piece.Y + directionDown].IsEmpty())
             {
                 var i = directionDown > 0 ? 2 : 0;
                 var j = directionRight > 0 ? 1 : 0;

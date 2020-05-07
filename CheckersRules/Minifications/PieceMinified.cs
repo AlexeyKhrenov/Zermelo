@@ -5,10 +5,12 @@ using System.Text;
 
 namespace Checkers.Minifications
 {
-    internal class PieceMinified
+    internal class PieceMinified : IEquatable<PieceMinified>
     {
         public byte X;
         public byte Y;
+
+        public bool IsCaptured { get; set; }
 
         public Cell[] AvailableMoves { get; set; }
 
@@ -69,6 +71,20 @@ namespace Checkers.Minifications
                 }
             }
             return result;
+        }
+
+        public override int GetHashCode()
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Equals(PieceMinified other)
+        {
+            return
+                other.IsWhite == IsWhite &&
+                other.IsQueen == IsQueen &&
+                other.X == X &&
+                other.Y == Y;
         }
     }
 }

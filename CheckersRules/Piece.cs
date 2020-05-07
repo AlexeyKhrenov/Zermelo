@@ -20,6 +20,8 @@ namespace Checkers
 
         public bool IsQueen { get; set; }
 
+        public bool IsCaptured { get; set; }
+
         public string Type
         {
             get

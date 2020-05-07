@@ -14,7 +14,7 @@ namespace Game.Implementations
 
         public bool IsComputerPlayer => false;
 
-        public IEnumerable<IFigure> Figures { get; set; }
+        public List<IFigure> Figures { get; set; }
 
         public bool IsActive { get; set; }
 

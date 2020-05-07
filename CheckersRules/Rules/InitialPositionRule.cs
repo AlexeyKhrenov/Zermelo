@@ -20,7 +20,7 @@ namespace Checkers.Rules
                 throw new NotImplementedException("Game size smaller than 4");
             }
 
-            // positioning pieces
+            // todo - refactor this
             var isWhite = !changedSides;
             for (byte y = (byte)(size - 1); y > size / 2; y--)
             {
@@ -28,8 +28,8 @@ namespace Checkers.Rules
                 for (var x = startX; x < size; x += 2)
                 {
                     var piece = new PieceMinified(x, y, isWhite, true, false);
-                    board.Pieces[x, y] = piece;
                     player1Figures.Add(piece);
+                    board.Pieces[x, y] = new BoardCell((byte)(player1Figures.Count - 1), isWhite);
                 }
             }
 
@@ -39,8 +39,8 @@ namespace Checkers.Rules
                 for (var x = startX; x < size; x += 2)
                 {
                     var piece = new PieceMinified(x, y, !isWhite, false, true);
-                    board.Pieces[x, y] = piece;
                     player2Figures.Add(piece);
+                    board.Pieces[x, y] = new BoardCell((byte)(player2Figures.Count - 1), isWhite);
                 }
             }
 

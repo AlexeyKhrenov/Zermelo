@@ -9,19 +9,26 @@ namespace Checkers.Minifications
     // todo - this should become a struct with methods
     internal struct BoardMinified
     {
-        public PieceMinified[,] Pieces { get; set; }
+        // todo rename to board cell
+        public BoardCell[,] Pieces { get; set; }
 
         public bool InvertedCoordinates { get; set; }
 
-        // change to array
+        // todo change to array
         public List<PieceMinified> Player1Pieces { get; set; }
 
-        // change to array
+        // todo change to array
         public List<PieceMinified> Player2Pieces { get; set; }
 
         public bool ActivePlayer { get; set; }
 
         public List<PieceMinified> ActiveSet => ActivePlayer ? Player1Pieces : Player2Pieces;
+
+        // little optimisation for GameNode evaluation
+        public byte Player1PiecesCount { get; set; }
+
+        // little optimisation for GameNode evaluation
+        public byte Player2PiecesCount { get; set; }
 
         public void SwitchPlayers()
         {
@@ -36,20 +43,21 @@ namespace Checkers.Minifications
 
         public PieceMinified RemovePiece(int x, int y, bool player)
         {
-            Pieces[x, y] = null;
+            var index = Pieces[x, y].GetIndex();
+            Pieces[x, y].RemovePiece();
 
             if (player)
             {
-                // todo - remove Linq
-                var toRemove = Player1Pieces.First(f => f.X == x && f.Y == y);
-                Player1Pieces.Remove(toRemove);
+                Player1PiecesCount--;
+                var toRemove = Player1Pieces[index];
+                toRemove.IsCaptured = true;
                 return toRemove;
             }
             else
             {
-                // todo - remove Linq
-                var toRemove = Player2Pieces.First(f => f.X == x && f.Y == y);
-                Player2Pieces.Remove(toRemove);
+                Player2PiecesCount--;
+                var toRemove = Player2Pieces[index];
+                toRemove.IsCaptured = true;
                 return toRemove;
             }
         }
@@ -57,7 +65,7 @@ namespace Checkers.Minifications
         public void MovePiece(byte x0, byte y0, byte x1, byte y1)
         {
             Pieces[x1, y1] = Pieces[x0, y0];
-            Pieces[x0, y0] = null;
+            Pieces[x0, y0].RemovePiece();
 
             // todo - optimize it along with Linq removal and collections
             var piece = Player1Pieces.FirstOrDefault(f => f.X == x0 && f.Y == y0);
@@ -76,14 +84,38 @@ namespace Checkers.Minifications
         {
             if (player)
             {
-                Player1Pieces.Add(captured);
+                Player1PiecesCount++;
+                RestorePiece(Player1Pieces, captured);
             }
             else
             {
-                Player2Pieces.Add(captured);
+                Player2PiecesCount++;
+                RestorePiece(Player1Pieces, captured);
             }
+        }
 
-            Pieces[captured.X, captured.Y] = captured;
+        private void RestorePiece(List<PieceMinified> playersPieces, PieceMinified captured)
+        {
+            for (byte i = 0; i < playersPieces.Count; i++)
+            {
+                if (playersPieces[i].Equals(captured))
+                {
+                    Pieces[captured.X, captured.Y] = new BoardCell(i, captured.IsWhite);
+                }
+            }
+        }
+
+        public PieceMinified GetPiece(byte x, byte y, bool player)
+        {
+            var cell = Pieces[x, y];
+            if (player)
+            {
+                return Player1Pieces[cell.GetIndex()];
+            }
+            else
+            {
+                return Player2Pieces[cell.GetIndex()];
+            }
         }
 
         // todo - remove after it becomes a structure

@@ -6,44 +6,39 @@ namespace CheckersAI.CheckersGameTree
 {
     internal class Evaluator : IEvaluator<BoardMinified, sbyte>
     {
-        private bool _playsFor1Player;
-
-        public Evaluator(bool playsFor1Player)
+        public Evaluator()
         {
-            _playsFor1Player = playsFor1Player;
-        }
-
-        public sbyte Evaluate(BoardMinified board)
-        {
-            // simply count available moves and checks if winning position
-            return _playsFor1Player
-                ? Count(board.Player1Pieces, board.Player2Pieces)
-                : Count(board.Player2Pieces, board.Player1Pieces);
         }
 
         // todo - perfomance arch valuable point
-        private sbyte Count(List<PieceMinified> myPieces, List<PieceMinified> hisPieces)
+        public sbyte Evaluate(BoardMinified board)
         {
-            if (hisPieces.Count == 0)
-            {
-                return sbyte.MaxValue;
-            }
-
-            if (myPieces.Count == 0)
+            if (board.Player1PiecesCount == 0)
             {
                 return sbyte.MinValue;
             }
 
-            sbyte result = 0;
-
-            foreach (var piece in myPieces)
+            if (board.Player2PiecesCount == 0)
             {
-                result += (sbyte) piece.CountAvailableMoves();
+                return sbyte.MaxValue;
             }
 
-            foreach (var piece in hisPieces)
+            sbyte result = 0;
+
+            foreach (var piece in board.Player1Pieces)
             {
-                result -= (sbyte) piece.CountAvailableMoves();
+                if (!piece.IsCaptured)
+                {
+                    result += (sbyte)piece.CountAvailableMoves();
+                }
+            }
+
+            foreach (var piece in board.Player2Pieces)
+            {
+                if (!piece.IsCaptured)
+                {
+                    result -= (sbyte)piece.CountAvailableMoves();
+                }
             }
 
             return result;

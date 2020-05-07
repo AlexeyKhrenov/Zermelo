@@ -11,7 +11,7 @@ namespace Checkers.Rules
     {
         public override BoardMinified ApplyRule(BoardMinified board, HistoryItemMinified latestMove)
         {
-            var piece = board.Pieces[latestMove.To.X, latestMove.To.Y];
+            var piece = board.GetPiece(latestMove.To.X, latestMove.To.Y, latestMove.Player);
             if (!piece.IsQueen)
             {
                 bool v1 = (piece.CanGoDown && piece.Y == board.GetSize() - 1);
@@ -33,7 +33,7 @@ namespace Checkers.Rules
         {
             if (toUndo.IsPieceChangeType)
             {
-                var piece = board.Pieces[toUndo.From.X, toUndo.From.Y];
+                var piece = board.GetPiece(toUndo.From.X, toUndo.From.Y, toUndo.Player);
 
                 piece.IsQueen = false;
                 if (toUndo.To.Y > toUndo.From.Y)

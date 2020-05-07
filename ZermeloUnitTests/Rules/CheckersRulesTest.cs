@@ -77,6 +77,10 @@ namespace ZermeloUnitTests.Rules
             targetBoard.Player2.Figures.First(f => f.X == 1 && f.Y == 0).AvailableMoves =
                 new List<Cell>() { new Cell(3, 2) };
 
+            var capturedPiece = new Piece(1, 2, false, false, false);
+            capturedPiece.IsCaptured = true;
+            targetBoard.Player2.Figures.Add(capturedPiece);
+
             var move = new HistoryItem(sourceBoard.ActivePlayer, new Move(new Cell(0, 3), new Cell(2, 1)));
 
             // ACT
@@ -110,6 +114,10 @@ namespace ZermeloUnitTests.Rules
             targetBoard.SwitchPlayers();
             targetBoard.Player2.Figures.First(f => f.X == 3 && f.Y == 0).AvailableMoves =
                 new List<Cell>() { new Cell(2, 1) };
+
+            var capturedPiece = new Piece(2, 1, false, false, false);
+            capturedPiece.IsCaptured = true;
+            targetBoard.Player2.Figures.Add(capturedPiece);
 
             var move = new HistoryItem(sourceBoard.ActivePlayer, new Move(new Cell(3, 2), new Cell(1, 0)));
 
@@ -179,6 +187,10 @@ namespace ZermeloUnitTests.Rules
             var targetBoard = new BoardMock(targetBoardStr, 5, false);
             targetBoard.Player1.Figures.First(f => f.X == 0 && f.Y == 2).AvailableMoves =
                 new List<Cell>() { new Cell(2, 0) };
+
+            var capturedPiece = new Piece(1, 3, false, false, false);
+            capturedPiece.IsCaptured = true;
+            targetBoard.Player2.Figures.Add(capturedPiece);
 
             var move = new HistoryItem(sourceBoard.ActivePlayer, new Move(new Cell(2, 4), new Cell(0, 2)));
 

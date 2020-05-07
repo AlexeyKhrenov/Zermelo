@@ -22,7 +22,7 @@ namespace CheckersAI
 
             var comparator = new Comparator();
             var brancher = new Brancher(rules);
-            var evaluator = new Evaluator(true);
+            var evaluator = new Evaluator();
             var stateTransitions = new StateTransitions(rules);
 
             return new SerialAlfaBetaSearch<GameNode, sbyte, BoardMinified>(

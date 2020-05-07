@@ -21,7 +21,7 @@ namespace CheckersAI
 
         public bool IsActive { get; set; }
 
-        public IEnumerable<IFigure> Figures { get; set; }
+        public List<IFigure> Figures { get; set; }
 
         public int Ply { get; }
 

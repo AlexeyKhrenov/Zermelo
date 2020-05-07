@@ -62,6 +62,10 @@ namespace ZermeloUnitTests.Rules
             var sourceBoard = new BoardMock(sourceBoardStr, 4, false);
             sourceBoard.SwitchPlayers();
 
+            var capturedPiece = new Piece(1, 2, false, false, false);
+            capturedPiece.IsCaptured = true;
+            sourceBoard.Player2.Figures.Add(capturedPiece);
+
             var targetBoardStr = new string[]
             {
                 "___b",
@@ -99,6 +103,10 @@ namespace ZermeloUnitTests.Rules
             var sourceBoard = new BoardMock(sourceBoardStr, 4, false);
             sourceBoard.SwitchPlayers();
 
+            var capturedPiece = new Piece(2, 1, false, false, false, true);
+            capturedPiece.IsCaptured = true;
+            sourceBoard.Player2.Figures.Add(capturedPiece);
+
             var targetBoardStr = new string[]
             {
                 "____",
@@ -135,6 +143,10 @@ namespace ZermeloUnitTests.Rules
             };
             var sourceBoard = new BoardMock(sourceBoardStr, 5, false);
             sourceBoard.SwitchPlayers();
+
+            var capturedPiece = new Piece(1, 1, false, false, false, true);
+            capturedPiece.IsCaptured = true;
+            sourceBoard.Player2.Figures.Add(capturedPiece);
 
             var targetBoardStr = new string[]
             {

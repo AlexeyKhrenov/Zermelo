@@ -1,4 +1,6 @@
 ﻿using BenchmarkDotNet.Running;
+using Checkers.Minifications;
+using Game.Primitives;
 using System;
 using System.Runtime.CompilerServices;
 
@@ -9,11 +11,9 @@ namespace Benchmarking
     {
         static void Main(string[] args)
         {
-            //BenchmarkRunner.Run<ByteTreeSearchBenchmarks>();
-            var t = new SerialGameTreeSearchBenchmark();
-            t.GlobalSetup();
-            t.RunSerialGameTreeSearchBenchmark();
             BenchmarkRunner.Run<SerialGameTreeSearchBenchmark>();
+
+            //BenchmarkRunner.Run<ByteTreeSearchBenchmarks>();
             //var s = new ByteTreeSearchBenchmarks();
             //var r1 = s.SerialTreeSearch();
             //var r2 = s.DynamicTreeSearch();
