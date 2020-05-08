@@ -8,5 +8,7 @@
         TState GoUp(TState state, TNode node);
 
         TState GoDown(TState state, TNode node);
+
+        TState Copy(TState state);
     }
 }

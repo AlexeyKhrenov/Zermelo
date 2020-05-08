@@ -123,7 +123,7 @@ namespace CheckersAI.TreeSearch
             {
                 if (child.TryLockNode())
                 {
-                    var localState = _stateTransitions.GoDown(state, child);
+                    var localState = _stateTransitions.GoDown(_stateTransitions.Copy(state), child);
                     ThreadPool.QueueUserWorkItem(
                         obj =>
                         GoDown(child, localState, depth - 1, node));

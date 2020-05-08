@@ -27,5 +27,17 @@ namespace CheckersAI.CheckersGameTree
             // todo - implement fast-forwarding
             return _rules.UndoMove(state, node.Move, node.Parent?.Move);
         }
+
+        public BoardMinified Copy(BoardMinified state)
+        {
+            // todo - improve perfomance
+            var target = state;
+            target.Pieces = state.Pieces.Clone() as BoardCell[,];
+            target.Player1Pieces = new PieceMinified[state.Player1Pieces.Length];
+            target.Player2Pieces = new PieceMinified[state.Player2Pieces.Length];
+            state.Player1Pieces.CopyTo(target.Player1Pieces, 0);
+            state.Player2Pieces.CopyTo(target.Player2Pieces, 0);
+            return target;
+        }
     }
 }

@@ -64,6 +64,30 @@ namespace ZermeloUnitTests.GameTreeSearch
             practiceBoardSource.Player1Pieces[0].Should().BeEquivalentTo(practiceBoardTarget.Player1Pieces[0]);
             practiceBoardSource.Player2Pieces[0].Should().BeEquivalentTo(practiceBoardTarget.Player2Pieces[0]);
         }
-        
+
+        [Fact]
+        public void StateTransitionsTest_2()
+        {
+            var sourceBoardStr = new string[]
+            {
+                "____",
+                "____",
+                "__b_",
+                "_w__"
+            };
+            var sourceBoard = new BoardMock(sourceBoardStr, 4, false).ToMinified();
+
+            var targetBoard = _stateTransitions.Copy(sourceBoard);
+
+            sourceBoard.Player1Pieces[0].AvailableMoves[0] = new Cell(0, 2);
+            sourceBoard.Player2Pieces[0].X = 0;
+            sourceBoard.Pieces[0, 0] = new BoardCell(0, false);
+
+            Assert.False(ReferenceEquals(targetBoard.Player2Pieces[0], sourceBoard.Player2Pieces[0]));
+            Assert.False(ReferenceEquals(targetBoard.Player2Pieces, sourceBoard.Player2Pieces));
+            targetBoard.Pieces[0, 0].Should().NotBeEquivalentTo(new BoardCell(0, false));
+            targetBoard.Player2Pieces[0].X.Should().NotBe(0);
+            targetBoard.Player1Pieces[0].AvailableMoves[0].Should().NotBeEquivalentTo(new Cell(0, 2));
+        }
     }
 }

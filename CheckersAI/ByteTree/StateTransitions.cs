@@ -25,5 +25,9 @@ namespace CheckersAI.ByteTree
         {
             return (sbyte)(state - node.ValueChange);
         }
+        public sbyte Copy(sbyte state)
+        {
+            return state;
+        }
     }
 }

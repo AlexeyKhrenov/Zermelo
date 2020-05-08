@@ -217,5 +217,10 @@ namespace Checkers.Minifications
                 throw new InvalidOperationException();
             }
         }
+
+        public object Clone()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
