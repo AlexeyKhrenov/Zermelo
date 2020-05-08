@@ -103,6 +103,8 @@ namespace Checkers.Minifications
 
         internal void RestorePiece(PieceMinified captured, bool player)
         {
+            captured.IsCaptured = true;
+
             if (player)
             {
                 Player1PiecesCount++;
