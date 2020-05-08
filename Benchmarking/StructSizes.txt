@@ -1,0 +1,4 @@
+﻿PieceMinified: 40
+BoardMinified: 40
+
+

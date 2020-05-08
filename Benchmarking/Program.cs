@@ -3,6 +3,7 @@ using Checkers.Minifications;
 using Game.Primitives;
 using System;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 [assembly: InternalsVisibleTo("ZermeloUnitTests")]
 namespace Benchmarking
@@ -11,11 +12,13 @@ namespace Benchmarking
     {
         static void Main(string[] args)
         {
+            MeasureStructSizes.Measure();
+
             //var s = new SerialGameTreeSearchBenchmark();
             //s.GlobalSetup();
             //s.RunSerialGameTreeSearchBenchmark();
 
-            BenchmarkRunner.Run<SerialGameTreeSearchBenchmark>();
+            //BenchmarkRunner.Run<SerialGameTreeSearchBenchmark>();
 
             //BenchmarkRunner.Run<ByteTreeSearchBenchmarks>();
             //var s = new ByteTreeSearchBenchmarks();
