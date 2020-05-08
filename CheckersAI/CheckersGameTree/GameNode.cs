@@ -76,7 +76,14 @@ namespace CheckersAI.CheckersGameTree
 
         public override string ToString()
         {
-            return $"{Move.From.X},{Move.From.Y}->{Move.To.X},{Move.To.Y}  Result:{Result}";
+            if (Move != null)
+            {
+                return $"{Move.From.X},{Move.From.Y}->{Move.To.X},{Move.To.Y}  Result:{Result}";
+            }
+            else
+            {
+                return $"Move is NULL. Result: {Result}";
+            }
         }
     }
 }

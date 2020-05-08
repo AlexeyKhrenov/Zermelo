@@ -24,6 +24,7 @@ namespace ZermeloUnitTests.Rules
         public void CheckersRulesPrimitiveTest_1()
         {
             var board = BoardMinifiedTest.CreateSampleBoard();
+            board.Player1PiecesCount--;
             board.Player1Pieces[0].IsCaptured = true;
             _rules.FastForwardAvailableMoves(board);
 

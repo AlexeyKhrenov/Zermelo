@@ -21,6 +21,7 @@ namespace Checkers.Rules
                     continue;
                 }
                 needToPassControl &= !Check(piece, board.Pieces);
+                board.UpdatePieceAvailableMoves(piece.X, piece.Y, piece.AvailableMoves, board.ActivePlayer);
             }
 
             if (needToPassControl)
@@ -46,7 +47,7 @@ namespace Checkers.Rules
                     continue;
                 }
                 needToPassControl &= !Check(piece, board.Pieces);
-                board.Replace(piece, board.ActivePlayer);
+                board.UpdatePieceAvailableMoves(piece.X, piece.Y, piece.AvailableMoves, board.ActivePlayer);
             }
 
             if (needToPassControl)

@@ -1,4 +1,5 @@
-﻿using Game.PublicInterfaces;
+﻿using Game.Primitives;
+using Game.PublicInterfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -79,37 +80,25 @@ namespace Checkers.Minifications
 
         public void MovePiece(byte x0, byte y0, byte x1, byte y1, bool player)
         {
+            var i = Pieces[x0, y0].GetIndex();
+
             Pieces[x1, y1] = Pieces[x0, y0];
             Pieces[x0, y0].RemovePiece();
 
             if (player)
             {
-                for (var i = 0; i < Player1Pieces.Length; i++)
-                {
-                    var piece = Player1Pieces[i];
-                    if (piece.X == x0 && piece.Y == y0)
-                    {
-                        piece.X = x1;
-                        piece.Y = y1;
-                        Player1Pieces[i] = piece;
-                        break;
-                    }
-                }
+                Player1Pieces[i].X = x1;
+                Player1Pieces[i].Y = y1;
+                return;
             }
             else
             {
-                for (var i = 0; i < Player2Pieces.Length; i++)
-                {
-                    var piece = Player2Pieces[i];
-                    if (piece.X == x0 && piece.Y == y0)
-                    {
-                        piece.X = x1;
-                        piece.Y = y1;
-                        Player2Pieces[i] = piece;
-                        break;
-                    }
-                }
+                Player2Pieces[i].X = x1;
+                Player2Pieces[i].Y = y1;
+                return;
             }
+
+            throw new ArgumentException("Coudn't find the required piece");
         }
 
         internal void RestorePiece(PieceMinified captured, bool player)
@@ -132,27 +121,45 @@ namespace Checkers.Minifications
             {
                 if (playersPieces[i].IsEmpty())
                 {
-                    break;
+                    throw new ArgumentException("Couldn't find the required piece");
                 }
 
-                if (playersPieces[i].Equals(captured))
+                if (playersPieces[i].IsCaptured && playersPieces[i].Equals(captured))
                 {
                     Pieces[captured.X, captured.Y] = new BoardCell(i, captured.IsWhite);
                     playersPieces[i].IsCaptured = false;
+                    return;
                 }
             }
         }
 
-        public void Replace(PieceMinified piece, bool player)
+        public void ChangePieceType(byte x, byte y, bool canGoDown, bool canGoUp, bool isQueen, bool player)
         {
-            var arr = player ? Player1Pieces : Player2Pieces;
-            for (var i = 0; i < arr.Length; i++)
+            var index = Pieces[x, y].GetIndex();
+            if (player)
             {
-                if (arr[i].X == piece.X && arr[i].Y == piece.Y)
-                {
-                    arr[i] = piece;
-                    break;
-                }
+                Player1Pieces[index].CanGoDown = canGoDown;
+                Player1Pieces[index].CanGoUp = canGoUp;
+                Player1Pieces[index].IsQueen = isQueen;
+            }
+            else
+            {
+                Player2Pieces[index].CanGoDown = canGoDown;
+                Player2Pieces[index].CanGoUp = canGoUp;
+                Player2Pieces[index].IsQueen = isQueen;
+            }
+        }
+
+        public void UpdatePieceAvailableMoves(byte x, byte y, Cell[] availableMoves, bool player)
+        {
+            var index = Pieces[x, y].GetIndex();
+            if (player)
+            {
+                Player1Pieces[index].AvailableMoves = availableMoves;
+            }
+            else
+            {
+                Player2Pieces[index].AvailableMoves = availableMoves;
             }
         }
 
@@ -188,6 +195,26 @@ namespace Checkers.Minifications
                     break;
                 }
                 Player2Pieces[i].ClearMoves();
+            }
+        }
+
+        public void Validate()
+        {
+            var index = 0;
+            for (var i = 0; i < Player1Pieces.Length; i++)
+            {
+                if (Player1Pieces[i].IsEmpty())
+                {
+                    break;
+                }
+                if (!Player1Pieces[i].IsCaptured)
+                {
+                    index++;
+                }
+            }
+            if (index != Player1PiecesCount)
+            {
+                throw new InvalidOperationException();
             }
         }
     }

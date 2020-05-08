@@ -60,7 +60,7 @@ namespace CheckersAI.TreeSearch
                 {
                     var childState = _stateTransitions.GoDown(state, child);
                     var result = Search(child, depth - 1, alfa, beta, childState, ct);
-                    _stateTransitions.GoUp(childState, child);
+                    state = _stateTransitions.GoUp(childState, child);
 
                     if (!_comparator.IsBigger(maxVal, result))
                     {
@@ -86,8 +86,9 @@ namespace CheckersAI.TreeSearch
                 foreach (var child in node.Children)
                 {
                     var childState = _stateTransitions.GoDown(state, child);
+
                     var result = Search(child, depth - 1, alfa, beta, childState, ct);
-                    _stateTransitions.GoUp(childState, child);
+                    state = _stateTransitions.GoUp(childState, child);
 
                     if (!_comparator.IsBigger(result, minVal))
                     {

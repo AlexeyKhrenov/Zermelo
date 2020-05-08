@@ -11,18 +11,18 @@ namespace Checkers.Rules
     {
         public override BoardMinified ApplyRule(BoardMinified board, HistoryItemMinified latestMove)
         {
-            var piece = board.GetPiece(latestMove.To.X, latestMove.To.Y, latestMove.Player);
+            var x = latestMove.To.X;
+            var y = latestMove.To.Y;
+
+            var piece = board.GetPiece(x, y, latestMove.Player);
             if (!piece.IsQueen)
             {
-                bool v1 = (piece.CanGoDown && piece.Y == board.GetSize() - 1);
-                bool v2 = (piece.CanGoUp && piece.Y == 0);
+                bool v1 = (piece.CanGoDown && y == board.GetSize() - 1);
+                bool v2 = (piece.CanGoUp && y == 0);
 
                 if (v1 || v2)
                 {
-                    piece.IsQueen = true;
-                    piece.CanGoDown = true;
-                    piece.CanGoUp = true;
-                    board.Replace(piece, board.ActivePlayer);
+                    board.ChangePieceType(x, y, true, true, true, board.ActivePlayer);
                     latestMove.IsPieceChangeType = true;
                 }
             }
@@ -39,14 +39,12 @@ namespace Checkers.Rules
                 piece.IsQueen = false;
                 if (toUndo.To.Y > toUndo.From.Y)
                 {
-                    piece.CanGoUp = false;
+                    board.ChangePieceType(piece.X, piece.Y, true, false, false, toUndo.Player);
                 }
                 else
                 {
-                    piece.CanGoDown = false;
+                    board.ChangePieceType(piece.X, piece.Y, false, true, false, toUndo.Player);
                 }
-
-                board.Replace(piece, toUndo.Player);
             }
 
             return NextUndo(board, toUndo, lastMoveBeforeUndo);

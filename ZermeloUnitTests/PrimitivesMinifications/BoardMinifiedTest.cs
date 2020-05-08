@@ -45,6 +45,27 @@ namespace ZermeloUnitTests.PrimitivesMinifications
             board.Player2PiecesCount.Should().Be(1);
         }
 
+        [Fact]
+        public void BoardMinifiedTest_4()
+        {
+            var board = CreateSampleBoard();
+
+            board.Player1Pieces[0] = new PieceMinified(1, 2, true, true, false, false);
+            board.Player1Pieces[1] = new PieceMinified(2, 3, true, true, false, false);
+
+            board.Pieces[1, 2] = new BoardCell(0, true);
+            board.Pieces[2, 3] = new BoardCell(1, true);
+
+            board.RemovePiece(1, 2, true);
+            board.MovePiece(2, 3, 1, 2, true);
+
+            board.MovePiece(1, 2, 2, 3, true);
+            board.RestorePiece(new PieceMinified(1, 2, true, true, false), true);
+
+            board.Player1PiecesCount.Should().Be(2);
+            board.Validate();
+        }
+
         internal static BoardMinified CreateSampleBoard()
         {
             var board = new BoardMinified(4);

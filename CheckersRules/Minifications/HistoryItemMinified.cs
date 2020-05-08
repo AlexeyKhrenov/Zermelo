@@ -46,5 +46,10 @@ namespace Checkers.Minifications
                 toMaximizedTarget.Captured = Captured.ToMaximized();
             }
         }
+
+        public override string ToString()
+        {
+            return $"{From.X},{From.Y}->{To.X},{To.Y}";
+        }
     }
 }

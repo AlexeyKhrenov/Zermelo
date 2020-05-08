@@ -70,7 +70,7 @@ namespace Checkers.Rules
                     }
                 }
 
-                board.Replace(piece, board.ActivePlayer);
+                board.UpdatePieceAvailableMoves(piece.X, piece.Y, piece.AvailableMoves, board.ActivePlayer);
             }
 
             return board;
