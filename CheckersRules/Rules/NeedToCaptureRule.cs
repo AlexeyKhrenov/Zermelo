@@ -9,13 +9,18 @@ namespace Checkers.Rules
         {
             var needToPassControl = true;
 
-            foreach (var figure in board.ActiveSet)
+            foreach (var piece in board.ActiveSet)
             {
-                if (figure.IsCaptured)
+                if (piece.IsEmpty())
+                {
+                    break;
+                }
+
+                if (piece.IsCaptured)
                 {
                     continue;
                 }
-                needToPassControl &= !Check(figure, board.Pieces);
+                needToPassControl &= !Check(piece, board.Pieces);
             }
 
             if (needToPassControl)
@@ -30,13 +35,18 @@ namespace Checkers.Rules
         {
             var needToPassControl = true;
 
-            foreach (var figure in board.ActiveSet)
+            foreach (var piece in board.ActiveSet)
             {
-                if (figure.IsCaptured)
+                if (piece.IsEmpty())
+                {
+                    break;
+                }
+                if (piece.IsCaptured)
                 {
                     continue;
                 }
-                needToPassControl &= !Check(figure, board.Pieces);
+                needToPassControl &= !Check(piece, board.Pieces);
+                board.Replace(piece, board.ActivePlayer);
             }
 
             if (needToPassControl)

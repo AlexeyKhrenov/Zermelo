@@ -28,7 +28,7 @@ namespace ZermeloCheckers.GameFactory
                 throw new ArgumentException("Invalid game request - player name can't be empty");
             }
 
-            if (GameSize < 4 || GameSize > 16)
+            if (GameSize < 4 || GameSize > 10)
             {
                 throw new ArgumentException("GameSize must be between 4 and 16");
             }

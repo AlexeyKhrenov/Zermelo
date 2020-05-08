@@ -40,19 +40,16 @@ namespace Checkers.Minifications
 
         public static BoardMinified ToMinified(this IBoard from)
         {
-            var min = new BoardMinified();
-            min.Player1Pieces = new List<PieceMinified>();
-            min.Player2Pieces = new List<PieceMinified>();
-
-            min.Pieces = new BoardCell[from.Size, from.Size];
+            var min = new BoardMinified(from.Size);
             min.InvertedCoordinates = from.InvertedCoordinates;
 
             min.ActivePlayer = from.ActivePlayer == from.Player1;
 
+            // todo - change to one loop
             for (byte i = 0; i < from.Player1.Figures.Count; i++)
             {
                 var minPiece = ((Piece)from.Player1.Figures[i]).ToMinified();
-                min.Player1Pieces.Add(minPiece);
+                min.Player1Pieces[i] = minPiece;
 
                 if (!minPiece.IsCaptured)
                 {
@@ -63,7 +60,7 @@ namespace Checkers.Minifications
             for (byte i = 0; i < from.Player2.Figures.Count; i++)
             {
                 var minPiece = ((Piece)from.Player2.Figures[i]).ToMinified();
-                min.Player2Pieces.Add(minPiece);
+                min.Player2Pieces[i] = minPiece;
 
                 if (!minPiece.IsCaptured)
                 {
@@ -71,20 +68,40 @@ namespace Checkers.Minifications
                 }
             }
 
-            min.Player1PiecesCount = (byte)min.Player1Pieces.Count;
-            min.Player2PiecesCount = (byte)min.Player2Pieces.Count;
+            min.Player1PiecesCount = (byte)from.Player1.Figures.Count;
+            min.Player2PiecesCount = (byte)from.Player2.Figures.Count;
 
             return min;
         }
 
         public static void ToMaximized(this BoardMinified from, IBoard to)
         {
-            to.Player1.Figures = from.Player1Pieces.Select(x => (IFigure)x.ToMaximized()).ToList();
-            to.Player2.Figures = from.Player2Pieces.Select(x => (IFigure)x.ToMaximized()).ToList();
+            to.Player1.Figures.Clear();
+            to.Player2.Figures.Clear();
+
+            foreach (var piece in from.Player1Pieces)
+            {
+                if (piece.IsEmpty())
+                {
+                    break;
+                }
+
+                to.Player1.Figures.Add(piece.ToMaximized());
+            }
+
+            foreach (var piece in from.Player2Pieces)
+            {
+                if (piece.IsEmpty())
+                {
+                    break;
+                }
+
+                to.Player2.Figures.Add(piece.ToMaximized());
+            }
 
             if (to.ActivePlayer != (from.ActivePlayer ? to.Player1 : to.Player2))
             {
-                to.SwitchPlayers();      
+                to.SwitchPlayers();
             }
 
             to.ActivePlayer.IsActive = true;

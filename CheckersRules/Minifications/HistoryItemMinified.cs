@@ -41,7 +41,7 @@ namespace Checkers.Minifications
 
         public void Maximize(IHistoryItem toMaximizedTarget)
         {
-            if (Captured != null)
+            if (!Captured.IsEmpty())
             {
                 toMaximizedTarget.Captured = Captured.ToMaximized();
             }

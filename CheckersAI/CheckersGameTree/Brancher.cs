@@ -24,6 +24,10 @@ namespace CheckersAI.CheckersGameTree
 
             foreach (var piece in practiceBoard.ActiveSet)
             {
+                if (piece.IsEmpty())
+                {
+                    break;
+                }
                 foreach (var move in piece.AvailableMoves)
                 {
                     if (move.IsNotNull)

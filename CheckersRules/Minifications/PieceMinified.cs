@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Checkers.Minifications
 {
-    internal class PieceMinified : IEquatable<PieceMinified>
+    internal struct PieceMinified : IEquatable<PieceMinified>
     {
         public byte X;
         public byte Y;
@@ -19,6 +19,8 @@ namespace Checkers.Minifications
         public bool CanGoDown { get; set; }
 
         public bool IsWhite { get; set; }
+
+        public bool IsBlack { get; set; }
 
         public bool IsQueen { get; set; }
 
@@ -39,8 +41,11 @@ namespace Checkers.Minifications
             X = x;
             Y = y;
             IsWhite = isWhite;
+            IsBlack = !isWhite;
             CanGoDown = canGoDown;
             CanGoUp = canGoUp;
+            IsCaptured = false;
+            IsQueen = false;
         }
 
         public PieceMinified(byte x, byte y, bool isWhite, bool canGoUp, bool canGoDown, bool isQueen)
@@ -50,9 +55,11 @@ namespace Checkers.Minifications
             X = x;
             Y = y;
             IsWhite = isWhite;
+            IsBlack = !isWhite;
             CanGoDown = canGoDown;
             CanGoUp = canGoUp;
             IsQueen = isQueen;
+            IsCaptured = false;
         }
 
         public void ClearMoves()
@@ -82,9 +89,15 @@ namespace Checkers.Minifications
         {
             return
                 other.IsWhite == IsWhite &&
+                other.IsBlack == IsBlack &&
                 other.IsQueen == IsQueen &&
                 other.X == X &&
                 other.Y == Y;
+        }
+
+        public bool IsEmpty()
+        {
+            return !IsWhite && !IsBlack;
         }
     }
 }

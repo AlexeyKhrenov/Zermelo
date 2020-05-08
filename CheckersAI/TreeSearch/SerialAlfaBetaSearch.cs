@@ -1,4 +1,5 @@
-﻿using CheckersAI.CheckersGameTree;
+﻿using Checkers.Minifications;
+using CheckersAI.CheckersGameTree;
 using CheckersAI.InternalInterfaces;
 using Game.Primitives;
 using System;
@@ -59,8 +60,7 @@ namespace CheckersAI.TreeSearch
                 {
                     var childState = _stateTransitions.GoDown(state, child);
                     var result = Search(child, depth - 1, alfa, beta, childState, ct);
-                    // todo - remove this state undo after everything becomes struct
-                    childState = _stateTransitions.GoUp(childState, child);
+                    _stateTransitions.GoUp(childState, child);
 
                     if (!_comparator.IsBigger(maxVal, result))
                     {
@@ -87,8 +87,7 @@ namespace CheckersAI.TreeSearch
                 {
                     var childState = _stateTransitions.GoDown(state, child);
                     var result = Search(child, depth - 1, alfa, beta, childState, ct);
-                    // todo - remove this state undo after everything becomes struct
-                    childState = _stateTransitions.GoUp(state, child);
+                    _stateTransitions.GoUp(childState, child);
 
                     if (!_comparator.IsBigger(result, minVal))
                     {

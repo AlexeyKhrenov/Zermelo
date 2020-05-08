@@ -8,6 +8,7 @@
         <Style TargetType="Button" x:Key="MButton" >
             <Setter Property="Height" Value="30"/>
         </Style>
+        <!-- Maximum size is 10 -->
         <sys:Int32 x:Key="GameSize">8</sys:Int32>
     </Application.Resources>
 </Application>

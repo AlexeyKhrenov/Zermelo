@@ -23,25 +23,7 @@ namespace CheckersAI.CheckersGameTree
                 return sbyte.MaxValue;
             }
 
-            sbyte result = 0;
-
-            foreach (var piece in board.Player1Pieces)
-            {
-                if (!piece.IsCaptured)
-                {
-                    result += (sbyte)piece.CountAvailableMoves();
-                }
-            }
-
-            foreach (var piece in board.Player2Pieces)
-            {
-                if (!piece.IsCaptured)
-                {
-                    result -= (sbyte)piece.CountAvailableMoves();
-                }
-            }
-
-            return result;
+            return (sbyte)(board.Player1PiecesCount - board.Player2PiecesCount);
         }
     }
 }

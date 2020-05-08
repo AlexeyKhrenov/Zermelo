@@ -1,5 +1,6 @@
 ﻿using Checkers.Minifications;
 using Game.Primitives;
+using System;
 
 namespace Checkers.Rules
 {
@@ -21,10 +22,16 @@ namespace Checkers.Rules
         {
             foreach (var piece in board.ActiveSet)
             {
+                if (piece.IsEmpty())
+                {
+                    break;
+                }
+
                 if (piece.IsCaptured)
                 {
                     continue;
                 }
+
                 var size = board.GetSize();
 
                 if (piece.CanGoUp && piece.Y > 0)
@@ -54,6 +61,16 @@ namespace Checkers.Rules
                         Check(piece, board.Pieces, 1, 1);
                     }
                 }
+
+                for (var i = 0; i < piece.AvailableMoves.Length; i++)
+                {
+                    if (piece.AvailableMoves[i].IsNotNull && (piece.AvailableMoves[i].X == piece.X || piece.AvailableMoves[i].Y == piece.Y))
+                    {
+                        throw new InvalidOperationException();
+                    }
+                }
+
+                board.Replace(piece, board.ActivePlayer);
             }
 
             return board;

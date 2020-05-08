@@ -12,7 +12,7 @@ using ZermeloUnitTests.Mocks;
 
 namespace ZermeloUnitTests.Rules
 {
-    public class CheckersRulesTest : RulesTestBase
+    public class CheckersRulesIntegrationTest : RulesTestBase
     {
         [Fact]
         public void CheckersRulesTest_1()
@@ -125,7 +125,7 @@ namespace ZermeloUnitTests.Rules
             _rules.MakeMove(sourceBoard, move);
 
             // ASSERT
-            AssertBoardsAreEqual(sourceBoard, targetBoard);
+            AssertBoardsAreEqual(targetBoard, sourceBoard);
         }
 
         [Fact]
@@ -159,7 +159,7 @@ namespace ZermeloUnitTests.Rules
             _rules.MakeMove(sourceBoard, move);
 
             // ASSERT
-            AssertBoardsAreEqual(sourceBoard, targetBoard);
+            AssertBoardsAreEqual(targetBoard, sourceBoard);
         }
 
         [Fact]
@@ -198,7 +198,7 @@ namespace ZermeloUnitTests.Rules
             _rules.MakeMove(sourceBoard, move);
 
             // ASSERT
-            AssertBoardsAreEqual(sourceBoard, targetBoard);
+            AssertBoardsAreEqual(targetBoard, sourceBoard);
         }
     }
 }

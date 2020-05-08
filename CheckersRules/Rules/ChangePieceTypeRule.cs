@@ -22,6 +22,7 @@ namespace Checkers.Rules
                     piece.IsQueen = true;
                     piece.CanGoDown = true;
                     piece.CanGoUp = true;
+                    board.Replace(piece, board.ActivePlayer);
                     latestMove.IsPieceChangeType = true;
                 }
             }
@@ -44,6 +45,8 @@ namespace Checkers.Rules
                 {
                     piece.CanGoDown = false;
                 }
+
+                board.Replace(piece, toUndo.Player);
             }
 
             return NextUndo(board, toUndo, lastMoveBeforeUndo);

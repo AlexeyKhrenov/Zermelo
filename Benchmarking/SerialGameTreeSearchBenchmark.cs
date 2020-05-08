@@ -48,7 +48,6 @@ namespace Benchmarking
         public void RunSerialGameTreeSearchBenchmark()
         {
             var result = search.DoProgressiveDeepening(node, practiceBoard, sbyte.MinValue, sbyte.MaxValue, 10, cts.Token);
-            var depth = node.GetDepth<GameNode, sbyte>();
             node.Children = null;
             GC.Collect();
         }
