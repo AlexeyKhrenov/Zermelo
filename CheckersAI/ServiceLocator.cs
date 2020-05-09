@@ -1,6 +1,7 @@
 ﻿using Checkers;
 using Checkers.Minifications;
 using CheckersAI.CheckersGameTree;
+using CheckersAI.InternalInterfaces;
 using CheckersAI.TreeSearch;
 using Game.PublicInterfaces;
 
@@ -12,11 +13,12 @@ namespace CheckersAI
         {
             var treeManager = new TreeManager<GameNode, sbyte>();
             var search = CreateSerialGameTreeSearch();
+            var searchWrapper = CreateProgressiveDeepeningWrapper(search);
 
-            return new ComputerPlayer(name, search, treeManager);
+            return new ComputerPlayer(name, searchWrapper, treeManager);
         }
 
-        internal static SerialAlfaBetaSearch<GameNode, sbyte, BoardMinified> CreateSerialGameTreeSearch()
+        internal static ISearch<GameNode, sbyte, BoardMinified> CreateSerialGameTreeSearch()
         {
             var rules = new CheckersRules();
 
@@ -35,7 +37,7 @@ namespace CheckersAI
             );
         }
 
-        internal static DynamicTreeSplitting<GameNode, sbyte, BoardMinified> CreateDynamicTreeSplittingGameTreeSearch()
+        internal static ISearch<GameNode, sbyte, BoardMinified> CreateDynamicTreeSplittingGameTreeSearch()
         {
             var rules = new CheckersRules();
 
@@ -50,6 +52,12 @@ namespace CheckersAI
                 comparator,
                 stateTransitions
             );
+        }
+
+        internal static IProgressiveDeepeningWrapper<GameNode, sbyte, BoardMinified> 
+            CreateProgressiveDeepeningWrapper(ISearch<GameNode, sbyte, BoardMinified> search)
+        {
+            return new ProgressiveDeepeningWrapper<GameNode, sbyte, BoardMinified>(search);
         }
     }
 }

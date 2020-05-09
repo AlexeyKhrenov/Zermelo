@@ -26,11 +26,11 @@ namespace CheckersAI
         public int Ply { get; }
 
         private string _name;
-        private ISearch<GameNode, sbyte, BoardMinified> _search;
+        private IProgressiveDeepeningWrapper<GameNode, sbyte, BoardMinified> _search;
         private ITreeManager<GameNode, sbyte> _treeManager;
 
         internal ComputerPlayer(string name,
-            ISearch<GameNode, sbyte, BoardMinified> search,
+            IProgressiveDeepeningWrapper<GameNode, sbyte, BoardMinified> search,
             ITreeManager<GameNode, sbyte> treeManager)
         {
             _name = name;
@@ -48,7 +48,7 @@ namespace CheckersAI
             root = _treeManager.GoDownToNode(root);
 
             // add registration to abort threads
-            var plannedMoves = _search.DoProgressiveDeepening(root, practiceBoard, sbyte.MinValue, sbyte.MaxValue, int.MaxValue, ct);
+            var plannedMoves = _search.Run(practiceBoard, root, sbyte.MinValue, sbyte.MaxValue, int.MaxValue, ct);
 
             StopThinking(game, plannedMoves);
             return Task.CompletedTask;

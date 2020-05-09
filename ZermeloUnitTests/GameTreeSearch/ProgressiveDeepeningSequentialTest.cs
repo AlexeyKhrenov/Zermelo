@@ -1,6 +1,7 @@
 ﻿using Checkers;
 using Checkers.Minifications;
 using CheckersAI.CheckersGameTree;
+using CheckersAI.InternalInterfaces;
 using CheckersAI.TreeSearch;
 using FluentAssertions;
 using Game.Primitives;
@@ -15,13 +16,15 @@ namespace ZermeloUnitTests.GameTreeSearch
 {
     public class ProgressiveDeepeningSequentialTest
     {
-        private SerialAlfaBetaSearch<GameNode, sbyte, BoardMinified> _search;
+        private ISearch<GameNode, sbyte, BoardMinified> _search;
+        private IProgressiveDeepeningWrapper<GameNode, sbyte, BoardMinified> _wrapper;
         private CheckersRules _rules;
         private CancellationTokenSource _cts;
 
         public ProgressiveDeepeningSequentialTest()
         {
             _search = CheckersAI.ServiceLocator.CreateSerialGameTreeSearch();
+            _wrapper = CheckersAI.ServiceLocator.CreateProgressiveDeepeningWrapper(_search);
             _rules = new CheckersRules();
             _cts = new CancellationTokenSource();
         }
@@ -42,7 +45,7 @@ namespace ZermeloUnitTests.GameTreeSearch
 
             var practiceBoard = sourceBoard.ToMinified();
 
-            var result = _search.DoProgressiveDeepening(root, practiceBoard, sbyte.MinValue, sbyte.MaxValue, 2, _cts.Token);
+            var result = _wrapper.Run(practiceBoard, root, sbyte.MinValue, sbyte.MaxValue, 2, _cts.Token);
             var bestMove = result.Peek().Move;
             bestMove.From.Should().BeEquivalentTo(new Cell(2, 2));
             bestMove.To.Should().BeEquivalentTo(new Cell(3, 1));
@@ -65,7 +68,7 @@ namespace ZermeloUnitTests.GameTreeSearch
 
             var practiceBoard = sourceBoard.ToMinified();
 
-            var result = _search.DoProgressiveDeepening(root, practiceBoard, sbyte.MinValue, sbyte.MaxValue, 3, _cts.Token);
+            var result = _wrapper.Run(practiceBoard, root, sbyte.MinValue, sbyte.MaxValue, 3, _cts.Token);
             var bestMove = result.Peek().Move;
             bestMove.From.Should().BeEquivalentTo(new Cell(1, 3));
             bestMove.To.Should().BeEquivalentTo(new Cell(0, 2));
@@ -88,7 +91,7 @@ namespace ZermeloUnitTests.GameTreeSearch
 
             var practiceBoard = sourceBoard.ToMinified();
 
-            var result = _search.DoProgressiveDeepening(root, practiceBoard, sbyte.MinValue, sbyte.MaxValue, 12, _cts.Token);
+            var result = _wrapper.Run(practiceBoard, root, sbyte.MinValue, sbyte.MaxValue, 12, _cts.Token);
             var bestMove = result.Peek().Move;
             bestMove.From.Should().BeEquivalentTo(new Cell(1, 3));
             bestMove.To.Should().BeEquivalentTo(new Cell(2, 2));
@@ -113,7 +116,7 @@ namespace ZermeloUnitTests.GameTreeSearch
 
             var practiceBoard = sourceBoard.ToMinified();
 
-            var result = _search.DoProgressiveDeepening(root, practiceBoard, sbyte.MinValue, sbyte.MaxValue, 3, _cts.Token);
+            var result = _wrapper.Run(practiceBoard, root, sbyte.MinValue, sbyte.MaxValue, 3, _cts.Token);
             var bestMove = result.Peek().Move;
             bestMove.From.Should().BeEquivalentTo(new Cell(2, 5));
             bestMove.To.Should().BeEquivalentTo(new Cell(4, 3));
@@ -138,7 +141,7 @@ namespace ZermeloUnitTests.GameTreeSearch
 
             var practiceBoard = sourceBoard.ToMinified();
 
-            var result = _search.DoProgressiveDeepening(root, practiceBoard, sbyte.MinValue, sbyte.MaxValue, 2, _cts.Token);
+            var result = _wrapper.Run(practiceBoard, root, sbyte.MinValue, sbyte.MaxValue, 2, _cts.Token);
             var bestMove = result.Peek().Move;
             bestMove.From.Should().BeEquivalentTo(new Cell(3, 5));
             bestMove.To.Should().BeEquivalentTo(new Cell(1, 3));
@@ -163,7 +166,7 @@ namespace ZermeloUnitTests.GameTreeSearch
 
             var practiceBoard = sourceBoard.ToMinified();
 
-            var result = _search.DoProgressiveDeepening(root, practiceBoard, sbyte.MinValue, sbyte.MaxValue, 3, _cts.Token);
+            var result = _wrapper.Run(practiceBoard, root, sbyte.MinValue, sbyte.MaxValue, 3, _cts.Token);
             var bestMove = result.Peek().Move;
             bestMove.From.Should().BeEquivalentTo(new Cell(2, 5));
             bestMove.To.Should().BeEquivalentTo(new Cell(3, 4));
@@ -190,7 +193,7 @@ namespace ZermeloUnitTests.GameTreeSearch
 
             var practiceBoard = sourceBoard.ToMinified();
 
-            var result = _search.DoProgressiveDeepening(root, practiceBoard, sbyte.MinValue, sbyte.MaxValue, 3, _cts.Token);
+            var result = _wrapper.Run(practiceBoard, root, sbyte.MinValue, sbyte.MaxValue, 3, _cts.Token);
             var bestMove = result.Peek().Move;
             bestMove.From.Should().BeEquivalentTo(new Cell(1, 0));
             bestMove.To.Should().BeEquivalentTo(new Cell(0, 1));

@@ -9,6 +9,10 @@ namespace CheckersAI.CheckersGameTree
 {
     internal class GameNode : INode<GameNode, sbyte>, IAlfaBetaNode<GameNode, sbyte>
     {
+        public bool Cutoff { get; set; }
+
+        public bool WasSplitted { get; set; }
+
         public sbyte Result { get; set; }
 
         public GameNode Parent { get; set; }
@@ -150,6 +154,12 @@ namespace CheckersAI.CheckersGameTree
                     Beta = Result < Beta ? Result : Beta;
                 }
 
+                if (Alfa > Beta)
+                {
+                    Cutoff = true;
+                    IsFinalized = true;
+                }
+
                 foreach (var c in Children)
                 {
                     if (!c.IsFinalized)
@@ -157,9 +167,9 @@ namespace CheckersAI.CheckersGameTree
                         return;
                     }
                 }
-            }
 
-            IsFinalized = true;
+                IsFinalized = true;
+            }
         }
     }
 }

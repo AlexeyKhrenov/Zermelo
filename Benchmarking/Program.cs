@@ -14,9 +14,9 @@ namespace Benchmarking
         {
             //MeasureStructSizes.Measure();
 
-            //var s = new SerialGameTreeSearchBenchmark();
-            //s.GlobalSetup();
-            //s.RunSerialGameTreeSearchBenchmark();
+            var s = new GameTreeSearchBenchmark();
+            s.GlobalSetup();
+            s.RunDynamicTreeSplittingBenchmark();
 
             BenchmarkRunner.Run<GameTreeSearchBenchmark>();
 

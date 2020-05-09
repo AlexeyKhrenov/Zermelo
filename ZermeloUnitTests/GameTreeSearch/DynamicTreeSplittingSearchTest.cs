@@ -1,6 +1,7 @@
 ﻿using Checkers;
 using Checkers.Minifications;
 using CheckersAI.CheckersGameTree;
+using CheckersAI.InternalInterfaces;
 using CheckersAI.TreeSearch;
 using FluentAssertions;
 using Game.Primitives;
@@ -15,7 +16,7 @@ namespace ZermeloUnitTests.GameTreeSearch
 {
     public class DynamicTreeSplittingSearchTest
     {
-        private DynamicTreeSplitting<GameNode, sbyte, BoardMinified> _search;
+        private ISearch<GameNode, sbyte, BoardMinified> _search;
         private CheckersRules _rules;
         private CancellationTokenSource _cts;
 

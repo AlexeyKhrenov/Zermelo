@@ -17,5 +17,7 @@
         void Update(TNode child);
 
         void Update(TMetric result);
+
+        bool WasSplitted { get; set; }
     }
 }

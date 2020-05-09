@@ -35,10 +35,8 @@ namespace CheckersAI.TreeSearch
         {
             _manualResetEvent = new ManualResetEvent(false);
 
-            node.Alfa = alfa;
-            node.Beta = beta;
-
-            GoDown(node, state, depth, node);
+            var localState = _stateTransitions.Copy(state);
+            GoDown(node, localState, depth, node);
 
             _manualResetEvent.WaitOne();
 
@@ -47,8 +45,7 @@ namespace CheckersAI.TreeSearch
 
         private void GoDown(TNode node, TState state, int depth, TNode splittedFrom)
         {
-            // todo - remove comparator
-            if (_comparator.IsBigger(splittedFrom.Alfa, splittedFrom.Beta))
+            if (splittedFrom.IsFinalized)
             {
                 return;
             }
@@ -112,6 +109,7 @@ namespace CheckersAI.TreeSearch
 
         private void SplitNode(TNode node, int depth, TState state)
         {
+            node.WasSplitted = true;
             foreach (var child in node.Children)
             {
                 if (child.TryLockNode())
@@ -123,30 +121,6 @@ namespace CheckersAI.TreeSearch
                         GoDown(child, localState, depth - 1, node));
                 }
             }
-        }
-
-        public void ClearTree(TNode node)
-        {
-            var queue = new Queue<TNode>();
-            queue.Enqueue(node);
-
-            while (queue.Count > 0)
-            {
-                var next = queue.Dequeue();
-                next.Clear();
-                if (next.Children != null)
-                {
-                    foreach (var child in next.Children)
-                    {
-                        queue.Enqueue(child);
-                    }
-                }
-            }
-        }
-
-        public Queue<TNode> DoProgressiveDeepening(TNode node, TState state, TMetric alfa, TMetric beta, int maxDepth, CancellationToken ct)
-        {
-            throw new NotImplementedException();
         }
     }
 }

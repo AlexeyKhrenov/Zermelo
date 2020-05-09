@@ -15,12 +15,12 @@ namespace ZermeloUnitTests.Entities
 {
     public class ComputerPlayerTests
     {
-        private GameTreeSearchMock _search;
         private TreeManagerMock _treeManager;
+        private ProgressiveWrapperMock _wrapper;
 
         public ComputerPlayerTests()
         {
-            _search = new GameTreeSearchMock();
+            _wrapper = new ProgressiveWrapperMock();
             _treeManager = new TreeManagerMock();
         }
 
@@ -30,7 +30,7 @@ namespace ZermeloUnitTests.Entities
         [Fact]
         public void ComputerPlayerTest_1()
         {
-            var computerPlayer = new ComputerPlayer("P1", _search, _treeManager);
+            var computerPlayer = new ComputerPlayer("P1", _wrapper, _treeManager);
             var anotherPlayer = new PlayerMock("P2");
 
             var board1Str = new string[]

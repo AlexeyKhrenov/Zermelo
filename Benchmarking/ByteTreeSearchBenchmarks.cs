@@ -60,7 +60,7 @@ namespace Benchmarking
                 _cts.Token
             );
 
-            _serial.ClearTree(_serialTree);
+            ProgressiveDeepeningWrapper<ByteNode, sbyte, sbyte>.ClearTree(_serialTree);
             return result;
         }
 
@@ -76,7 +76,7 @@ namespace Benchmarking
                 _cts.Token
             );
 
-            _dynamic.ClearTree(_dynamicTree);
+            ProgressiveDeepeningWrapper<AlfaBetaByteNode, sbyte, sbyte>.ClearTree(_dynamicTree);
             return result;
         }
     }

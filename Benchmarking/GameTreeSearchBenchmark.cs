@@ -3,6 +3,7 @@ using Checkers.Minifications;
 using CheckersAI;
 using CheckersAI.ByteTree;
 using CheckersAI.CheckersGameTree;
+using CheckersAI.InternalInterfaces;
 using CheckersAI.TreeSearch;
 using System;
 using System.Threading;
@@ -22,8 +23,11 @@ namespace Benchmarking
         BoardMinified practiceBoard1;
         BoardMinified practiceBoard2;
 
-        SerialAlfaBetaSearch<GameNode, sbyte, BoardMinified> search1;
-        DynamicTreeSplitting<GameNode, sbyte, BoardMinified> search2;
+        ISearch<GameNode, sbyte, BoardMinified> search1;
+        ISearch<GameNode, sbyte, BoardMinified> search2;
+
+        IProgressiveDeepeningWrapper<GameNode, sbyte, BoardMinified> wrapper1;
+        IProgressiveDeepeningWrapper<GameNode, sbyte, BoardMinified> wrapper2;
 
         CancellationTokenSource cts;
 
@@ -32,6 +36,9 @@ namespace Benchmarking
         {
             search1 = ServiceLocator.CreateSerialGameTreeSearch();
             search2 = ServiceLocator.CreateDynamicTreeSplittingGameTreeSearch();
+
+            wrapper1 = ServiceLocator.CreateProgressiveDeepeningWrapper(search1);
+            wrapper2 = ServiceLocator.CreateProgressiveDeepeningWrapper(search2);
 
             var sourceBoardStr = new string[]
             {
@@ -57,7 +64,7 @@ namespace Benchmarking
         [Benchmark]
         public void RunSerialGameTreeSearchBenchmark()
         {
-            var result = search1.DoProgressiveDeepening(node1, practiceBoard1, sbyte.MinValue, sbyte.MaxValue, 10, cts.Token);
+            var result = wrapper1.Run(practiceBoard1, node1, sbyte.MinValue, sbyte.MaxValue, 10, cts.Token);
             node1.Children = null;
             GC.Collect();
         }
@@ -65,7 +72,7 @@ namespace Benchmarking
         [Benchmark]
         public void RunDynamicTreeSplittingBenchmark()
         {
-            var result = search2.DoProgressiveDeepening(node2, practiceBoard1, sbyte.MinValue, sbyte.MaxValue, 10, cts.Token);
+            var result = wrapper2.Run(practiceBoard1, node2, sbyte.MinValue, sbyte.MaxValue, 10, cts.Token);
             node2.Children = null;
             GC.Collect();
         }
