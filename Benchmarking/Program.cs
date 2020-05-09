@@ -12,13 +12,13 @@ namespace Benchmarking
     {
         static void Main(string[] args)
         {
-            MeasureStructSizes.Measure();
+            //MeasureStructSizes.Measure();
 
             //var s = new SerialGameTreeSearchBenchmark();
             //s.GlobalSetup();
             //s.RunSerialGameTreeSearchBenchmark();
 
-            //BenchmarkRunner.Run<SerialGameTreeSearchBenchmark>();
+            BenchmarkRunner.Run<SerialGameTreeSearchBenchmark>();
 
             //BenchmarkRunner.Run<ByteTreeSearchBenchmarks>();
             //var s = new ByteTreeSearchBenchmarks();
