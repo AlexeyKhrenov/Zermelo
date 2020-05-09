@@ -134,7 +134,7 @@ namespace CheckersAI.TreeSearch
             var depth = 0;
             var result = new Queue<TNode>();
 
-            ClearTree(node);
+            //ClearTree(node);
 
             while (!ct.IsCancellationRequested)
             {

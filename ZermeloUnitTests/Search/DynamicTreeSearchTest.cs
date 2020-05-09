@@ -23,9 +23,7 @@ namespace ZermeloUnitTests.Search
                 evaluator,
                 brancher,
                 comparator,
-                stateTransitions,
-                sbyte.MaxValue,
-                sbyte.MinValue
+                stateTransitions
             );
 
             _cts = new CancellationTokenSource();

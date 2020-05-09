@@ -40,9 +40,7 @@ namespace Benchmarking
                 evaluator,
                 brancher,
                 comparator,
-                stateTransitions,
-                sbyte.MaxValue,
-                sbyte.MinValue
+                stateTransitions
             );
 
             _dynamicTree = TreeGenerator.ReadAlfaBetaTree();

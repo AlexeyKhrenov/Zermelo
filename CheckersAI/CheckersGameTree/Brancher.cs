@@ -32,11 +32,10 @@ namespace CheckersAI.CheckersGameTree
                 {
                     if (move.IsNotNull)
                     {
-                        var child = new GameNode();
+                        var child = new GameNode(!practiceBoard.ActivePlayer);
                         child.Move = new HistoryItemMinified(new Cell(piece.X, piece.Y), move, practiceBoard.ActivePlayer);
 
                         // todo - remove - duplicated information
-                        child.IsMaxPlayer = !practiceBoard.ActivePlayer;
                         child.Parent = node;
                         children.Add(child);
                     }

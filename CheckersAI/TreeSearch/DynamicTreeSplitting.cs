@@ -15,26 +15,19 @@ namespace CheckersAI.TreeSearch
         private IBrancher<TNode, TState, TMetric> _brancher;
         private IComparator<TMetric> _comparator;
         private IStateTransitions<TState, TNode, TMetric> _stateTransitions;
-        private TMetric _maxValue;
-        private TMetric _minValue;
         private ManualResetEvent _manualResetEvent;
 
         public DynamicTreeSplitting(
             IEvaluator<TState, TMetric> evaluator,
             IBrancher<TNode, TState, TMetric> brancher,
             IComparator<TMetric> comparator,
-            IStateTransitions<TState, TNode, TMetric> stateTransitions,
-            TMetric maxValue,
-            TMetric minValue
+            IStateTransitions<TState, TNode, TMetric> stateTransitions
         )
         {
             _evaluator = evaluator;
             _brancher = brancher;
             _comparator = comparator;
             _stateTransitions = stateTransitions;
-            _minValue = minValue;
-            _maxValue = maxValue;
-
             _manualResetEvent = new ManualResetEvent(false);
         }
 
@@ -123,7 +116,8 @@ namespace CheckersAI.TreeSearch
             {
                 if (child.TryLockNode())
                 {
-                    var localState = _stateTransitions.GoDown(_stateTransitions.Copy(state), child);
+                    var stateCopy = _stateTransitions.Copy(state);
+                    var localState = _stateTransitions.GoDown(stateCopy, child);
                     ThreadPool.QueueUserWorkItem(
                         obj =>
                         GoDown(child, localState, depth - 1, node));

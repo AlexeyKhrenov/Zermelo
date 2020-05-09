@@ -3,10 +3,11 @@ using CheckersAI.InternalInterfaces;
 using Game.Primitives;
 using Game.PublicInterfaces;
 using System;
+using System.Threading;
 
 namespace CheckersAI.CheckersGameTree
 {
-    internal class GameNode : INode<GameNode, sbyte>
+    internal class GameNode : INode<GameNode, sbyte>, IAlfaBetaNode<GameNode, sbyte>
     {
         public sbyte Result { get; set; }
 
@@ -20,10 +21,22 @@ namespace CheckersAI.CheckersGameTree
 
         public bool IsMaxPlayer { get; set; }
 
+        public sbyte Alfa { get; set; }
+
+        public sbyte Beta { get; set; }
+
+        public bool IsFinalized { get; set; }
+
         public GameNode()
         {
             IsMaxPlayer = true;
-            Result = sbyte.MinValue;
+            Clear();
+        }
+
+        public GameNode(bool isMaxPlayer)
+        {
+            IsMaxPlayer = isMaxPlayer;
+            Clear();
         }
 
         public GameNode(IHistoryItem item, IBoard board)
@@ -38,6 +51,7 @@ namespace CheckersAI.CheckersGameTree
             {
                 IsMaxPlayer = true;
             }
+            Clear();
         }
 
         // don't call this method often - not optimized
@@ -70,8 +84,21 @@ namespace CheckersAI.CheckersGameTree
 
         public void Clear()
         {
+            Alfa = sbyte.MinValue;
+            Beta = sbyte.MaxValue;
+            IsFinalized = false;
+            _isLocked = 0;
+
+            if (IsMaxPlayer)
+            {
+                Result = sbyte.MinValue;
+            }
+            else
+            {
+                Result = sbyte.MaxValue;
+            }
+
             BestChild = null;
-            Result = sbyte.MinValue;
         }
 
         public override string ToString()
@@ -84,6 +111,55 @@ namespace CheckersAI.CheckersGameTree
             {
                 return $"Move is NULL. Result: {Result}";
             }
+        }
+
+        public void Update(sbyte result)
+        {
+            IsFinalized = true;
+            Result = result;
+        }
+
+        private int _isLocked;
+        public bool TryLockNode()
+        {
+            return 0 == Interlocked.CompareExchange(ref _isLocked, 1, 0);
+        }
+
+        // todo - consider making it thread-safe
+        object _lock1 = new object();
+        public void Update(GameNode child)
+        {
+            lock (_lock1)
+            {
+                if (IsMaxPlayer)
+                {
+                    if (child.Result >= Result)
+                    {
+                        Result = child.Result;
+                        BestChild = child;
+                    }
+                    Alfa = Result > Alfa ? Result : Alfa;
+                }
+                else
+                {
+                    if (child.Result <= Result)
+                    {
+                        Result = child.Result;
+                        BestChild = child;
+                    }
+                    Beta = Result < Beta ? Result : Beta;
+                }
+
+                foreach (var c in Children)
+                {
+                    if (!c.IsFinalized)
+                    {
+                        return;
+                    }
+                }
+            }
+
+            IsFinalized = true;
         }
     }
 }

@@ -18,7 +18,7 @@ namespace Benchmarking
             //s.GlobalSetup();
             //s.RunSerialGameTreeSearchBenchmark();
 
-            BenchmarkRunner.Run<SerialGameTreeSearchBenchmark>();
+            BenchmarkRunner.Run<GameTreeSearchBenchmark>();
 
             //BenchmarkRunner.Run<ByteTreeSearchBenchmarks>();
             //var s = new ByteTreeSearchBenchmarks();

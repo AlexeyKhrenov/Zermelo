@@ -13,13 +13,13 @@ using ZermeloUnitTests.Mocks;
 
 namespace ZermeloUnitTests.GameTreeSearch
 {
-    public class DynamicDeepeningSequentialTest
+    public class ProgressiveDeepeningSequentialTest
     {
         private SerialAlfaBetaSearch<GameNode, sbyte, BoardMinified> _search;
         private CheckersRules _rules;
         private CancellationTokenSource _cts;
 
-        public DynamicDeepeningSequentialTest()
+        public ProgressiveDeepeningSequentialTest()
         {
             _search = CheckersAI.ServiceLocator.CreateSerialGameTreeSearch();
             _rules = new CheckersRules();

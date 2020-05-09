@@ -34,5 +34,22 @@ namespace CheckersAI
                 sbyte.MinValue
             );
         }
+
+        internal static DynamicTreeSplitting<GameNode, sbyte, BoardMinified> CreateDynamicTreeSplittingGameTreeSearch()
+        {
+            var rules = new CheckersRules();
+
+            var comparator = new Comparator();
+            var brancher = new Brancher(rules);
+            var evaluator = new Evaluator();
+            var stateTransitions = new StateTransitions(rules);
+
+            return new DynamicTreeSplitting<GameNode, sbyte, BoardMinified>(
+                evaluator,
+                brancher,
+                comparator,
+                stateTransitions
+            );
+        }
     }
 }
