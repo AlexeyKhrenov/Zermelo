@@ -56,11 +56,6 @@ namespace ZermeloUnitTests.GameTreeSearch
 
             practiceBoardSource.ClearMoves();
 
-            practiceBoardSource.Player1Pieces[0].AvailableMoves = null;
-            practiceBoardTarget.Player1Pieces[0].AvailableMoves = null;
-            practiceBoardSource.Player2Pieces[0].AvailableMoves = null;
-            practiceBoardTarget.Player2Pieces[0].AvailableMoves = null;
-
             practiceBoardSource.Player1Pieces[0].Should().BeEquivalentTo(practiceBoardTarget.Player1Pieces[0]);
             practiceBoardSource.Player2Pieces[0].Should().BeEquivalentTo(practiceBoardTarget.Player2Pieces[0]);
         }
@@ -79,7 +74,7 @@ namespace ZermeloUnitTests.GameTreeSearch
 
             var targetBoard = _stateTransitions.Copy(sourceBoard);
 
-            sourceBoard.Player1Pieces[0].AvailableMoves[0] = new Cell(0, 2);
+            sourceBoard.Player1Pieces[0].GetAvailableMoves()[0] = new Cell(0, 2);
             sourceBoard.Player2Pieces[0].X = 0;
             sourceBoard.Pieces[0, 0] = new BoardCell(0, false);
 
@@ -87,7 +82,7 @@ namespace ZermeloUnitTests.GameTreeSearch
             Assert.False(ReferenceEquals(targetBoard.Player2Pieces, sourceBoard.Player2Pieces));
             targetBoard.Pieces[0, 0].Should().NotBeEquivalentTo(new BoardCell(0, false));
             targetBoard.Player2Pieces[0].X.Should().NotBe(0);
-            targetBoard.Player1Pieces[0].AvailableMoves[0].Should().NotBeEquivalentTo(new Cell(0, 2));
+            targetBoard.Player1Pieces[0].GetAvailableMoves()[0].Should().NotBeEquivalentTo(new Cell(0, 2));
         }
     }
 }

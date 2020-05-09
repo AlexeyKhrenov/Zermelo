@@ -28,15 +28,11 @@ namespace ZermeloUnitTests.Rules
             board.Player1Pieces[0].IsCaptured = true;
             _rules.FastForwardAvailableMoves(board);
 
-            board.Player1Pieces[0].AvailableMoves
-                .Should()
-                .BeEquivalentTo(_emptyAvailableMoves);
+            board.Player1Pieces[0].HasAvailableMoves().Should().BeFalse();
 
-            board.Player2Pieces[0].AvailableMoves
-                .Should()
-                .BeEquivalentTo(_emptyAvailableMoves);
+            board.Player2Pieces[0].HasAvailableMoves().Should().BeFalse();
 
-            board.Player1Pieces[1].AvailableMoves
+            board.Player1Pieces[1].GetAvailableMoves()
                 .Should()
                 .BeEquivalentTo(new Cell[] { new Cell(2, 1), new Cell(), new Cell(), new Cell() });
         }

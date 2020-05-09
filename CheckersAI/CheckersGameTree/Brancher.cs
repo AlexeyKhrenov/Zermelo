@@ -28,7 +28,7 @@ namespace CheckersAI.CheckersGameTree
                 {
                     break;
                 }
-                foreach (var move in piece.AvailableMoves)
+                foreach (var move in piece.GetAvailableMoves())
                 {
                     if (move.IsNotNull)
                     {
@@ -39,6 +39,10 @@ namespace CheckersAI.CheckersGameTree
                         child.IsMaxPlayer = !practiceBoard.ActivePlayer;
                         child.Parent = node;
                         children.Add(child);
+                    }
+                    else
+                    {
+                        break;
                     }
                 }
             }

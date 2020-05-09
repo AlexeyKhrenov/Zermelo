@@ -6,3 +6,7 @@ PieceMinified: 16
 BoardMinified: 40
 
 
+PieceMinified: 4
+BoardMinified: 40
+
+

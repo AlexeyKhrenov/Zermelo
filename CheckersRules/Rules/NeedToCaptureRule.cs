@@ -1,5 +1,6 @@
 ﻿using Checkers.Minifications;
 using Game.Primitives;
+using System;
 
 namespace Checkers.Rules
 {
@@ -7,74 +8,66 @@ namespace Checkers.Rules
     {
         public override BoardMinified ApplyRule(BoardMinified board, HistoryItemMinified latestMove)
         {
-            var needToPassControl = true;
+            var (newBoard, noNeedToCallNext) = CheckRule(board);
 
-            foreach (var piece in board.ActiveSet)
+            if (!noNeedToCallNext)
             {
-                if (piece.IsEmpty())
-                {
-                    break;
-                }
-
-                if (piece.IsCaptured)
-                {
-                    continue;
-                }
-                needToPassControl &= !Check(piece, board.Pieces);
-                board.UpdatePieceAvailableMoves(piece.X, piece.Y, piece.AvailableMoves, board.ActivePlayer);
+                return Next(newBoard, latestMove);
             }
 
-            if (needToPassControl)
-            {
-                return Next(board, latestMove);
-            }
-
-            return board;
+            return newBoard;
         }
 
         public override BoardMinified UndoRule(BoardMinified board, HistoryItemMinified toUndo, HistoryItemMinified lastMoveBeforeUndo)
         {
-            var needToPassControl = true;
+            var (newBoard, noNeedToCallNext) = CheckRule(board);
 
-            foreach (var piece in board.ActiveSet)
+            if (!noNeedToCallNext)
             {
-                if (piece.IsEmpty())
+                return NextUndo(newBoard, toUndo, lastMoveBeforeUndo);
+            }
+
+            return newBoard;
+        }
+
+        private (BoardMinified, bool) CheckRule(BoardMinified board)
+        {
+            var noNeedToCallNext = false;
+            var pieces = board.ActiveSet;
+            var size = board.GetSize();
+
+            for (var i = 0; i < pieces.Length; i++)
+            {
+                if (pieces[i].IsEmpty())
                 {
                     break;
                 }
-                if (piece.IsCaptured)
+                if (pieces[i].IsCaptured)
                 {
                     continue;
                 }
-                needToPassControl &= !Check(piece, board.Pieces);
-                board.UpdatePieceAvailableMoves(piece.X, piece.Y, piece.AvailableMoves, board.ActivePlayer);
+                pieces[i] = Check(pieces[i], board.Pieces, size);
+
+                noNeedToCallNext |= pieces[i].HasAvailableMoves();
             }
 
-            if (needToPassControl)
-            {
-                return NextUndo(board, toUndo, lastMoveBeforeUndo);
-            }
-
-            return board;
+            return (board, noNeedToCallNext);
         }
 
         // returns true if a piece to capture was detected
-        public static bool Check(PieceMinified piece, BoardCell[,] pieces)
+        public static PieceMinified Check(PieceMinified piece, BoardCell[,] pieces, int size)
         {
-            var result = false;
-
-            var size = pieces.GetLength(0);
             if (piece.Y > 1)
             {
                 // left
                 if (piece.X > 1)
                 {
-                    result |= CheckDirection(piece, pieces, -1, -1);
+                    piece = CheckDirection(piece, pieces, -1, -1);
                 }
                 // right
                 if (piece.X < size - 2)
                 {
-                    result |= CheckDirection(piece, pieces, 1, -1);
+                    piece = CheckDirection(piece, pieces, 1, -1);
                 }
             }
             if (piece.Y < size - 2)
@@ -82,33 +75,30 @@ namespace Checkers.Rules
                 // left
                 if (piece.X > 1)
                 {
-                    result |= CheckDirection(piece, pieces, -1, 1);
+                    piece = CheckDirection(piece, pieces, -1, 1);
                 }
 
                 // right
                 if (piece.X < size - 2)
                 {
-                    result |= CheckDirection(piece, pieces, 1, 1);
+                    piece = CheckDirection(piece, pieces, 1, 1);
                 }
             }
 
-            return result;
+            return piece;
         }
 
-        private static bool CheckDirection(PieceMinified piece, BoardCell[,] pieces, int directionRight, int directionDown)
+        private static PieceMinified CheckDirection(PieceMinified piece, BoardCell[,] pieces, sbyte directionRight, sbyte directionDown)
         {
             var target = pieces[piece.X + directionRight, piece.Y + directionDown];
             if (!target.IsEmpty() && target.IsWhite() != piece.IsWhite)
             {
                 if (pieces[piece.X + 2 * directionRight, piece.Y + 2 * directionDown].IsEmpty())
                 {
-                    var i = directionDown > 0 ? 2 : 0;
-                    var j = directionRight > 0 ? 1 : 0;
-                    piece.AvailableMoves[i + j] = new Cell((byte)(piece.X + 2 * directionRight), (byte)(piece.Y + 2 * directionDown));
-                    return true;
+                    piece.AddAvailableMove(directionRight, directionDown, true);
                 }
             }
-            return false;
+            return piece;
         }
     }
 }

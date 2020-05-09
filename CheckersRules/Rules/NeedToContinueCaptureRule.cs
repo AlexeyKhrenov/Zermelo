@@ -14,8 +14,10 @@ namespace Checkers.Rules
             {
                 var piece = board.GetPiece(latestMove.To.X, latestMove.To.Y, latestMove.Player);
 
-                if (NeedToCaptureRule.Check(piece, board.Pieces))
+                var newPiece = NeedToCaptureRule.Check(piece, board.Pieces, board.GetSize());
+                if (newPiece.HasAvailableMoves())
                 {
+                    board.UpdatePieceAvailableMoves(newPiece, board.ActivePlayer);
                     return board;
                 }
             }
@@ -33,19 +35,21 @@ namespace Checkers.Rules
             {
                 var piece = board.GetPiece(toUndo.From.X, toUndo.From.Y, toUndo.Player);
 
-                NeedToCaptureRule.Check(piece, board.Pieces);
-
-                if (board.ActivePlayer != lastMoveBeforeUndo.Player)
+                var newPiece = NeedToCaptureRule.Check(piece, board.Pieces, board.GetSize());
+                if (newPiece.HasAvailableMoves())
                 {
-                    board.SwitchPlayers();
-                }
+                    board.UpdatePieceAvailableMoves(newPiece, toUndo.Player);
 
-                return board;
+                    if (board.ActivePlayer != lastMoveBeforeUndo.Player)
+                    {
+                        board.SwitchPlayers();
+                    }
+
+                    return board;
+                }
             }
-            else
-            {
-                return NextUndo(board, toUndo, lastMoveBeforeUndo);
-            }
+
+            return NextUndo(board, toUndo, lastMoveBeforeUndo);
         }
     }
 }

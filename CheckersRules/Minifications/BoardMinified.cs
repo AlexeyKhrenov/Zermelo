@@ -152,19 +152,6 @@ namespace Checkers.Minifications
             }
         }
 
-        public void UpdatePieceAvailableMoves(byte x, byte y, Cell[] availableMoves, bool player)
-        {
-            var index = Pieces[x, y].GetIndex();
-            if (player)
-            {
-                Player1Pieces[index].AvailableMoves = availableMoves;
-            }
-            else
-            {
-                Player2Pieces[index].AvailableMoves = availableMoves;
-            }
-        }
-
         public PieceMinified GetPiece(byte x, byte y, bool player)
         {
             var cell = Pieces[x, y];
@@ -175,6 +162,20 @@ namespace Checkers.Minifications
             else
             {
                 return Player2Pieces[cell.GetIndex()];
+            }
+        }
+
+        public void UpdatePieceAvailableMoves(PieceMinified piece, bool player)
+        {
+            var cell = Pieces[piece.X, piece.Y];
+            if (player)
+            {
+                // todo - refactor callstack
+                Player1Pieces[cell.GetIndex()].UpdateAvailableMoves(piece);
+            }
+            else
+            {
+                Player2Pieces[cell.GetIndex()].UpdateAvailableMoves(piece);
             }
         }
 

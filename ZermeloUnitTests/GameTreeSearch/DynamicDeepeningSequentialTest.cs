@@ -166,7 +166,7 @@ namespace ZermeloUnitTests.GameTreeSearch
             var result = _search.DoProgressiveDeepening(root, practiceBoard, sbyte.MinValue, sbyte.MaxValue, 3, _cts.Token);
             var bestMove = result.Peek().Move;
             bestMove.From.Should().BeEquivalentTo(new Cell(2, 5));
-            bestMove.To.Should().BeEquivalentTo(new Cell(1, 4));
+            bestMove.To.Should().BeEquivalentTo(new Cell(3, 4));
         }
 
         [Fact]

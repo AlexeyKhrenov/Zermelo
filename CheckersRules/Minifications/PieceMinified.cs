@@ -12,6 +12,8 @@ namespace Checkers.Minifications
 
         private byte _type;
 
+        private AvailableMoves _availableMoves;
+
         public bool CanGoDown
         {
             get { return (_type & (byte)PieceMinifiedType.CanGoDown) != 0; }
@@ -108,8 +110,6 @@ namespace Checkers.Minifications
             }
         }
 
-        public Cell[] AvailableMoves { get; set; }
-
         public void Maximize(Piece to)
         {
             to.X = X;
@@ -122,11 +122,10 @@ namespace Checkers.Minifications
 
         public PieceMinified(byte x, byte y, bool isWhite, bool canGoUp, bool canGoDown)
         {
-            AvailableMoves = new Cell[4];
-
             X = x;
             Y = y;
             _type = 0;
+            _availableMoves = new AvailableMoves();
 
             IsBlack = !isWhite;
             IsQueen = false;
@@ -136,13 +135,22 @@ namespace Checkers.Minifications
             IsCaptured = false;
         }
 
+        public void AddAvailableMove(sbyte directionRight, sbyte directionDown, bool isCapture)
+        {
+            _availableMoves.AddDirection(directionRight, directionDown, isCapture);
+        }
+
+        public void UpdateAvailableMoves(PieceMinified piece)
+        {
+            _availableMoves = piece._availableMoves;
+        }
+
         public PieceMinified(byte x, byte y, bool isWhite, bool canGoUp, bool canGoDown, bool isQueen)
         {
-            AvailableMoves = new Cell[4];
-
             X = x;
             Y = y;
             _type = 0;
+            _availableMoves = new AvailableMoves();
 
             IsBlack = !isWhite;
             IsQueen = isQueen;
@@ -152,22 +160,19 @@ namespace Checkers.Minifications
             CanGoDown = canGoDown;
         }
 
-        public void ClearMoves()
+        public Cell[] GetAvailableMoves()
         {
-            AvailableMoves = new Cell[4];
+            return _availableMoves.ToCells(X, Y);
         }
 
-        public byte CountAvailableMoves()
+        public bool HasAvailableMoves()
         {
-            byte result = 0;
-            foreach (var cell in AvailableMoves)
-            {
-                if (cell.IsNotNull)
-                {
-                    result++;
-                }
-            }
-            return result;
+            return _availableMoves.HasAvailableMoves();
+        }
+
+        public void ClearMoves()
+        {
+            _availableMoves.Clear();
         }
 
         public override int GetHashCode()
@@ -182,7 +187,7 @@ namespace Checkers.Minifications
 
         public bool IsEmpty()
         {
-            return !IsWhite && !IsBlack;
+            return _type == 0;
         }
     }
 }

@@ -20,70 +20,59 @@ namespace Checkers.Rules
 
         private BoardMinified CheckRule(BoardMinified board, HistoryItemMinified latestMove)
         {
-            foreach (var piece in board.ActiveSet)
+            var pieces = board.ActiveSet;
+            var size = board.GetSize();
+
+            for (var i = 0; i < board.ActiveSet.Length; i++)
             {
-                if (piece.IsEmpty())
+                if (pieces[i].IsEmpty())
                 {
                     break;
                 }
-
-                if (piece.IsCaptured)
+                if (pieces[i].IsCaptured)
                 {
                     continue;
                 }
 
-                var size = board.GetSize();
-
-                if (piece.CanGoUp && piece.Y > 0)
+                if (pieces[i].CanGoUp && pieces[i].Y > 0)
                 {
                     //left
-                    if (piece.X > 0)
+                    if (pieces[i].X > 0)
                     {
-                        Check(piece, board.Pieces, -1, -1);
+                        pieces[i] = Check(pieces[i], board.Pieces, -1, -1);
                     }
                     //right
-                    if (piece.X < size - 1)
+                    if (pieces[i].X < size - 1)
                     {
-                        Check(piece, board.Pieces, -1, 1);
+                        pieces[i] = Check(pieces[i], board.Pieces, -1, 1);
                     }
                 }
 
-                if (piece.CanGoDown && piece.Y < size - 1)
+                if (pieces[i].CanGoDown && pieces[i].Y < size - 1)
                 {
                     //left
-                    if (piece.X > 0)
+                    if (pieces[i].X > 0)
                     {
-                        Check(piece, board.Pieces, 1, -1);
+                        pieces[i] = Check(pieces[i], board.Pieces, 1, -1);
                     }
                     //right
-                    if (piece.X < size - 1)
+                    if (pieces[i].X < size - 1)
                     {
-                        Check(piece, board.Pieces, 1, 1);
+                        pieces[i] = Check(pieces[i], board.Pieces, 1, 1);
                     }
                 }
-
-                for (var i = 0; i < piece.AvailableMoves.Length; i++)
-                {
-                    if (piece.AvailableMoves[i].IsNotNull && (piece.AvailableMoves[i].X == piece.X || piece.AvailableMoves[i].Y == piece.Y))
-                    {
-                        throw new InvalidOperationException();
-                    }
-                }
-
-                board.UpdatePieceAvailableMoves(piece.X, piece.Y, piece.AvailableMoves, board.ActivePlayer);
             }
 
             return board;
         }
 
-        public void Check(PieceMinified piece, BoardCell[,] pieces, int directionDown, int directionRight)
+        public PieceMinified Check(PieceMinified piece, BoardCell[,] pieces, sbyte directionDown, sbyte directionRight)
         {
             if (pieces[piece.X + directionRight, piece.Y + directionDown].IsEmpty())
             {
-                var i = directionDown > 0 ? 2 : 0;
-                var j = directionRight > 0 ? 1 : 0;
-                piece.AvailableMoves[i + j] = new Cell((byte)(piece.X + directionRight), (byte)(piece.Y + directionDown));
+                piece.AddAvailableMove(directionRight, directionDown, false);
             }
+            return piece;
         }
     }
 }

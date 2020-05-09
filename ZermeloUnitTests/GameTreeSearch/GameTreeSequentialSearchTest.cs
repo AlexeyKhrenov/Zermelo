@@ -166,7 +166,7 @@ namespace ZermeloUnitTests.GameTreeSearch
             var bestMove = root.GetBestMove();
 
             root.Result.Should().Be(sbyte.MaxValue);
-            bestMove.Should().BeEquivalentTo(new Move(2, 5, 1, 4));
+            bestMove.Should().BeEquivalentTo(new Move(2, 5, 3, 4));
         }
 
         [Fact]

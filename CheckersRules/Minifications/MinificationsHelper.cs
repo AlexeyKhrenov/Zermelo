@@ -18,12 +18,6 @@ namespace Checkers.Minifications
                 from.CanGoDown,
                 from.IsQueen);
 
-            // todo - remove this cast
-            for (var i = 0; i < from.AvailableMoves.Count; i++)
-            {
-                min.AvailableMoves[i] = from.AvailableMoves[i];
-            }
-
             min.IsCaptured = from.IsCaptured;
 
             return min;
@@ -34,7 +28,7 @@ namespace Checkers.Minifications
             var piece = new Piece(min.X, min.Y, min.IsWhite, min.CanGoUp, min.CanGoDown);
             piece.IsQueen = min.IsQueen;
             piece.IsCaptured = min.IsCaptured;
-            piece.AvailableMoves = min.AvailableMoves.Where(x => x.IsNotNull).ToList();
+            piece.AvailableMoves = min.GetAvailableMoves().Where(x => x.IsNotNull).ToList();
             return piece;
         }
 
