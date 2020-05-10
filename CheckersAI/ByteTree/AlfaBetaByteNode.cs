@@ -26,6 +26,8 @@ namespace CheckersAI.ByteTree
 
         public AlfaBetaByteNode BestChild { get; set; }
 
+        public bool WasCutoff { get; set; }
+
         public AlfaBetaByteNode(bool isMaxPlayer)
         {
             IsMaxPlayer = isMaxPlayer;

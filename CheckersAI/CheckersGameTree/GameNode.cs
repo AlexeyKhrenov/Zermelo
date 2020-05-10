@@ -9,7 +9,7 @@ namespace CheckersAI.CheckersGameTree
 {
     internal class GameNode : INode<GameNode, sbyte>, IAlfaBetaNode<GameNode, sbyte>
     {
-        public bool Cutoff { get; set; }
+        public bool WasCutoff { get; set; }
 
         public bool WasSplitted { get; set; }
 
@@ -156,7 +156,7 @@ namespace CheckersAI.CheckersGameTree
 
                 if (Alfa > Beta)
                 {
-                    Cutoff = true;
+                    WasCutoff = true;
                     IsFinalized = true;
                 }
 
