@@ -16,6 +16,8 @@ namespace CheckersAI.TreeSearch
         private IComparator<TMetric> _comparator;
         private IStateTransitions<TState, TNode, TMetric> _stateTransitions;
         private ManualResetEvent _manualResetEvent;
+        private CancellationToken _cancellationToken;
+        private CountdownEvent _currentGenerationCounter;
 
         public DynamicTreeSplitting(
             IEvaluator<TState, TMetric> evaluator,
@@ -31,32 +33,35 @@ namespace CheckersAI.TreeSearch
             _manualResetEvent = new ManualResetEvent(false);
         }
 
-        private CancellationTokenSource currentGenerationTokenSource;
-        private CountdownEvent currentGenerationCounter;
-
         public TMetric Search(TNode node, int depth, TMetric alfa, TMetric beta, TState state, CancellationToken cancellationToken)
         {
-            currentGenerationTokenSource = new CancellationTokenSource();
-            currentGenerationCounter = new CountdownEvent(1);
+            _cancellationToken = cancellationToken;
+            cancellationToken.Register(CancelOperation);
+            _currentGenerationCounter = new CountdownEvent(1);
 
             _manualResetEvent = new ManualResetEvent(false);
 
             var localState = _stateTransitions.Copy(state);
             GoDown(node, localState, depth, node);
-            currentGenerationCounter.Signal();
+            _currentGenerationCounter.Signal();
 
             _manualResetEvent.WaitOne();
 
-            currentGenerationTokenSource.Cancel();
+            _cancellationToken.ThrowIfCancellationRequested();
 
             // waiting for other threadpool tasks that are already scheduled
-            currentGenerationCounter.Wait();
+            _currentGenerationCounter.Wait();
 
             return node.Result;
         }
 
         private void GoDown(TNode node, TState state, int depth, TNode splittedFrom)
         {
+            if (_cancellationToken.IsCancellationRequested)
+            {
+                return;
+            }
+
             if (splittedFrom.IsFinalized)
             {
                 return;
@@ -94,6 +99,11 @@ namespace CheckersAI.TreeSearch
 
         private void GoUp(TNode node, int depth, TState state)
         {
+            if (_cancellationToken.IsCancellationRequested)
+            {
+                return;
+            }
+
             var parent = node.Parent;
             if (parent != null)
             {
@@ -123,14 +133,14 @@ namespace CheckersAI.TreeSearch
         {
             node.WasSplitted = true;
 
-            if (currentGenerationTokenSource.IsCancellationRequested)
+            if (_cancellationToken.IsCancellationRequested)
             {
                 return;
             }
 
             foreach (var child in node.Children)
             {
-                if (child.TryLockNode() && currentGenerationCounter.TryAddCount())
+                if (child.TryLockNode() && _currentGenerationCounter.TryAddCount())
                 {
                     var stateCopy = _stateTransitions.Copy(state);
                     var localState = _stateTransitions.GoDown(stateCopy, child);
@@ -138,11 +148,16 @@ namespace CheckersAI.TreeSearch
                         obj =>
                         {
                             GoDown(child, localState, depth - 1, node);
-                            currentGenerationCounter.Signal();
+                            _currentGenerationCounter.Signal();
                         }
                     );
                 }
             }
+        }
+
+        private void CancelOperation()
+        {
+            _manualResetEvent.Set();
         }
     }
 }

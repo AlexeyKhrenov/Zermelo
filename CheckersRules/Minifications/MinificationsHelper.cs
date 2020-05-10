@@ -80,6 +80,11 @@ namespace Checkers.Minifications
                     break;
                 }
 
+                if (piece.IsCaptured)
+                {
+                    continue;
+                }
+
                 to.Player1.Figures.Add(piece.ToMaximized());
             }
 
@@ -88,6 +93,10 @@ namespace Checkers.Minifications
                 if (piece.IsEmpty())
                 {
                     break;
+                }
+                if (piece.IsCaptured)
+                {
+                    continue;
                 }
 
                 to.Player2.Figures.Add(piece.ToMaximized());

@@ -12,7 +12,7 @@ namespace CheckersAI
         public static IPlayer CreateComputerPlayer(string name)
         {
             var treeManager = new TreeManager<GameNode, sbyte>();
-            var search = CreateSerialGameTreeSearch();
+            var search = CreateDynamicTreeSplittingGameTreeSearch();
             var searchWrapper = CreateProgressiveDeepeningWrapper(search);
 
             return new ComputerPlayer(name, searchWrapper, treeManager);
