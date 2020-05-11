@@ -61,7 +61,6 @@ namespace Benchmarking
             node2 = new GameNode();
         }
 
-        [Benchmark]
         public void RunSerialGameTreeSearchBenchmark()
         {
             var result = wrapper1.Run(practiceBoard1, node1, sbyte.MinValue, sbyte.MaxValue, 10, cts.Token);
