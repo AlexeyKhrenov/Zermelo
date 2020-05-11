@@ -44,7 +44,7 @@ namespace CheckersAI
 
             var practiceBoard = game.Board.ToMinified();
 
-            var root = new GameNode(latestMove, game.Board);
+            var root = new GameNode(latestMove, game.Board, practiceBoard.ActivePlayer);
             root = _treeManager.GoDownToNode(root);
 
             // add registration to abort threads
