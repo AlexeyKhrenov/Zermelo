@@ -20,12 +20,9 @@ namespace Game.Implementations
 
         public IEnumerable<IFigure> Figures => Player1.Figures.Union(Player2.Figures);
 
-        public bool InvertedCoordinates { get; private set; }
-
-        public Board(IPlayer player1, IPlayer player2, int size, bool invertedCoordinates)
+        public Board(IPlayer player1, IPlayer player2, int size)
         {
             Size = size;
-            InvertedCoordinates = invertedCoordinates;
             Player1 = player1;
             Player2 = player2;
 

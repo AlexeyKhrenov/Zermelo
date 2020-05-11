@@ -14,8 +14,6 @@ namespace Checkers.Minifications
         // todo rename to board cell
         public BoardCell[,] Pieces { get; set; }
 
-        public bool InvertedCoordinates { get; set; }
-
         // todo - change it to fixed
         public PieceMinified[] Player1Pieces;
 
@@ -37,7 +35,6 @@ namespace Checkers.Minifications
             Player1Pieces = new PieceMinified[20];
             Player2Pieces = new PieceMinified[20];
             ActivePlayer = true;
-            InvertedCoordinates = false;
             Player1PiecesCount = 0;
             Player2PiecesCount = 0;
         }

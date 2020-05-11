@@ -13,13 +13,11 @@ namespace Game
             IGameRules rules,
             IPlayer player1,
             IPlayer player2,
-            bool
-            isRevertedSides,
             int gameSize
         )
         {
             var history = new History();
-            return new Implementations.Game(rules, player1, player2, history, gameSize, isRevertedSides);
+            return new Implementations.Game(rules, player1, player2, history, gameSize);
         }
     }
 }

@@ -35,7 +35,6 @@ namespace Checkers.Minifications
         public static BoardMinified ToMinified(this IBoard from)
         {
             var min = new BoardMinified(from.Size);
-            min.InvertedCoordinates = from.InvertedCoordinates;
 
             min.ActivePlayer = from.ActivePlayer == from.Player1;
 

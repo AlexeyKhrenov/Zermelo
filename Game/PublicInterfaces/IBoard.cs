@@ -16,8 +16,6 @@ namespace Game.PublicInterfaces
 
         int Size { get; }
 
-        bool InvertedCoordinates { get; }
-
         IEnumerable<IFigure> Figures { get; }
 
         void SwitchPlayers();

@@ -34,10 +34,8 @@ namespace ZermeloCheckers.GameFactory
                 player2 = new HumanPlayer(request.Player2Name);
             }
 
-            var isRevertedSides = !request.IsPlayer2ComputerPlayer && request.IsPlayer1ComputerPlayer;
-
             var rules = Checkers.ServiceLocator.CreateRules();
-            var game = Game.ServiceLocator.CreateGame(rules, player1, player2, isRevertedSides, request.GameSize);
+            var game = Game.ServiceLocator.CreateGame(rules, player1, player2, request.GameSize);
 
             return game;
         }

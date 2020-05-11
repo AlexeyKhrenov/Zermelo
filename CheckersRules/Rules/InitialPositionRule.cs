@@ -11,7 +11,6 @@ namespace Checkers.Rules
         public override BoardMinified ApplyRule(BoardMinified board, HistoryItemMinified latestMove)
         {
             var size = board.GetSize();
-            var changedSides = board.InvertedCoordinates;
             var player1Figures = new PieceMinified[20];
             var player2Figures = new PieceMinified[20];
 
@@ -21,7 +20,7 @@ namespace Checkers.Rules
             }
 
             // todo - refactor this
-            var isWhite = !changedSides;
+            var isWhite = true;
             byte i = 0;
             for (byte y = (byte)(size - 1); y > size / 2; y--)
             {

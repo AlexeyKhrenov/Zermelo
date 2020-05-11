@@ -22,7 +22,7 @@ namespace Game.Implementations
 
         public IHistoryItem LatestMove => _history.Latest;
 
-        public Game(IGameRules rules, IPlayer player1, IPlayer player2, IHistory history, int size, bool revertedSides)
+        public Game(IGameRules rules, IPlayer player1, IPlayer player2, IHistory history, int size)
         {
             // remove this intialization
             player1.Figures = new List<IFigure>();
@@ -32,7 +32,7 @@ namespace Game.Implementations
             Size = size;
             Rules = rules;
 
-            Board = new Board(player1, player2, size, revertedSides);
+            Board = new Board(player1, player2, size);
             Rules.PlaceFigures(Board);
         }
 
