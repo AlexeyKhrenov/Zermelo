@@ -19,13 +19,13 @@ namespace CheckersAI.CheckersGameTree
         {
             // todo - take care about moves that need available moves to be known
             // todo - implement fast-forwarding move
-            return _rules.MakeMove(state, node.Move);
+            return _rules.FastForwardMove(state, node.Move);
         }
 
         public BoardMinified GoUp(BoardMinified state, GameNode node)
         {
             // todo - implement fast-forwarding
-            return _rules.UndoMove(state, node.Move, node.Parent?.Move);
+            return _rules.FastForwardUndoMove(state, node.Move, node.Parent?.Move);
         }
 
         public BoardMinified Copy(BoardMinified state)

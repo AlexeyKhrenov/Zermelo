@@ -42,17 +42,20 @@ namespace CheckersAI.CheckersGameTree
                         // todo - remove - duplicated information
                         child.Parent = node;
                         children.Add(child);
-
-                        var localState = _stateTransitions.GoDown(practiceBoard, child);
-                        child.TerminationResult = _evaluator.Evaluate(localState);
-                        child.IsEvaluated = true;
-                        _stateTransitions.GoUp(practiceBoard, child);
                     }
                     else
                     {
                         break;
                     }
                 }
+            }
+
+            foreach (var child in children)
+            {
+                var localState = _stateTransitions.GoDown(practiceBoard, child);
+                child.TerminationResult = _evaluator.Evaluate(localState);
+                child.IsEvaluated = true;
+                _stateTransitions.GoUp(practiceBoard, child);
             }
 
             node.Children = children.ToArray();

@@ -15,12 +15,9 @@ namespace Benchmarking
         {
             //MeasureStructSizes.Measure();
 
-            //for (var i = 0; i < 20; i++)
-            //{
-            //    var s = new GameTreeSearchBenchmark();
-            //    s.GlobalSetup();
-            //    s.RunDynamicTreeSplittingBenchmark();
-            //}
+            //var s = new GameTreeSearchBenchmark();
+            //s.GlobalSetup();
+            //s.RunDynamicTreeSplittingBenchmark();
 
             BenchmarkRunner.Run<GameTreeSearchBenchmark>();
 
