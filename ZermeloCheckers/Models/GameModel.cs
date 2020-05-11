@@ -64,23 +64,32 @@ namespace ZermeloCheckers.Models
 
         public void NextMove()
         {
+            InvokeUiUpdate();
+
             var activePlayerModel = _game.Board.ActivePlayer == Player1Model.Player ? Player1Model : Player2Model;
             var awaitingPlayerModel = _game.Board.ActivePlayer == Player1Model.Player ? Player2Model : Player1Model;
 
             awaitingPlayerModel.Wait();
 
-            if (activePlayerModel.IsComputerPlayer)
+            if (_game.Winner == null)
             {
-                IsBlocked = true;
-                activePlayerModel.Act(_game).ContinueWith(task => NextMove());
+                if (activePlayerModel.IsComputerPlayer)
+                {
+                    IsBlocked = true;
+                    activePlayerModel.Act(_game)
+                        .ContinueWith(task => NextMove());
+                }
+                else
+                {
+                    IsBlocked = false;
+                    activePlayerModel.Act(_game).Wait();
+                }
             }
             else
             {
-                IsBlocked = false;
-                activePlayerModel.Act(_game).Wait();
+                IsBlocked = true;
+                InvokeUiUpdate();
             }
-
-            InvokeUiUpdate();
         }
 
         private void InvokeUiUpdate()
@@ -90,7 +99,7 @@ namespace ZermeloCheckers.Models
             Player1Model.IsActive = _game.Board.ActivePlayer == Player1Model.Player;
             Player2Model.IsActive = _game.Board.ActivePlayer == Player2Model.Player;
             Player1Model.IsUndoEnabled = _game.CanUndo;
-            Player1Model.IsUndoEnabled = _game.CanUndo;
+            Player2Model.IsUndoEnabled = _game.CanUndo;
         }
     }
 }

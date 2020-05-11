@@ -40,7 +40,7 @@ namespace Checkers
             min.ToMaximized(board);
         }
 
-        public void MakeMove(IBoard board, IHistoryItem move)
+        public IPlayer MakeMove(IBoard board, IHistoryItem move)
         {
             var minBoard = board.ToMinified();
 
@@ -50,6 +50,17 @@ namespace Checkers
             minBoard = MakeMove(minBoard, minMove);
             minBoard.ToMaximized(board);
             minMove.Maximize(move);
+
+            if (minBoard.Player1PiecesCount == 0)
+            {
+                return board.Player1;
+            }
+
+            if (minBoard.Player2PiecesCount == 0)
+            {
+                return board.Player2;
+            }
+            return null;
         }
 
         public void Undo(IBoard board, IHistoryItem toUndo, IHistoryItem lastMoveBeforeUndo)

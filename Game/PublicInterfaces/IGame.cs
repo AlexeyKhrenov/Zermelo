@@ -17,5 +17,7 @@ namespace Game.PublicInterfaces
         IHistoryItem LatestMove { get; }
 
         bool CanUndo { get; }
+
+        IPlayer Winner { get; }
     }
 }

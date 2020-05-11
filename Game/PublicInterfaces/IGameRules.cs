@@ -8,7 +8,10 @@ namespace Game.PublicInterfaces
     {
         void PlaceFigures(IBoard board);
 
-        void MakeMove(IBoard board, IHistoryItem latestMove);
+        /// <summary>
+        /// return winner or null
+        /// </summary>
+        IPlayer MakeMove(IBoard board, IHistoryItem latestMove);
 
         void Undo(IBoard board, IHistoryItem undo, IHistoryItem lastMoveBeforeUndo);
     }

@@ -110,7 +110,7 @@ namespace ZermeloCheckers.Models
 
         public void StopThinking()
         {
-            if (!_cts.Token.IsCancellationRequested)
+            if (_cts != null && !_cts.Token.IsCancellationRequested)
             {
                 _cts.Cancel();
             }

@@ -20,6 +20,9 @@ namespace Game.Implementations
 
         private IHistory _history { get; set; }
 
+        public IPlayer Winner { get; private set; }
+
+
         public IHistoryItem LatestMove => _history.Latest;
 
         public Game(IGameRules rules, IPlayer player1, IPlayer player2, IHistory history, int size)
@@ -41,8 +44,7 @@ namespace Game.Implementations
             var historyItem = new HistoryItem(Board.ActivePlayer, move);
             _history.Push(historyItem);
 
-            // make return type IHistoryItem
-            Rules.MakeMove(Board, historyItem);
+            Winner = Rules.MakeMove(Board, historyItem);
         }
 
         public void Undo(IPlayer player)
