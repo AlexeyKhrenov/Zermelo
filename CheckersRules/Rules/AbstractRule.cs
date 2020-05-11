@@ -1,5 +1,6 @@
 ﻿using Checkers.Minifications;
 using Game.PublicInterfaces;
+using System.Runtime.CompilerServices;
 
 namespace Checkers.Rules
 {
@@ -23,6 +24,7 @@ namespace Checkers.Rules
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected BoardMinified Next(BoardMinified board, HistoryItemMinified latestMove)
         {
             if (NextRule != null)
@@ -35,6 +37,7 @@ namespace Checkers.Rules
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected BoardMinified NextUndo(BoardMinified board, HistoryItemMinified toUndo, HistoryItemMinified lastMoveBeforeUndo)
         {
             if (NextRule != null)
