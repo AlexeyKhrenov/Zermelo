@@ -128,43 +128,62 @@ namespace CheckersAI.CheckersGameTree
             return 0 == Interlocked.CompareExchange(ref _isLocked, 1, 0);
         }
 
+        public void UpdateAlfaBeta(GameNode parent)
+        {
+            Alfa = parent.Alfa;
+            Beta = parent.Beta;
+        }
+
         // todo - consider making it thread-safe
         object _lock1 = new object();
         public void Update(GameNode child)
         {
             lock (_lock1)
             {
-                if (IsMaxPlayer)
+                if (!child.WasCutoff)
                 {
-                    if (child.Result >= Result)
+                    if (IsMaxPlayer)
                     {
-                        Result = child.Result;
-                        BestChild = child;
+                        if (child.Result >= Result)
+                        {
+                            Result = child.Result;
+                            BestChild = child;
+                        }
+                        Alfa = Result > Alfa ? Result : Alfa;
                     }
-                    Alfa = Result > Alfa ? Result : Alfa;
-                }
-                else
-                {
-                    if (child.Result <= Result)
+                    else
                     {
-                        Result = child.Result;
-                        BestChild = child;
+                        if (child.Result <= Result)
+                        {
+                            Result = child.Result;
+                            BestChild = child;
+                        }
+                        Beta = Result < Beta ? Result : Beta;
                     }
-                    Beta = Result < Beta ? Result : Beta;
+
+                    if (Alfa > Beta)
+                    {
+                        WasCutoff = true;
+                        IsFinalized = true;
+                    }
                 }
 
-                if (Alfa > Beta)
-                {
-                    WasCutoff = true;
-                    IsFinalized = true;
-                }
-
+                var numberOfCutoffChildren = 0;
                 foreach (var c in Children)
                 {
                     if (!c.IsFinalized)
                     {
                         return;
                     }
+                    if (c.WasCutoff)
+                    {
+                        numberOfCutoffChildren++;
+                    }
+                }
+
+                if (numberOfCutoffChildren == Children.Length)
+                {
+                    WasCutoff = true;
                 }
 
                 IsFinalized = true;

@@ -73,21 +73,37 @@ namespace CheckersAI.ByteTree
             return 0 == Interlocked.CompareExchange(ref _isLocked, 1, 0);
         }
 
+        public void UpdateAlfaBeta(AlfaBetaByteNode parent)
+        {
+            Alfa = parent.Alfa;
+            Beta = parent.Beta;
+        }
+
         // todo - consider making it thread-safe
         object _lock1 = new object();
         public void Update(AlfaBetaByteNode child)
         {
             lock (_lock1)
             {
-                if (IsMaxPlayer)
+                if (!child.WasCutoff)
                 {
-                    Result = child.Result > Result ? child.Result : Result;
-                    Alfa = Result > Alfa ? Result : Alfa;
-                }
-                else
-                {
-                    Result = child.Result < Result ? child.Result : Result;
-                    Beta = Result < Beta ? Result : Beta;
+                    if (IsMaxPlayer)
+                    {
+                        Result = child.Result > Result ? child.Result : Result;
+                        Alfa = Result > Alfa ? Result : Alfa;
+                    }
+                    else
+                    {
+                        Result = child.Result < Result ? child.Result : Result;
+                        Beta = Result < Beta ? Result : Beta;
+                    }
+
+                    if (Alfa > Beta)
+                    {
+                        WasCutoff = true;
+                        IsFinalized = true;
+                        return;
+                    }
                 }
 
                 foreach (var c in Children)
@@ -97,9 +113,8 @@ namespace CheckersAI.ByteTree
                         return;
                     }
                 }
+                IsFinalized = true;
             }
-
-            IsFinalized = true;
         }
 
         public void Update(sbyte result)

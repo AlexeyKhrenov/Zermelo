@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CheckersAI", "CheckersAI\Ch
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Benchmarking", "Benchmarking\Benchmarking.csproj", "{9DBA9755-E751-4793-82E7-E732137FE494}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZermeloUnitTests", "ZermeloUnitTests\ZermeloUnitTests.csproj", "{AB6C06C3-EAD7-4121-87C4-DC33B6A8392C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZermeloUnitTests", "ZermeloUnitTests\ZermeloUnitTests.csproj", "{AB6C06C3-EAD7-4121-87C4-DC33B6A8392C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

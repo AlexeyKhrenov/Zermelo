@@ -18,6 +18,8 @@
 
         void Update(TMetric result);
 
+        void UpdateAlfaBeta(TNode parent);
+
         bool WasCutoff { get; set; }
     }
 }

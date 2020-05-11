@@ -92,6 +92,7 @@ namespace CheckersAI.TreeSearch
             {
                 if (child.TryLockNode())
                 {
+                    child.UpdateAlfaBeta(node);
                     var localState = _stateTransitions.GoDown(state, child);
                     GoDown(child, localState, depth - 1, splittedFrom);
                     break;
@@ -148,6 +149,7 @@ namespace CheckersAI.TreeSearch
                     ThreadPool.QueueUserWorkItem(
                         obj =>
                         {
+                            child.UpdateAlfaBeta(node);
                             GoDown(child, localState, depth - 1, node);
                             _currentGenerationCounter.Signal();
                         }
