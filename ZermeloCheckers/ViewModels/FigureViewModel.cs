@@ -18,6 +18,8 @@ namespace ZermeloCheckers.ViewModels
 
         public List<Cell> AvailableMoves { get; set; }
 
+        public bool IsCaptured { get; set; }
+
         public bool HasCoordinates(int x, int y)
         {
             return X == x && Y == y;

@@ -142,6 +142,7 @@ namespace CheckersAI.TreeSearch
             {
                 if (child.TryLockNode() && _currentGenerationCounter.TryAddCount())
                 {
+                    // todo - rework closure
                     var stateCopy = _stateTransitions.Copy(state);
                     var localState = _stateTransitions.GoDown(stateCopy, child);
                     ThreadPool.QueueUserWorkItem(

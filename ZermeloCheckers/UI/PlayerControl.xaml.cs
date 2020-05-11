@@ -13,25 +13,19 @@ using System.Windows.Shapes;
 
 namespace ZermeloCheckers
 {
-    public partial class ComputerPlayerControl : UserControl
+    public partial class PlayerControl : UserControl
     {
-        public static DependencyProperty TitleProperty;
+        public static readonly DependencyProperty TitleProperty;
+        public static readonly DependencyProperty TimeToThinkProperty;
+        public static readonly DependencyProperty PlyProperty;
+        public static readonly DependencyProperty IsActiveProperty;
+        public static readonly DependencyProperty IsButtonsEnabledProperty;
+        public static readonly DependencyProperty IsSliderEnabledProperty;
+        public static readonly DependencyProperty IsComputerPlayerProperty;
+        public static readonly DependencyProperty IsHumanPlayerProperty;
 
-        public static DependencyProperty TimeToThinkProperty;
-
-        public static DependencyProperty PlyProperty;
-
-        public static DependencyProperty IsActiveProperty;
-
-        public static DependencyProperty IsStopThinkingButtonEnabledProperty;
-
-        public static DependencyProperty IsSliderEnabledProperty;
-
-        public static DependencyProperty IsUndoButtonEnabledProperty;
-
-        public static DependencyProperty IsComputerPlayerProperty;
-
-        public static DependencyProperty IsHumanPlayerProperty;
+        public static readonly DependencyProperty StopThinkingCommandProperty;
+        public static readonly DependencyProperty UndoCommandProperty;
 
         public string Title
         {
@@ -51,10 +45,10 @@ namespace ZermeloCheckers
             set { SetValue(PlyProperty, value); }
         }
 
-        public bool IsStopThinkingButtonEnabled
+        public bool IsButtonsEnabled
         {
-            get { return (bool)GetValue(IsStopThinkingButtonEnabledProperty); }
-            set { SetValue(IsStopThinkingButtonEnabledProperty, value); }
+            get { return (bool)GetValue(IsButtonsEnabledProperty); }
+            set { SetValue(IsButtonsEnabledProperty, value); }
         }
 
         public bool IsActive
@@ -69,12 +63,6 @@ namespace ZermeloCheckers
             set { SetValue(IsSliderEnabledProperty, value); }
         }
 
-        public bool IsUndoButtonEnabled
-        {
-            get { return (bool)GetValue(IsUndoButtonEnabledProperty); }
-            set { SetValue(IsUndoButtonEnabledProperty, value); }
-        }
-
         public bool IsComputerPlayer
         {
             get { return (bool)GetValue(IsComputerPlayerProperty); }
@@ -87,54 +75,112 @@ namespace ZermeloCheckers
             set { SetValue(IsHumanPlayerProperty, value); }
         }
 
-        static ComputerPlayerControl()
+        public ICommand StopThinkingCommand
+        {
+            get { return (ICommand)GetValue(StopThinkingCommandProperty); }
+            set { SetValue(StopThinkingCommandProperty, value); }
+        }
+
+        public ICommand UndoCommand
+        {
+            get { return (ICommand)GetValue(UndoCommandProperty); }
+            set { SetValue(UndoCommandProperty, value); }
+        }
+
+        static PlayerControl()
         {
             TimeToThinkProperty = DependencyProperty.Register(
-                "TimeToThink", typeof(int), typeof(ComputerPlayerControl)
+                "TimeToThink", typeof(int), typeof(PlayerControl),
+                new FrameworkPropertyMetadata(new PropertyChangedCallback(OnTimeToThinkChanged))
             );
 
             PlyProperty = DependencyProperty.Register(
-                "Ply", typeof(int), typeof(ComputerPlayerControl)
+                "Ply", typeof(int), typeof(PlayerControl)
             );
 
             TitleProperty = DependencyProperty.Register(
-                "Title", typeof(string), typeof(ComputerPlayerControl)
+                "Title", typeof(string), typeof(PlayerControl)
             );
 
             IsActiveProperty = DependencyProperty.Register(
-                "IsActive", typeof(bool), typeof(ComputerPlayerControl)
+                "IsActive", typeof(bool), typeof(PlayerControl)
             );
 
-            IsStopThinkingButtonEnabledProperty = DependencyProperty.Register(
-                "IsStopThinkingButtonEnabled", typeof(bool), typeof(ComputerPlayerControl)
+            IsButtonsEnabledProperty = DependencyProperty.Register(
+                "IsButtonsEnabled", typeof(bool), typeof(PlayerControl)
             );
 
             IsSliderEnabledProperty = DependencyProperty.Register(
-                "IsSliderEnabled", typeof(bool), typeof(ComputerPlayerControl)
-            );
-
-            IsUndoButtonEnabledProperty = DependencyProperty.Register(
-                "IsUndoButtonEnabled", typeof(bool), typeof(ComputerPlayerControl)
+                "IsSliderEnabled", typeof(bool), typeof(PlayerControl)
             );
 
             IsComputerPlayerProperty = DependencyProperty.Register(
-                "IsComputerPlayer", typeof(bool), typeof(ComputerPlayerControl)
+                "IsComputerPlayer", typeof(bool), typeof(PlayerControl)
             );
 
             IsHumanPlayerProperty = DependencyProperty.Register(
-                "IsHumanPlayer", typeof(bool), typeof(ComputerPlayerControl)
+                "IsHumanPlayer", typeof(bool), typeof(PlayerControl)
+            );
+
+            StopThinkingCommandProperty = DependencyProperty.Register(
+                "StopThinkingCommand", typeof(ICommand), typeof(PlayerControl)
+            );
+
+            UndoCommandProperty = DependencyProperty.Register(
+                "UndoCommand", typeof(ICommand), typeof(PlayerControl)
             );
         }
 
-        public ComputerPlayerControl()
+        public PlayerControl()
         {
             InitializeComponent();
             Slider.ValueChanged += Slider_ValueChanged;
         }
 
+        public static void OnTimeToThinkChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+        {
+            var playerControl = (PlayerControl)sender;
+            var value = (int)e.NewValue;
+            if (value == -1)
+            {
+                playerControl.Slider.Value = 101;
+                playerControl.TimeToThink = value;
+                playerControl.TimeToThinkLabel.Content = "\u221E";
+            }
+            else
+            {
+                playerControl.TimeToThinkLabel.Content = value;
+                playerControl.TimeToThink = value;
+                playerControl.Slider.Value = Math.Sqrt(value) / 2;
+            }
+        }
+
         private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            TimeToThink = (int)Math.Pow(e.NewValue * 2, 2);
+            // todo - use default coeff as dependency property
+
+            var value = (int)Math.Pow(e.NewValue * 2, 2);
+            if (TimeToThink != value)
+            {
+                if (value > 40000)
+                {
+                    TimeToThink = (-1);
+                }
+                else
+                {
+                    TimeToThink = value;
+                }
+            }
+        }
+
+        private void StopThinkingButtonClick(object sender, RoutedEventArgs e)
+        {
+            StopThinkingCommand.Execute(null);
+        }
+
+        private void UntoButtonClick(object sender, RoutedEventArgs e)
+        {
+            UndoCommand.Execute(null);
         }
     }
 }

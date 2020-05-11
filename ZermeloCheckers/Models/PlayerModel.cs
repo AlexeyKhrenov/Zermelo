@@ -18,7 +18,6 @@ namespace ZermeloCheckers.Models
             get { return _isComputerPlayer; }
             set { _isComputerPlayer = value; RaisePropertyChanged(); }
         }
-
         
         public string Name
         {
@@ -35,18 +34,33 @@ namespace ZermeloCheckers.Models
         public bool IsActive
         {
             get { return _isActive; }
-            private set { _isActive = value; RaisePropertyChanged(); }
+            set { _isActive = value; RaisePropertyChanged(); }
         }
 
-        public int TimeToThinkMs { get; private set; }
+        public bool IsUndoEnabled
+        {
+            get { return _isUndoEnabled; }
+            set { _isUndoEnabled = value; RaisePropertyChanged(); }
+        }
+
+        public int TimeToThinkMs
+        {
+            get { return _timeToThinkMs; }
+            private set { _timeToThinkMs = value; RaisePropertyChanged(); }
+        }
 
         public IPlayer Player;
 
+        public Action<IPlayer> UndoMoveCallback { get; set; }
+
         private int _ply;
+        private int _timeToThinkMs;
         private string _name;
+        private bool _isUndoEnabled;
         private bool _isComputerPlayer;
         private bool _isActive;
         private DispatcherTimer _timer;
+        private CancellationTokenSource _cts;
 
         public PlayerModel(IPlayer player, int defaultTimeToThink)
         {
@@ -54,16 +68,13 @@ namespace ZermeloCheckers.Models
             Name = player.Name;
             IsComputerPlayer = player.IsComputerPlayer;
             IsActive = player.IsActive;
-            TimeToThinkMs = defaultTimeToThink;
 
             if (Player.IsComputerPlayer)
             {
+                UpdateTimeToThink(defaultTimeToThink);
                 _timer = new DispatcherTimer();
                 _timer.Interval = TimeSpan.FromMilliseconds(100);
                 _timer.Tick += new EventHandler((sender, e) => UpdatePly());
-            }
-            else
-            {
             }
         }
 
@@ -74,8 +85,8 @@ namespace ZermeloCheckers.Models
             if (IsComputerPlayer)
             {
                 // todo - do we need to recreate this object?
-                var token = new CancellationTokenSource();
-                token.CancelAfter(TimeToThinkMs);
+                _cts = new CancellationTokenSource();
+                _cts.CancelAfter(TimeToThinkMs);
 
                 StartUpdatingPly();
 
@@ -83,7 +94,7 @@ namespace ZermeloCheckers.Models
                 return Task.Run(
                     () =>
                     {
-                        Player.MakeMove(game, token.Token).Wait();
+                        Player.MakeMove(game, _cts.Token).Wait();
                         StopUpdatingPly();
                     });
             }
@@ -107,8 +118,25 @@ namespace ZermeloCheckers.Models
             }
         }
 
+        public void Undo()
+        {
+            UndoMoveCallback?.Invoke(Player);
+        }
+
+        public void StopThinking()
+        {
+            if (!_cts.Token.IsCancellationRequested)
+            {
+                _cts.Cancel();
+            }
+        }
+
         public void UpdateTimeToThink(int timeToThink)
         {
+            if (timeToThink < -1)
+            {
+                throw new ArgumentException("Time to think can't be less than -1");
+            }
             if (!Player.IsComputerPlayer)
             {
                 throw new InvalidOperationException("Can't update player's time to think.");

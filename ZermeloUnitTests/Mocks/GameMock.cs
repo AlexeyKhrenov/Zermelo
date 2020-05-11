@@ -16,6 +16,8 @@ namespace ZermeloUnitTests.Mocks
 
         public IHistoryItem LatestMove => null;
 
+        public bool CanUndo => throw new NotImplementedException();
+
         public Move[] Moves;
 
         private IBoard[] _stateTransitions;
@@ -41,7 +43,7 @@ namespace ZermeloUnitTests.Mocks
             _stateTransitions[_stateIndex].ActivePlayer = _playerTransitions[_stateIndex];
         }
 
-        public void Undo()
+        public void Undo(IPlayer player)
         {
             throw new NotImplementedException();
         }

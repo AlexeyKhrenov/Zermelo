@@ -25,18 +25,14 @@ namespace ZermeloCheckers.Models
 
         private IGame _game;
 
-        private string _activePlayer;
-        public string ActivePlayer
-        {
-            get { return _activePlayer; }
-            set { _activePlayer = value; RaisePropertyChanged(); }
-        }
-
         public GameModel(IGame game, int defaultTimeToThink)
         {
             _game = game;
             Player1Model = new PlayerModel(game.Board.Player1, defaultTimeToThink);
             Player2Model = new PlayerModel(game.Board.Player2, defaultTimeToThink);
+
+            Player1Model.UndoMoveCallback += OnUndo;
+            Player2Model.UndoMoveCallback += OnUndo;
 
             NextMove();
         }
@@ -48,9 +44,10 @@ namespace ZermeloCheckers.Models
             NextMove();
         }
 
-        public void Undo()
+        public void OnUndo(IPlayer player)
         {
-            _game.Undo();
+            _game.Undo(player);
+            NextMove();
             InvokeUiUpdate();
         }
 
@@ -77,7 +74,10 @@ namespace ZermeloCheckers.Models
         {
             // update board UI after move
             FigureUpdatedEvent?.Invoke();
-            ActivePlayer = _game.Board.ActivePlayer.Name;
+            Player1Model.IsActive = _game.Board.ActivePlayer == Player1Model.Player;
+            Player2Model.IsActive = _game.Board.ActivePlayer == Player2Model.Player;
+            Player1Model.IsUndoEnabled = _game.CanUndo;
+            Player1Model.IsUndoEnabled = _game.CanUndo;
         }
     }
 }

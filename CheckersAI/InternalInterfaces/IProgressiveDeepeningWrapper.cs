@@ -13,7 +13,7 @@ namespace CheckersAI.InternalInterfaces
         /// <summary>
         /// Returns chain of maximizing or minimizing nodes
         /// </summary>
-        Queue<TNode> Run(TState state,
+        (Queue<TNode>, int) Run(TState state,
             TNode node,
             TMetric alfa,
             TMetric beta,

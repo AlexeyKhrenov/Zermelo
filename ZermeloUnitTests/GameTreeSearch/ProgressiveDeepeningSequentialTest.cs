@@ -45,7 +45,7 @@ namespace ZermeloUnitTests.GameTreeSearch
 
             var practiceBoard = sourceBoard.ToMinified();
 
-            var result = _wrapper.Run(practiceBoard, root, sbyte.MinValue, sbyte.MaxValue, 2, _cts.Token);
+            var (result, maxPly) = _wrapper.Run(practiceBoard, root, sbyte.MinValue, sbyte.MaxValue, 2, _cts.Token);
             var bestMove = result.Peek().Move;
             bestMove.From.Should().BeEquivalentTo(new Cell(2, 2));
             bestMove.To.Should().BeEquivalentTo(new Cell(3, 1));
@@ -68,7 +68,7 @@ namespace ZermeloUnitTests.GameTreeSearch
 
             var practiceBoard = sourceBoard.ToMinified();
 
-            var result = _wrapper.Run(practiceBoard, root, sbyte.MinValue, sbyte.MaxValue, 3, _cts.Token);
+            var (result, maxPly) = _wrapper.Run(practiceBoard, root, sbyte.MinValue, sbyte.MaxValue, 3, _cts.Token);
             var bestMove = result.Peek().Move;
             bestMove.From.Should().BeEquivalentTo(new Cell(1, 3));
             bestMove.To.Should().BeEquivalentTo(new Cell(0, 2));
@@ -91,7 +91,7 @@ namespace ZermeloUnitTests.GameTreeSearch
 
             var practiceBoard = sourceBoard.ToMinified();
 
-            var result = _wrapper.Run(practiceBoard, root, sbyte.MinValue, sbyte.MaxValue, 12, _cts.Token);
+            var (result, maxPly) = _wrapper.Run(practiceBoard, root, sbyte.MinValue, sbyte.MaxValue, 12, _cts.Token);
             var bestMove = result.Peek().Move;
             bestMove.From.Should().BeEquivalentTo(new Cell(1, 3));
             bestMove.To.Should().BeEquivalentTo(new Cell(2, 2));
@@ -116,7 +116,7 @@ namespace ZermeloUnitTests.GameTreeSearch
 
             var practiceBoard = sourceBoard.ToMinified();
 
-            var result = _wrapper.Run(practiceBoard, root, sbyte.MinValue, sbyte.MaxValue, 3, _cts.Token);
+            var (result, maxPly) = _wrapper.Run(practiceBoard, root, sbyte.MinValue, sbyte.MaxValue, 3, _cts.Token);
             var bestMove = result.Peek().Move;
             bestMove.From.Should().BeEquivalentTo(new Cell(2, 5));
             bestMove.To.Should().BeEquivalentTo(new Cell(4, 3));
@@ -141,7 +141,7 @@ namespace ZermeloUnitTests.GameTreeSearch
 
             var practiceBoard = sourceBoard.ToMinified();
 
-            var result = _wrapper.Run(practiceBoard, root, sbyte.MinValue, sbyte.MaxValue, 2, _cts.Token);
+            var (result, maxPly) = _wrapper.Run(practiceBoard, root, sbyte.MinValue, sbyte.MaxValue, 2, _cts.Token);
             var bestMove = result.Peek().Move;
             bestMove.From.Should().BeEquivalentTo(new Cell(3, 5));
             bestMove.To.Should().BeEquivalentTo(new Cell(1, 3));
@@ -166,7 +166,7 @@ namespace ZermeloUnitTests.GameTreeSearch
 
             var practiceBoard = sourceBoard.ToMinified();
 
-            var result = _wrapper.Run(practiceBoard, root, sbyte.MinValue, sbyte.MaxValue, 3, _cts.Token);
+            var (result, maxPly) = _wrapper.Run(practiceBoard, root, sbyte.MinValue, sbyte.MaxValue, 3, _cts.Token);
             var bestMove = result.Peek().Move;
             bestMove.From.Should().BeEquivalentTo(new Cell(2, 5));
             bestMove.To.Should().BeEquivalentTo(new Cell(3, 4));
@@ -193,7 +193,7 @@ namespace ZermeloUnitTests.GameTreeSearch
 
             var practiceBoard = sourceBoard.ToMinified();
 
-            var result = _wrapper.Run(practiceBoard, root, sbyte.MinValue, sbyte.MaxValue, 3, _cts.Token);
+            var (result, maxPly) = _wrapper.Run(practiceBoard, root, sbyte.MinValue, sbyte.MaxValue, 3, _cts.Token);
             var bestMove = result.Peek().Move;
             bestMove.From.Should().BeEquivalentTo(new Cell(1, 0));
             bestMove.To.Should().BeEquivalentTo(new Cell(0, 1));

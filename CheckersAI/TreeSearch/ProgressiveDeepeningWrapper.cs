@@ -18,7 +18,7 @@ namespace CheckersAI.TreeSearch
             _search = search;
         }
 
-        public Queue<TNode> Run(TState state,
+        public (Queue<TNode>, int) Run(TState state,
             TNode node,
             TMetric alfa,
             TMetric beta,
@@ -59,7 +59,7 @@ namespace CheckersAI.TreeSearch
                 }
             }
 
-            return result;
+            return (result, depth);
         }
 
         // todo - look for perfomance here

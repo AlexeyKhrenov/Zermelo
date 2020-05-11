@@ -21,14 +21,8 @@ namespace ZermeloCheckers.ViewModels
 
         private ObservableCollection<FigureViewModel> _figures;
 
-        public ICommand UndoMoveCommand { get; set; }
-
-        public ICommand StopThinking { get; set; }
-
         public MainViewModel()
         {
-            UndoMoveCommand = new RelayCommand(obj => OnUndoMoveCommand());
-
             Figures = new ObservableCollection<FigureViewModel>();
 
             Player1 = new PlayerViewModel("Computer player 1");
@@ -53,14 +47,9 @@ namespace ZermeloCheckers.ViewModels
             _model.Move(new Move(x0, y0, x1, y1));
         }
 
-        public void OnUndoMoveCommand()
-        {
-            _model.Undo();
-        }
-
         public void OnFiguresUpdated()
         {
-            var modelFigures = _model.Figures;
+            var modelFigures = _model.Figures.Where(x => !x.IsCaptured);
             var uiFigures = Figures;
 
             var toBeRemoved = uiFigures.Except(modelFigures).ToList();

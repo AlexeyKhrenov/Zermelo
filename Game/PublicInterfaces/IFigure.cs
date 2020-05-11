@@ -15,5 +15,7 @@ namespace Game.PublicInterfaces
         List<Cell> AvailableMoves { get; set; }
 
         string Type { get; }
+
+        bool IsCaptured { get; }
     }
 }

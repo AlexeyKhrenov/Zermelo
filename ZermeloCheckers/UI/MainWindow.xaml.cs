@@ -24,7 +24,7 @@ namespace ZermeloCheckers
         public MainWindow(int boardSize)
         {
             InitializeComponent();
-
+                
             // todo - move to config or to common place
             gameBoard.Initialize(boardSize);
         }

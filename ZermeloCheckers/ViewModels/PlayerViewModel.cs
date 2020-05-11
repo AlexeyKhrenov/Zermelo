@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Windows.Input;
+using ZermeloCheckers.Misc;
 using ZermeloCheckers.Models;
 
 namespace ZermeloCheckers.ViewModels
@@ -27,9 +29,13 @@ namespace ZermeloCheckers.ViewModels
 
         public int TimeToThink
         {
-            get { return _model?.TimeToThinkMs ?? 0; }
+            get { return _model?.TimeToThinkMs ?? -1; }
             set { _model.UpdateTimeToThink(value); }
         }
+
+        public ICommand StopThinkingCommand { get; set; }
+
+        public ICommand UndoCommand { get; set; }
 
         public bool IsButtonsEnabled
         {
@@ -43,20 +49,6 @@ namespace ZermeloCheckers.ViewModels
             set { _isEnabled = value; RaisePropertyChanged(); }
         }
 
-        public bool IsUndoButtonEnabled
-        {
-            get { return _isUndoButtonEnabled; }
-            set { _isUndoButtonEnabled = value; RaisePropertyChanged(); }
-        }
-
-        public bool IsStopThinkingButtonEnabled
-        {
-            get { return _isStopThinkingButtonEnabled; }
-            set { _isStopThinkingButtonEnabled = value; RaisePropertyChanged(); }
-        }
-
-        private bool _isUndoButtonEnabled;
-        private bool _isStopThinkingButtonEnabled;
         private bool _isEnabled;
         private bool _isButtonsEnabled;
         private string _defaultName;
@@ -65,6 +57,9 @@ namespace ZermeloCheckers.ViewModels
         public PlayerViewModel(string name)
         {
             Name = name;
+
+            StopThinkingCommand = new RelayCommand(obj => OnStopThinking());
+            UndoCommand = new RelayCommand(obj => OnUndo());
         }
 
         public void FromModel(PlayerModel model)
@@ -75,7 +70,7 @@ namespace ZermeloCheckers.ViewModels
             RaisePropertyChanged("Name");
             RaisePropertyChanged("IsActive");
             RaisePropertyChanged("IsComputerPlayer");
-            RaisePropertyChanged("IsHumanPlayer"); // todo -remove this code duplicateion
+            RaisePropertyChanged("IsHumanPlayer"); // todo -remove this code duplication
             RaisePropertyChanged("TimeToThink");
         }
 
@@ -86,12 +81,20 @@ namespace ZermeloCheckers.ViewModels
                 RaisePropertyChanged("IsHumanPlayer");
             }
 
-            if (e.PropertyName == "IsActive")
+            if (e.PropertyName == "IsActive" || e.PropertyName == "IsUndoEnabled")
             {
                 if (_model.IsActive)
                 {
                     IsSliderEnabled = false;
-                    IsButtonsEnabled = true;
+                    
+                    if (_model.IsComputerPlayer)
+                    {
+                        IsButtonsEnabled = true;
+                    }
+                    else
+                    {
+                        IsButtonsEnabled = _model.IsUndoEnabled;
+                    }
                 }
                 else
                 {
@@ -101,6 +104,16 @@ namespace ZermeloCheckers.ViewModels
             }
 
             base.ModelPropertyChanged(sender, e);
+        }
+
+        public void OnStopThinking()
+        {
+            _model.StopThinking();
+        }
+
+        public void OnUndo()
+        {
+            _model.Undo();
         }
     }
 }

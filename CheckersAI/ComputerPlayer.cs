@@ -23,7 +23,7 @@ namespace CheckersAI
 
         public List<IFigure> Figures { get; set; }
 
-        public int Ply { get; }
+        public int Ply { get; private set; }
 
         private string _name;
         private IProgressiveDeepeningWrapper<GameNode, sbyte, BoardMinified> _search;
@@ -48,8 +48,9 @@ namespace CheckersAI
             root = _treeManager.GoDownToNode(root);
 
             // add registration to abort threads
-            var plannedMoves = _search.Run(practiceBoard, root, sbyte.MinValue, sbyte.MaxValue, int.MaxValue, ct);
+            var (plannedMoves, maxPly) = _search.Run(practiceBoard, root, sbyte.MinValue, sbyte.MaxValue, int.MaxValue, ct);
 
+            Ply = maxPly;
             StopThinking(game, plannedMoves);
             return Task.CompletedTask;
         }

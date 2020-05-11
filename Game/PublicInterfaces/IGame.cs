@@ -8,12 +8,14 @@ namespace Game.PublicInterfaces
 
         void Move(Move move);
 
-        void Undo();
+        void Undo(IPlayer player);
 
         int HistoryLength { get; }
 
         IBoard Board { get; }
 
         IHistoryItem LatestMove { get; }
+
+        bool CanUndo { get; }
     }
 }

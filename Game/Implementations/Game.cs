@@ -45,12 +45,40 @@ namespace Game.Implementations
             Rules.MakeMove(Board, historyItem);
         }
 
-        public void Undo()
+        public void Undo(IPlayer player)
         {
-            var move = _history.Pop();
-            var lastMoveBeforeUndo = _history.Latest;
+            while (CanUndo)
+            {
+                var move = _history.Pop();
+                var lastMoveBeforeUndo = _history.Latest;
 
-            Rules.Undo(Board, move, lastMoveBeforeUndo);
+                Rules.Undo(Board, move, lastMoveBeforeUndo);
+
+                if (player == move.Player)
+                {
+                    break;
+                }
+            }
+        }
+
+        public bool CanUndo
+        {
+            get
+            {
+                if (_history.Length == 0)
+                {
+                    return false;
+                }
+                if (Board.Player1.IsComputerPlayer && Board.Player2.IsComputerPlayer)
+                {
+                    return false;
+                }
+                if (_history.Length == 1 && _history.Latest.Player.IsComputerPlayer)
+                {
+                    return false;
+                }
+                return true;
+            }
         }
     }
 }

@@ -12,9 +12,9 @@ namespace ZermeloUnitTests.Mocks
     {
         public Queue<GameNode> Result { get; set; }
 
-        public Queue<GameNode> Run(BoardMinified state, GameNode node, sbyte alfa, sbyte beta, int maxDepth, CancellationToken ct)
+        public (Queue<GameNode>, int) Run(BoardMinified state, GameNode node, sbyte alfa, sbyte beta, int maxDepth, CancellationToken ct)
         {
-            return Result;
+            return (Result, 0);
         }
     }
 }

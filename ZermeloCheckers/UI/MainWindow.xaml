@@ -28,33 +28,35 @@
         >
         </local:BoardControl>
         <DockPanel DockPanel.Dock="Right" LastChildFill="False">
-            <local:ComputerPlayerControl
+            <local:PlayerControl
                 DataContext="{Binding Path=Player1}"
                 DockPanel.Dock="Top"
                 Margin="10"
                 Ply="{Binding Ply}"
                 Title="{Binding Name}"
-                TimeToThink="{Binding TimeToThink}"
+                TimeToThink="{Binding TimeToThink, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                 IsActive="{Binding IsActive}"
-                IsStopThinkingButtonEnabled="{Binding IsStopThinkingButtonEnabled}"
+                IsButtonsEnabled="{Binding IsButtonsEnabled}"
                 IsSliderEnabled="{Binding IsSliderEnabled}"
-                IsUndoButtonEnabled="{Binding IsUndoButtonEnabled}"
                 IsComputerPlayer="{Binding IsComputerPlayer}"
                 IsHumanPlayer="{Binding IsHumanPlayer}"
+                StopThinkingCommand="{Binding StopThinkingCommand}"
+                UndoCommand="{Binding UndoCommand}"
                 x:Name="ComputerPlayerControl1"/>
-            <local:ComputerPlayerControl
+            <local:PlayerControl
                 DockPanel.Dock="Top"
                 Margin="10"
                 DataContext="{Binding ElementName=MainWindow1, Path=DataContext.Player1}"
                 Ply="{Binding Ply}"
                 Title="{Binding Name}"
-                TimeToThink="{Binding TimeToThink}"
+                TimeToThink="{Binding TimeToThink, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                 IsActive="{Binding IsActive}"
-                IsStopThinkingButtonEnabled="{Binding IsStopThinkingButtonEnabled}"
                 IsSliderEnabled="{Binding IsSliderEnabled}"
-                IsUndoButtonEnabled="{Binding IsUndoButtonEnabled}"
+                IsButtonsEnabled="{Binding IsButtonsEnabled}"
                 IsComputerPlayer="{Binding IsComputerPlayer}"
                 IsHumanPlayer="{Binding IsHumanPlayer}"
+                StopThinkingCommand="{Binding StopThinkingCommand}"
+                UndoCommand="{Binding UndoCommand}"
                 x:Name="ComputerPlayerControl2"/>
             <Button DockPanel.Dock="Bottom" Grid.Column="2" Margin="10" Grid.Row="3" Style="{StaticResource MButton}" Click="NewGameButtonClick">New game</Button>
         </DockPanel>

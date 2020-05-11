@@ -10,5 +10,6 @@
         </Style>
         <!-- Maximum size is 10 -->
         <sys:Int32 x:Key="GameSize">8</sys:Int32>
+        <sys:Int32 x:Key="DefaultTimeToThink">-1</sys:Int32>
     </Application.Resources>
 </Application>
