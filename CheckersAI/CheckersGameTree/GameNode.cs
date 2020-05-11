@@ -3,6 +3,7 @@ using CheckersAI.InternalInterfaces;
 using Game.Primitives;
 using Game.PublicInterfaces;
 using System;
+using System.Runtime.InteropServices;
 using System.Threading;
 
 namespace CheckersAI.CheckersGameTree
@@ -10,8 +11,6 @@ namespace CheckersAI.CheckersGameTree
     internal class GameNode : INode<GameNode, sbyte>, IAlfaBetaNode<GameNode, sbyte>
     {
         public bool WasCutoff { get; set; }
-
-        public bool WasSplitted { get; set; }
 
         public sbyte Result { get; set; }
 

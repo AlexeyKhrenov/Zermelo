@@ -18,6 +18,8 @@ namespace ZermeloUnitTests.Mocks
 
         public bool CanUndo => throw new NotImplementedException();
 
+        public IPlayer Winner => throw new NotImplementedException();
+
         public Move[] Moves;
 
         private IBoard[] _stateTransitions;

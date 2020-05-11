@@ -133,8 +133,6 @@ namespace CheckersAI.TreeSearch
 
         private void SplitNode(TNode node, int depth, TState state)
         {
-            node.WasSplitted = true;
-
             if (_cancellationToken.IsCancellationRequested)
             {
                 return;
@@ -166,7 +164,7 @@ namespace CheckersAI.TreeSearch
         // todo - implement after mesuring
         public int EstimateRequiredMemoryUsageIncrementInMb(int startDepth, int endDepth)
         {
-            return int.MaxValue;
+            return 1;
         }
     }
 }

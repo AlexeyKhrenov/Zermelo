@@ -39,7 +39,7 @@ namespace CheckersAI.TreeSearch
 
         public int EstimateRequiredMemoryUsageIncrementInMb(int startDepth, int endDepth)
         {
-            return 0;
+            return 1;
         }
 
         public TMetric Search(TNode node, int depth, TMetric alfa, TMetric beta, TState state, CancellationToken ct)

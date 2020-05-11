@@ -18,8 +18,6 @@
 
         void Update(TMetric result);
 
-        bool WasSplitted { get; set; }
-
         bool WasCutoff { get; set; }
     }
 }
