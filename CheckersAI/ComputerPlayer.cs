@@ -67,8 +67,11 @@ namespace CheckersAI
                 {
                     var nextMove = plannedMoves.Dequeue();
                     game.Move(new Move(nextMove.Move.From, nextMove.Move.To));
+                    _treeManager.GoDownToNode(nextMove);
                 }
             }
+
+            GC.Collect();
         }
 
         private void MakeRandomNextMove(IGame game)

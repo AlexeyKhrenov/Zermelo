@@ -1,6 +1,7 @@
 ﻿using CheckersAI.InternalInterfaces;
 using System;
 using System.Collections.Generic;
+using System.Runtime;
 using System.Text;
 using System.Threading; 
 
@@ -28,13 +29,19 @@ namespace CheckersAI.TreeSearch
             var depth = 0;
             var result = new Queue<TNode>();
 
-            while (!ct.IsCancellationRequested)
+            MemoryFailPoint mfp = null;
+            try
             {
-                try
+                while (!ct.IsCancellationRequested)
                 {
                     if (depth > maxDepth)
                     {
                         break;
+                    }
+
+                    if (depth != 0)
+                    {
+                        mfp = new MemoryFailPoint(_search.EstimateRequiredMemoryUsageIncrementInMb(depth - 1, depth));
                     }
 
                     _search.Search(node, depth, alfa, beta, state, ct);
@@ -51,12 +58,17 @@ namespace CheckersAI.TreeSearch
                         nextNode = nextNode.BestChild;
                     }
 
+                    mfp?.Dispose();
                     ClearTree(node);
+                    GC.Collect();
                     depth++;
                 }
-                catch (OperationCanceledException)
-                {
-                }
+            }
+            catch (InsufficientMemoryException) { }
+            catch (OperationCanceledException) { }
+            finally
+            {
+                mfp?.Dispose();
             }
 
             return (result, depth);

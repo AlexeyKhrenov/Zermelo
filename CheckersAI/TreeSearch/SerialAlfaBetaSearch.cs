@@ -37,6 +37,11 @@ namespace CheckersAI.TreeSearch
             _maxValue = maxValue;
         }
 
+        public int EstimateRequiredMemoryUsageIncrementInMb(int startDepth, int endDepth)
+        {
+            return 0;
+        }
+
         public TMetric Search(TNode node, int depth, TMetric alfa, TMetric beta, TState state, CancellationToken ct)
         {
             ct.ThrowIfCancellationRequested();

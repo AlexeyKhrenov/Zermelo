@@ -9,5 +9,7 @@ namespace CheckersAI.InternalInterfaces
         where TState : struct
     {
         TMetric Search(TNode node, int depth, TMetric alfa, TMetric beta, TState state, CancellationToken cancellationToken);
+
+        int EstimateRequiredMemoryUsageIncrementInMb(int startDepth, int endDepth);
     }
 }

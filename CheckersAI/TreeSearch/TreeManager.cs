@@ -19,6 +19,11 @@ namespace CheckersAI.TreeSearch
                 return node;
             }
 
+            if (_root == null)
+            {
+                return _root;
+            }
+
             var queue = new Queue<TNode>();
             queue.Enqueue(_root);
 

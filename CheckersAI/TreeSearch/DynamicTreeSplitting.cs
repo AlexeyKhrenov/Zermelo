@@ -1,6 +1,7 @@
 ﻿using CheckersAI.InternalInterfaces;
 using System;
 using System.Collections.Generic;
+using System.Runtime;
 using System.Text;
 using System.Threading;
 
@@ -37,6 +38,7 @@ namespace CheckersAI.TreeSearch
         {
             _cancellationToken = cancellationToken;
             cancellationToken.Register(CancelOperation);
+
             _currentGenerationCounter = new CountdownEvent(1);
 
             _manualResetEvent = new ManualResetEvent(false);
@@ -159,6 +161,12 @@ namespace CheckersAI.TreeSearch
         private void CancelOperation()
         {
             _manualResetEvent.Set();
+        }
+
+        // todo - implement after mesuring
+        public int EstimateRequiredMemoryUsageIncrementInMb(int startDepth, int endDepth)
+        {
+            return int.MaxValue;
         }
     }
 }

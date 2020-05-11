@@ -50,7 +50,7 @@ namespace ZermeloCheckers.ViewModels
 
         public void OnFiguresUpdated()
         {
-            var modelFigures = _model.Figures.Where(x => !x.IsCaptured);
+            var modelFigures = _model.Figures.Where(x => !x.IsCaptured).ToList();
             var uiFigures = Figures;
 
             var toBeRemoved = uiFigures.Except(modelFigures).ToList();
