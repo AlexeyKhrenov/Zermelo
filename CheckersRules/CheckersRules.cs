@@ -30,11 +30,13 @@ namespace Checkers
 
             FastForwardMoveRules = new AppendMoveRule();
             FastForwardMoveRules.AddNext(new RemoveCapturedPieceRule());
+            FastForwardMoveRules.AddNext(new ChangePieceTypeRule());
             FastForwardMoveRules.AddNext(new NeedToContinueCaptureRule());
             FastForwardMoveRules.AddNext(new SwitchPlayerRule());
 
             FastForwardUndoMoveRules = new AppendMoveRule();
             FastForwardUndoMoveRules.AddNext(new RemoveCapturedPieceRule());
+            FastForwardUndoMoveRules.AddNext(new ChangePieceTypeRule());
             FastForwardUndoMoveRules.AddNext(new NeedToContinueCaptureRule());
             FastForwardUndoMoveRules.AddNext(new SwitchPlayerRule());
 

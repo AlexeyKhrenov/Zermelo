@@ -1,6 +1,7 @@
 ﻿using Game.Primitives;
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace Checkers.Minifications
@@ -52,6 +53,7 @@ namespace Checkers.Minifications
             return cells;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Clear()
         {
             _value = 0;

@@ -8,6 +8,7 @@ namespace Checkers.Rules
     {
         public override BoardMinified ApplyRule(BoardMinified board, HistoryItemMinified latestMove)
         {
+            board.ClearMoves();
             var (newBoard, noNeedToCallNext) = CheckRule(board);
 
             if (!noNeedToCallNext)
@@ -20,6 +21,7 @@ namespace Checkers.Rules
 
         public override BoardMinified UndoRule(BoardMinified board, HistoryItemMinified toUndo, HistoryItemMinified lastMoveBeforeUndo)
         {
+            board.ClearMoves();
             var (newBoard, noNeedToCallNext) = CheckRule(board);
 
             if (!noNeedToCallNext)

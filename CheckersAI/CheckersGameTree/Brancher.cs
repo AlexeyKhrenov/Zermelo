@@ -55,7 +55,7 @@ namespace CheckersAI.CheckersGameTree
                 var localState = _stateTransitions.GoDown(practiceBoard, child);
                 child.TerminationResult = _evaluator.Evaluate(localState);
                 child.IsEvaluated = true;
-                _stateTransitions.GoUp(practiceBoard, child);
+                _stateTransitions.GoUp(localState, child);
             }
 
             node.Children = children.ToArray();

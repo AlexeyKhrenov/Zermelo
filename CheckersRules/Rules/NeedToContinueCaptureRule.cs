@@ -13,10 +13,12 @@ namespace Checkers.Rules
             if (latestMove.IsKill)
             {
                 var piece = board.GetPiece(latestMove.To.X, latestMove.To.Y, latestMove.Player);
+                piece.ClearMoves();
 
                 var newPiece = NeedToCaptureRule.Check(piece, board.Pieces, board.GetSize());
                 if (newPiece.HasAvailableMoves())
                 {
+                    board.ClearMoves();
                     board.UpdatePieceAvailableMoves(newPiece, board.ActivePlayer);
                     return board;
                 }
@@ -34,10 +36,12 @@ namespace Checkers.Rules
                 toUndo.Player == lastMoveBeforeUndo.Player)
             {
                 var piece = board.GetPiece(toUndo.From.X, toUndo.From.Y, toUndo.Player);
+                piece.ClearMoves();
 
                 var newPiece = NeedToCaptureRule.Check(piece, board.Pieces, board.GetSize());
                 if (newPiece.HasAvailableMoves())
                 {
+                    board.ClearMoves();
                     board.UpdatePieceAvailableMoves(newPiece, toUndo.Player);
 
                     if (board.ActivePlayer != lastMoveBeforeUndo.Player)

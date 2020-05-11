@@ -1,6 +1,7 @@
 ﻿using Game.Primitives;
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace Checkers.Minifications
@@ -170,6 +171,7 @@ namespace Checkers.Minifications
             return _availableMoves.HasAvailableMoves();
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void ClearMoves()
         {
             _availableMoves.Clear();
