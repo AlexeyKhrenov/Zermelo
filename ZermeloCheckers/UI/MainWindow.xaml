@@ -25,6 +25,7 @@
             Width="400"
             Margin="60"
             Figures="{Binding Figures}"
+            IsBlocked="{Binding IsBlocked}"
         >
         </local:BoardControl>
         <DockPanel DockPanel.Dock="Right" LastChildFill="False">

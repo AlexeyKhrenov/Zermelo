@@ -67,11 +67,13 @@ namespace ZermeloCheckers.ViewModels
             _model = model;
             _model.PropertyChanged += ModelPropertyChanged;
 
-            RaisePropertyChanged("Name");
-            RaisePropertyChanged("IsActive");
-            RaisePropertyChanged("IsComputerPlayer");
-            RaisePropertyChanged("IsHumanPlayer"); // todo -remove this code duplication
-            RaisePropertyChanged("TimeToThink");
+            ModelPropertyChanged(this, new PropertyChangedEventArgs("Name"));
+            ModelPropertyChanged(this, new PropertyChangedEventArgs("IsActive"));
+            ModelPropertyChanged(this, new PropertyChangedEventArgs("IsComputerPlayer"));
+            ModelPropertyChanged(this, new PropertyChangedEventArgs("IsHumanPlayer"));
+            ModelPropertyChanged(this, new PropertyChangedEventArgs("Name"));
+            ModelPropertyChanged(this, new PropertyChangedEventArgs("TimeToThink"));
+            ModelPropertyChanged(this, new PropertyChangedEventArgs("Ply"));
         }
 
         public override void ModelPropertyChanged(object sender, PropertyChangedEventArgs e)

@@ -76,6 +76,12 @@ namespace CheckersAI
             var availableMoves = Figures.Select(x => x.AvailableMoves).SelectMany(x => x).ToList();
 
             var moveIndex = new Random().Next(0, availableMoves.Count);
+
+            if (availableMoves.Count == 0)
+            {
+                return;
+            }
+
             var move = availableMoves[moveIndex];
 
             var figure = Figures.First(x => x.AvailableMoves.Contains(move));

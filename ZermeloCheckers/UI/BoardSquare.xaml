@@ -20,6 +20,8 @@
                     <Setter Property="BorderBrush" Value="Yellow"/>
                     <Setter Property="BorderThickness" Value="2"/>
                 </DataTrigger>
+                <Trigger Property="IsEnabled" Value="False">
+                </Trigger>
             </Style.Triggers>
         </Style> 
     </UserControl.Resources>

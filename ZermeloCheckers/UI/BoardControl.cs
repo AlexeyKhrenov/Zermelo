@@ -25,10 +25,18 @@ namespace ZermeloCheckers
         private FigureViewModel selectedFigure;
         private BoardSquare[,] squares;
 
+        public static DependencyProperty IsBlockedProperty;
+
         public ObservableCollection<FigureViewModel> Figures
         {
             get { return (ObservableCollection<FigureViewModel>) GetValue(FiguresProperty); }
             set { SetValue(FiguresProperty, value); }
+        }
+
+        public bool IsBlocked
+        {
+            get { return (bool)GetValue(IsBlockedProperty); }
+            set { SetValue(IsBlockedProperty, value); }
         }
 
         static BoardControl()
@@ -36,6 +44,11 @@ namespace ZermeloCheckers
             FiguresProperty = DependencyProperty.Register(
                 "Figures", typeof(ObservableCollection<FigureViewModel>), typeof(BoardControl),
                 new FrameworkPropertyMetadata(new PropertyChangedCallback(WholeSetOfFiguresChanged))
+            );
+
+            IsBlockedProperty = DependencyProperty.Register(
+                "IsBlocked", typeof(bool), typeof(BoardControl),
+                new FrameworkPropertyMetadata(new PropertyChangedCallback(IsBlockedPropertyChanged))
             );
         }
 
@@ -56,8 +69,19 @@ namespace ZermeloCheckers
             }
         }
 
-        public BoardControl()
+        private static void IsBlockedPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
+            var board = (BoardControl)d;
+
+            var newValue = (bool)e.NewValue;
+
+            if (newValue == true)
+            {
+                if (board.selectedFigure != null)
+                {
+                    board.DeselectFigure(board.selectedFigure);
+                }
+            }
         }
 
         private void Figures_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -185,6 +209,10 @@ namespace ZermeloCheckers
 
         private void OnSquareMouseClick(object sender, RoutedEventArgs e)
         {
+            if (IsBlocked)
+            {
+                return;
+            }
             var square = (BoardSquare)sender;
             if (selectedFigure != null)
             {

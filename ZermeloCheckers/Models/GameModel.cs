@@ -19,10 +19,15 @@ namespace ZermeloCheckers.Models
 
         public IEnumerable<IFigure> Figures => _game.Board.Figures;
 
-        public event Action FigureUpdatedEvent;
-
         public bool IsUndoEnabled;
 
+        public bool IsBlocked
+        {
+            get { return _isBlocked; }
+            set { _isBlocked = value; RaisePropertyChanged(); }
+        }
+
+        private bool _isBlocked;
         private IGame _game;
 
         public GameModel(IGame game, int defaultTimeToThink)
@@ -34,6 +39,7 @@ namespace ZermeloCheckers.Models
             Player1Model.UndoMoveCallback += OnUndo;
             Player2Model.UndoMoveCallback += OnUndo;
 
+            InvokeUiUpdate();
             NextMove();
         }
 
@@ -51,6 +57,11 @@ namespace ZermeloCheckers.Models
             InvokeUiUpdate();
         }
 
+        public void OnBoardBlockedUnblocked(bool isBlocked)
+        {
+            IsBlocked = isBlocked;
+        }
+
         public void NextMove()
         {
             var activePlayerModel = _game.Board.ActivePlayer == Player1Model.Player ? Player1Model : Player2Model;
@@ -60,10 +71,12 @@ namespace ZermeloCheckers.Models
 
             if (activePlayerModel.IsComputerPlayer)
             {
+                IsBlocked = true;
                 activePlayerModel.Act(_game).ContinueWith(task => NextMove());
             }
             else
             {
+                IsBlocked = false;
                 activePlayerModel.Act(_game).Wait();
             }
 
@@ -73,7 +86,7 @@ namespace ZermeloCheckers.Models
         private void InvokeUiUpdate()
         {
             // update board UI after move
-            FigureUpdatedEvent?.Invoke();
+            RaisePropertyChanged("Figures");
             Player1Model.IsActive = _game.Board.ActivePlayer == Player1Model.Player;
             Player2Model.IsActive = _game.Board.ActivePlayer == Player2Model.Player;
             Player1Model.IsUndoEnabled = _game.CanUndo;

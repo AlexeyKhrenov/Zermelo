@@ -52,14 +52,13 @@ namespace ZermeloCheckers.Models
         public IPlayer Player;
 
         public Action<IPlayer> UndoMoveCallback { get; set; }
-
+        
         private int _ply;
         private int _timeToThinkMs;
         private string _name;
         private bool _isUndoEnabled;
         private bool _isComputerPlayer;
         private bool _isActive;
-        private DispatcherTimer _timer;
         private CancellationTokenSource _cts;
 
         public PlayerModel(IPlayer player, int defaultTimeToThink)
@@ -72,9 +71,6 @@ namespace ZermeloCheckers.Models
             if (Player.IsComputerPlayer)
             {
                 UpdateTimeToThink(defaultTimeToThink);
-                _timer = new DispatcherTimer();
-                _timer.Interval = TimeSpan.FromMilliseconds(100);
-                _timer.Tick += new EventHandler((sender, e) => UpdatePly());
             }
         }
 
@@ -88,14 +84,12 @@ namespace ZermeloCheckers.Models
                 _cts = new CancellationTokenSource();
                 _cts.CancelAfter(TimeToThinkMs);
 
-                StartUpdatingPly();
-
                 // todo - refactor this
                 return Task.Run(
                     () =>
                     {
                         Player.MakeMove(game, _cts.Token).Wait();
-                        StopUpdatingPly();
+                        Ply = ((ComputerPlayer)Player).Ply;
                     });
             }
             else
@@ -107,15 +101,6 @@ namespace ZermeloCheckers.Models
         public void Wait()
         {
             IsActive = false;
-        }
-
-        public void UpdatePly()
-        {
-            var ply = ((ComputerPlayer)Player).Ply;
-            if (ply != Ply)
-            {
-                Ply = ply;
-            }
         }
 
         public void Undo()
@@ -145,16 +130,6 @@ namespace ZermeloCheckers.Models
             {
                 TimeToThinkMs = timeToThink;
             }
-        }
-
-        public void StartUpdatingPly()
-        {
-            _timer.Start();
-        }
-
-        public void StopUpdatingPly()
-        {
-            _timer.Stop();
         }
     }
 }

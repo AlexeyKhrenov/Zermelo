@@ -17,8 +17,9 @@ namespace ZermeloCheckers.ViewModels
         public PlayerViewModel Player1;
         public PlayerViewModel Player2;
 
-        private GameModel _model;
+        public bool IsBlocked => _model?.IsBlocked ?? false;
 
+        private GameModel _model;
         private ObservableCollection<FigureViewModel> _figures;
 
         public MainViewModel()
@@ -89,14 +90,23 @@ namespace ZermeloCheckers.ViewModels
                 }
             }
 
-            OnFiguresUpdated();
-            model.FigureUpdatedEvent += OnFiguresUpdated;
+            _model.PropertyChanged += ModelPropertyChanged;
 
             Player1.FromModel(model.Player1Model);
             Player2.FromModel(model.Player2Model);
 
-            RaisePropertyChanged("Figures");
+            OnFiguresUpdated();
             RaisePropertyChanged("ActivePlayer");
+        }
+
+        public override void ModelPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "Figures")
+            {
+                OnFiguresUpdated();
+            }
+
+            base.ModelPropertyChanged(sender, e);
         }
     }
 }
