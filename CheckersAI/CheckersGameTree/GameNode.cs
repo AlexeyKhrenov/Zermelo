@@ -10,6 +10,10 @@ namespace CheckersAI.CheckersGameTree
 {
     internal class GameNode : INode<GameNode, sbyte>, IAlfaBetaNode<GameNode, sbyte>
     {
+        public sbyte TerminationResult { get; set; }
+
+        public bool IsEvaluated { get; set; }
+
         public bool WasCutoff { get; set; }
 
         public sbyte Result { get; set; }

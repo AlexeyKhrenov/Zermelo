@@ -21,5 +21,9 @@
         void UpdateAlfaBeta(TNode parent);
 
         bool WasCutoff { get; set; }
+
+        TMetric TerminationResult { get; set; }
+
+        bool IsEvaluated { get; set; }
     }
 }

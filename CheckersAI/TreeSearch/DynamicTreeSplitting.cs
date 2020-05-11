@@ -71,7 +71,15 @@ namespace CheckersAI.TreeSearch
 
             if (depth == 0)
             {
-                node.Update(_evaluator.Evaluate(state));
+                if (node.IsEvaluated)
+                {
+                    node.Update(node.TerminationResult);
+                }
+                else
+                {
+                    node.Update(_evaluator.Evaluate(state));
+                }
+                
                 GoUp(node, depth, state);
                 return;
             }

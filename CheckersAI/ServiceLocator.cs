@@ -23,9 +23,9 @@ namespace CheckersAI
             var rules = new CheckersRules();
 
             var comparator = new Comparator();
-            var brancher = new Brancher(rules);
             var evaluator = new Evaluator();
             var stateTransitions = new StateTransitions(rules);
+            var brancher = new Brancher(rules, evaluator, stateTransitions);
 
             return new SerialAlfaBetaSearch<GameNode, sbyte, BoardMinified>(
                 evaluator,
@@ -42,9 +42,9 @@ namespace CheckersAI
             var rules = new CheckersRules();
 
             var comparator = new Comparator();
-            var brancher = new Brancher(rules);
             var evaluator = new Evaluator();
             var stateTransitions = new StateTransitions(rules);
+            var brancher = new Brancher(rules, evaluator, stateTransitions);
 
             return new DynamicTreeSplitting<GameNode, sbyte, BoardMinified>(
                 evaluator,

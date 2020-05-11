@@ -9,10 +9,14 @@ namespace CheckersAI.CheckersGameTree
     internal class Brancher : IBrancher<GameNode, BoardMinified, sbyte>
     {
         CheckersRules _rules;
+        IEvaluator<BoardMinified, sbyte> _evaluator;
+        IStateTransitions<BoardMinified, GameNode, sbyte> _stateTransitions;
 
-        public Brancher(CheckersRules rules)
+        public Brancher(CheckersRules rules, IEvaluator<BoardMinified, sbyte> evaluator, IStateTransitions<BoardMinified, GameNode, sbyte> stateTransitions)
         {
             _rules = rules;
+            _evaluator = evaluator;
+            _stateTransitions = stateTransitions;
         }
 
         public void Branch(GameNode node, BoardMinified practiceBoard)
@@ -38,6 +42,11 @@ namespace CheckersAI.CheckersGameTree
                         // todo - remove - duplicated information
                         child.Parent = node;
                         children.Add(child);
+
+                        var localState = _stateTransitions.GoDown(practiceBoard, child);
+                        child.TerminationResult = _evaluator.Evaluate(localState);
+                        child.IsEvaluated = true;
+                        _stateTransitions.GoUp(practiceBoard, child);
                     }
                     else
                     {
@@ -47,6 +56,35 @@ namespace CheckersAI.CheckersGameTree
             }
 
             node.Children = children.ToArray();
+            InsertionSort(node.Children, node.IsMaxPlayer);
+        }
+
+        private static void InsertionSort(GameNode[] childNodes, bool isMaxPlayer)
+        {
+            for (int i = 0; i < childNodes.Length - 1; i++)
+            {
+                for (int j = i + 1; j > 0; j--)
+                {
+                    if (isMaxPlayer)
+                    {
+                        if (childNodes[j - 1].TerminationResult < childNodes[j].TerminationResult)
+                        {
+                            var temp = childNodes[j - 1];
+                            childNodes[j - 1] = childNodes[j];
+                            childNodes[j] = temp;
+                        }
+                    }
+                    else
+                    {
+                        if (childNodes[j - 1].TerminationResult > childNodes[j].TerminationResult)
+                        {
+                            var temp = childNodes[j - 1];
+                            childNodes[j - 1] = childNodes[j];
+                            childNodes[j] = temp;
+                        }
+                    }
+                }
+            }
         }
     }
 }

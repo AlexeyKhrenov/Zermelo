@@ -21,7 +21,7 @@ namespace Benchmarking
             //    s.GlobalSetup();
             //    s.RunDynamicTreeSplittingBenchmark();
             //}
-            
+
             BenchmarkRunner.Run<GameTreeSearchBenchmark>();
 
             //BenchmarkRunner.Run<ByteTreeSearchBenchmarks>();

@@ -6,6 +6,10 @@ namespace CheckersAI.ByteTree
 {
     public class AlfaBetaByteNode : IAlfaBetaNode<AlfaBetaByteNode, sbyte>
     {
+        public sbyte TerminationResult { get; set; }
+
+        public bool IsEvaluated { get; set; }
+
         public bool WasSplitted { get; set; }
 
         public sbyte ValueChange { get; set; }
