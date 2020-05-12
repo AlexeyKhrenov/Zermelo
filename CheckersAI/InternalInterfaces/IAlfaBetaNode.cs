@@ -12,18 +12,18 @@
 
         bool TryLockNode(); //todo - rename
 
-        bool IsFinalized { get; }
-
         void Update(TNode child);
 
         void Update(TMetric result);
 
         void UpdateAlfaBeta(TNode parent);
 
-        bool WasCutoff { get; set; }
+        bool IsFinalized { get; }
 
-        TMetric TerminationResult { get; set; }
+        bool WasCutoff { get; }
 
-        bool IsEvaluated { get; set; }
+        TMetric TerminationResult { get; }
+
+        bool IsEvaluated { get; }
     }
 }

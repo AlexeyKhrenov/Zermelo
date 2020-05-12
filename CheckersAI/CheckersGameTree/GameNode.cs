@@ -12,10 +12,6 @@ namespace CheckersAI.CheckersGameTree
     {
         public sbyte TerminationResult { get; set; }
 
-        public bool IsEvaluated { get; set; }
-
-        public bool WasCutoff { get; set; }
-
         public sbyte Result { get; set; }
 
         public GameNode Parent { get; set; }
@@ -26,15 +22,77 @@ namespace CheckersAI.CheckersGameTree
         
         public HistoryItemMinified Move { get; set; }
 
-        public bool IsMaxPlayer { get; set; }
-
         private volatile sbyte _alfa;
         public sbyte Alfa { get { return _alfa; } set { _alfa = value; } }
 
         private volatile sbyte _beta;
         public sbyte Beta { get { return _beta; } set { _beta = value; } }
 
-        public bool IsFinalized { get; set; }
+        public bool IsFinalized
+        {
+            get { return (_state & (byte)GameNodeType.IsFinalized) != 0; }
+            set
+            {
+                if (value == true)
+                {
+                    _state = (byte)(_state | (byte)GameNodeType.IsFinalized);
+                }
+                else
+                {
+                    _state = (byte)(_state & ~(byte)GameNodeType.IsFinalized);
+                }
+            }
+        }
+
+        public bool IsEvaluated
+        {
+            get { return (_state & (byte)GameNodeType.IsEvaluated) != 0; }
+            set
+            {
+                if (value == true)
+                {
+                    _state = (byte)(_state | (byte)GameNodeType.IsEvaluated);
+                }
+                else
+                {
+                    _state = (byte)(_state & ~(byte)GameNodeType.IsEvaluated);
+                }
+            }
+        }
+
+        public bool WasCutoff
+        {
+            get { return (_state & (byte)GameNodeType.WasCutOff) != 0; }
+            set
+            {
+                if (value == true)
+                {
+                    _state = (byte)(_state | (byte)GameNodeType.WasCutOff);
+                }
+                else
+                {
+                    _state = (byte)(_state & ~(byte)GameNodeType.WasCutOff);
+                }
+            }
+        }
+
+        public bool IsMaxPlayer
+        {
+            get { return (_state & (byte)GameNodeType.IsMaxPlayer) != 0; }
+            set
+            {
+                if (value == true)
+                {
+                    _state = (byte)(_state | (byte)GameNodeType.IsMaxPlayer);
+                }
+                else
+                {
+                    _state = (byte)(_state & ~(byte)GameNodeType.IsMaxPlayer);
+                }
+            }
+        }
+
+        private byte _state;
 
         public GameNode()
         {
