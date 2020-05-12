@@ -20,9 +20,9 @@ namespace Benchmarking
             //watch.Start();
             //for (var i = 0; i < 10; i++)
             //{
-            //var s = new GameTreeSearchBenchmark();
-            //s.GlobalSetup();
-            //s.RunDynamicTreeSplittingBenchmark();
+            //    var s = new GameTreeSearchBenchmark();
+            //    s.GlobalSetup();
+            //    s.RunDynamicTreeSplittingBenchmark();
             //}
             //watch.Stop();
 

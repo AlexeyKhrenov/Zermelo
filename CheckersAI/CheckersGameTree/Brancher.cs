@@ -63,7 +63,7 @@ namespace CheckersAI.CheckersGameTree
             }
 
             node.Children = children.ToArray();
-            //InsertionSort(node.Children, node.IsMaxPlayer);
+            InsertionSort(node.Children, node.IsMaxPlayer);
         }
 
         private static void InsertionSort(GameNode[] childNodes, bool isMaxPlayer)
