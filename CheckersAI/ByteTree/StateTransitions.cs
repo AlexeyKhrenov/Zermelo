@@ -29,5 +29,9 @@ namespace CheckersAI.ByteTree
         {
             return state;
         }
+
+        public void DeallocateCopy(sbyte state)
+        {
+        }
     }
 }

@@ -13,7 +13,7 @@ namespace Checkers.Minifications
     unsafe internal struct BoardMinified
     {
         // todo rename to board cell
-        public BoardCell[] Pieces { get; set; }
+        public byte[] Pieces { get; set; }
 
         public const byte BufferSize = 20;
         public fixed int Player1Pieces[BufferSize];
@@ -33,7 +33,7 @@ namespace Checkers.Minifications
         public BoardMinified(byte size)
         {
             _size = size;
-            Pieces = new BoardCell[size * size];
+            Pieces = new byte[size * size];
             ActivePlayer = true;
             Player1PiecesCount = 0;
             Player2PiecesCount = 0;
@@ -176,7 +176,7 @@ namespace Checkers.Minifications
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public BoardCell GetBoardCell(byte x, byte y)
         {
-            return Pieces[_size * y + x];
+            return (BoardCell)Pieces[_size * y + x];
         }
 
         public void SetBoardCell(byte x, byte y, BoardCell boardCell)
@@ -186,7 +186,7 @@ namespace Checkers.Minifications
 
         public void ClearBoardCell(byte x, byte y)
         {
-            Pieces[_size * y + x].RemovePiece();
+            Pieces[_size * y + x] = 0;
         }
 
         public PieceMinified GetPiece(byte x, byte y, bool player)

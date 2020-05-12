@@ -3,6 +3,7 @@ using Checkers.Minifications;
 using CheckersAI.InternalInterfaces;
 using CheckersAI.TreeSearch;
 using System;
+using System.Buffers;
 
 namespace CheckersAI.CheckersGameTree
 {
@@ -31,9 +32,15 @@ namespace CheckersAI.CheckersGameTree
         public BoardMinified Copy(BoardMinified state)
         {
             // todo - change state.Pieces to fixed too
-            var target = state;
-            target.Pieces = state.Pieces.Clone() as BoardCell[];
-            return target;
+            var dest = state;
+            dest.Pieces = ArrayPool<byte>.Shared.Rent(state.Pieces.Length);
+            Buffer.BlockCopy(state.Pieces, 0, dest.Pieces, 0, state.Pieces.Length);
+            return dest;
+        }
+
+        public void DeallocateCopy(BoardMinified state)
+        {
+            ArrayPool<byte>.Shared.Return(state.Pieces);
         }
     }
 }

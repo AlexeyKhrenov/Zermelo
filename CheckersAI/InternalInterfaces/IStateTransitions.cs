@@ -10,5 +10,7 @@
         TState GoDown(TState state, TNode node);
 
         TState Copy(TState state);
+
+        void DeallocateCopy(TState state);
     }
 }

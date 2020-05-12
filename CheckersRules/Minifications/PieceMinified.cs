@@ -189,7 +189,6 @@ namespace Checkers.Minifications
             return _availableMoves.HasAvailableMoves();
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void ClearMoves()
         {
             _availableMoves.Clear();

@@ -167,6 +167,7 @@ namespace CheckersAI.TreeSearch
                             {
                                 child.UpdateAlfaBeta(node);
                                 GoDown(child, localState, depth - 1, node);
+                                _stateTransitions.DeallocateCopy(stateCopy);
                                 _currentGenerationCounter.Signal();
                             }
                         );

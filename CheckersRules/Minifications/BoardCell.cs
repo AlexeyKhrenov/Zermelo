@@ -23,6 +23,11 @@ namespace Checkers.Minifications
             _value = (byte)((byte)(index << 2) + (isWhite ? 1 : 2));
         }
 
+        public BoardCell(byte value)
+        {
+            _value = value;
+        }
+
         public bool IsWhite()
         {
             return !IsEmpty() && _value % 2 == 1;
@@ -37,5 +42,8 @@ namespace Checkers.Minifications
         {
             _value = 0;
         }
+
+        public static implicit operator byte(BoardCell p) => p._value;
+        public static explicit operator BoardCell(byte b) => new BoardCell(b);
     }
 }
