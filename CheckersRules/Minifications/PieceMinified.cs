@@ -170,12 +170,8 @@ namespace Checkers.Minifications
             CanGoDown = canGoDown;
         }
 
-        public PieceMinified(int value)
+        public PieceMinified(int value) : this()
         {
-            X = 0;
-            Y = 0;
-            _type = 0;
-            _availableMoves = new AvailableMoves();
             Value = value;
         }
 
@@ -210,6 +206,6 @@ namespace Checkers.Minifications
         }
 
         public static implicit operator int(PieceMinified p) => p.Value;
-        public static explicit operator PieceMinified(int i) => new PieceMinified(i);
+        public static explicit operator PieceMinified(int i) => Unsafe.As<int, PieceMinified>(ref i);
     }
 }

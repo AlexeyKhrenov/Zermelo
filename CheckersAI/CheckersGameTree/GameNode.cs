@@ -28,9 +28,11 @@ namespace CheckersAI.CheckersGameTree
 
         public bool IsMaxPlayer { get; set; }
 
-        public sbyte Alfa { get; set; }
+        private volatile sbyte _alfa;
+        public sbyte Alfa { get { return _alfa; } set { _alfa = value; } }
 
-        public sbyte Beta { get; set; }
+        private volatile sbyte _beta;
+        public sbyte Beta { get { return _beta; } set { _beta = value; } }
 
         public bool IsFinalized { get; set; }
 

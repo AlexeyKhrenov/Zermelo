@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace Checkers.Minifications
@@ -44,6 +45,6 @@ namespace Checkers.Minifications
         }
 
         public static implicit operator byte(BoardCell p) => p._value;
-        public static explicit operator BoardCell(byte b) => new BoardCell(b);
+        public static explicit operator BoardCell(byte b) => Unsafe.As<byte, BoardCell>(ref b);
     }
 }
