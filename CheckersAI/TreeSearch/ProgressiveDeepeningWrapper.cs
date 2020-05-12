@@ -60,7 +60,6 @@ namespace CheckersAI.TreeSearch
 
                     mfp?.Dispose();
                     ClearTree(node);
-                    GC.Collect();
                     depth++;
                 }
             }

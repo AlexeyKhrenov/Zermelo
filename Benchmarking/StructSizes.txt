@@ -10,3 +10,19 @@ PieceMinified: 4
 BoardMinified: 40
 
 
+PieceMinified: 4
+BoardMinified: 32
+
+
+PieceMinified: 4
+BoardMinified: 32
+
+
+PieceMinified: 4
+BoardMinified: 176
+
+
+PieceMinified: 4
+BoardMinified: 176
+
+

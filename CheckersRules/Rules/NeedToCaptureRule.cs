@@ -4,7 +4,7 @@ using System;
 
 namespace Checkers.Rules
 {
-    internal class NeedToCaptureRule : AbstractRule
+    internal unsafe class NeedToCaptureRule : AbstractRule
     {
         public override BoardMinified ApplyRule(BoardMinified board, HistoryItemMinified latestMove)
         {
@@ -35,22 +35,26 @@ namespace Checkers.Rules
         private (BoardMinified, bool) CheckRule(BoardMinified board)
         {
             var noNeedToCallNext = false;
-            var pieces = board.ActiveSet;
             var size = board.GetSize();
 
-            for (var i = 0; i < pieces.Length; i++)
+            int* activeSetPtr = board.ActivePlayer ? board.Player1Pieces : board.Player2Pieces;
+
+            for (var i = 0; i < BoardMinified.BufferSize; i++)
             {
-                if (pieces[i].IsEmpty())
+                var currentPtr = activeSetPtr + i;
+                var piece = (PieceMinified)(*(currentPtr));
+                if (piece.IsEmpty())
                 {
                     break;
                 }
-                if (pieces[i].IsCaptured)
+                if (piece.IsCaptured)
                 {
                     continue;
                 }
-                pieces[i] = Check(pieces[i], board.Pieces, size);
 
-                noNeedToCallNext |= pieces[i].HasAvailableMoves();
+                piece = Check(piece, board.Pieces, size);
+                noNeedToCallNext |= piece.HasAvailableMoves();
+                *currentPtr = piece;
             }
 
             return (board, noNeedToCallNext);

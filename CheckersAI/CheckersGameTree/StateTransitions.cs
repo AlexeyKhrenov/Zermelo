@@ -30,13 +30,9 @@ namespace CheckersAI.CheckersGameTree
 
         public BoardMinified Copy(BoardMinified state)
         {
-            // todo - improve perfomance
+            // todo - change state.Pieces to fixed too
             var target = state;
             target.Pieces = state.Pieces.Clone() as BoardCell[,];
-            target.Player1Pieces = new PieceMinified[state.Player1Pieces.Length];
-            target.Player2Pieces = new PieceMinified[state.Player2Pieces.Length];
-            state.Player1Pieces.CopyTo(target.Player1Pieces, 0);
-            state.Player2Pieces.CopyTo(target.Player2Pieces, 0);
             return target;
         }
     }

@@ -4,63 +4,68 @@ using System;
 
 namespace Checkers.Rules
 {
-    internal class DetectAvailableMovesRule : AbstractRule
+    internal unsafe class DetectAvailableMovesRule : AbstractRule
     {
         public override BoardMinified ApplyRule(BoardMinified board, HistoryItemMinified latestMove)
         {
-            CheckRule(board, latestMove);
+            board = CheckRule(board, latestMove);
             return Next(board, latestMove);
         }
 
         public override BoardMinified UndoRule(BoardMinified board, HistoryItemMinified toUndo, HistoryItemMinified lastMoveBeforeUndo)
         {
-            CheckRule(board, toUndo);
+            board = CheckRule(board, toUndo);
             return NextUndo(board, toUndo, lastMoveBeforeUndo);
         }
 
         private BoardMinified CheckRule(BoardMinified board, HistoryItemMinified latestMove)
         {
-            var pieces = board.ActiveSet;
             var size = board.GetSize();
 
-            for (var i = 0; i < board.ActiveSet.Length; i++)
+            int* activeSetPtr = board.ActivePlayer ? board.Player1Pieces : board.Player2Pieces;
+
+            for (var i = 0; i < BoardMinified.BufferSize; i++)
             {
-                if (pieces[i].IsEmpty())
+                var currentPtr = activeSetPtr + i;
+                var piece = (PieceMinified)(*(currentPtr));
+                if (piece.IsEmpty())
                 {
                     break;
                 }
-                if (pieces[i].IsCaptured)
+                if (piece.IsCaptured)
                 {
                     continue;
                 }
 
-                if (pieces[i].CanGoUp && pieces[i].Y > 0)
+                if (piece.CanGoUp && piece.Y > 0)
                 {
                     //left
-                    if (pieces[i].X > 0)
+                    if (piece.X > 0)
                     {
-                        pieces[i] = Check(pieces[i], board.Pieces, -1, -1);
+                        piece = Check(piece, board.Pieces, -1, -1);
                     }
                     //right
-                    if (pieces[i].X < size - 1)
+                    if (piece.X < size - 1)
                     {
-                        pieces[i] = Check(pieces[i], board.Pieces, -1, 1);
+                        piece = Check(piece, board.Pieces, -1, 1);
                     }
                 }
 
-                if (pieces[i].CanGoDown && pieces[i].Y < size - 1)
+                if (piece.CanGoDown && piece.Y < size - 1)
                 {
                     //left
-                    if (pieces[i].X > 0)
+                    if (piece.X > 0)
                     {
-                        pieces[i] = Check(pieces[i], board.Pieces, 1, -1);
+                        piece = Check(piece, board.Pieces, 1, -1);
                     }
                     //right
-                    if (pieces[i].X < size - 1)
+                    if (piece.X < size - 1)
                     {
-                        pieces[i] = Check(pieces[i], board.Pieces, 1, 1);
+                        piece = Check(piece, board.Pieces, 1, 1);
                     }
                 }
+
+                *currentPtr = piece;
             }
 
             return board;

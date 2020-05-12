@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Checkers.Rules
 {
-    internal class InitialPositionRule : AbstractRule
+    internal unsafe class InitialPositionRule : AbstractRule
     {
         public override BoardMinified ApplyRule(BoardMinified board, HistoryItemMinified latestMove)
         {
@@ -47,8 +47,15 @@ namespace Checkers.Rules
                 }
             }
 
-            board.Player1Pieces = player1Figures;
-            board.Player2Pieces = player2Figures;
+            for (byte j = 0; j < player1Figures.Length; j++)
+            {
+                board.Player1Pieces[j] = player1Figures[j];
+            }
+
+            for (byte j = 0; j < player2Figures.Length; j++)
+            {
+                board.Player2Pieces[j] = player2Figures[j];
+            }
 
             return Next(board, null);
         }

@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Checkers.Minifications
 {
-    internal static class MinificationsHelper
+    internal unsafe static class MinificationsHelper
     {
         public static PieceMinified ToMinified(this Piece from)
         {
@@ -72,23 +72,13 @@ namespace Checkers.Minifications
             to.Player1.Figures.Clear();
             to.Player2.Figures.Clear();
 
-            foreach (var piece in from.Player1Pieces)
+            foreach (var piece in from.GetPlayer1PiecesList())
             {
-                if (piece.IsEmpty())
-                {
-                    break;
-                }
-
                 to.Player1.Figures.Add(piece.ToMaximized());
             }
 
-            foreach (var piece in from.Player2Pieces)
+            foreach (var piece in from.GetPlayer2PiecesList())
             {
-                if (piece.IsEmpty())
-                {
-                    break;
-                }
-
                 to.Player2.Figures.Add(piece.ToMaximized());
             }
 

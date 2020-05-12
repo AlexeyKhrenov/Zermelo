@@ -3,6 +3,7 @@ using Checkers.Minifications;
 using CheckersAI.CheckersGameTree;
 using Game.Primitives;
 using System;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -15,14 +16,22 @@ namespace Benchmarking
         {
             //MeasureStructSizes.Measure();
 
+            //var watch = new Stopwatch();
+            //watch.Start();
             //for (var i = 0; i < 10; i++)
             //{
-            //    var s = new GameTreeSearchBenchmark();
-            //    s.GlobalSetup();
-            //    s.RunDynamicTreeSplittingBenchmark();
+            var s = new GameTreeSearchBenchmark();
+            s.GlobalSetup();
+            s.RunDynamicTreeSplittingBenchmark();
             //}
+            //watch.Stop();
 
-            BenchmarkRunner.Run<GameTreeSearchBenchmark>();
+            //var piece = new PieceMinified();
+            //piece.X = 6;
+            //piece.Y = 4;
+            //piece.IsWhite = true;
+
+            //BenchmarkRunner.Run<GameTreeSearchBenchmark>();
 
             //BenchmarkRunner.Run<ByteTreeSearchBenchmarks>();
             //var s = new ByteTreeSearchBenchmarks();

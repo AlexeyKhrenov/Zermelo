@@ -1,4 +1,5 @@
 ﻿using Checkers;
+using Checkers.Minifications;
 using FluentAssertions;
 using Game.Primitives;
 using System;
@@ -9,7 +10,7 @@ using ZermeloUnitTests.PrimitivesMinifications;
 
 namespace ZermeloUnitTests.Rules
 {
-    public class CheckersRulesPrimitiveTest
+    public unsafe class CheckersRulesPrimitiveTest
     {
         private CheckersRules _rules;
         private Cell[] _emptyAvailableMoves;
@@ -25,16 +26,42 @@ namespace ZermeloUnitTests.Rules
         {
             var board = BoardMinifiedTest.CreateSampleBoard();
             board.Player1PiecesCount--;
-            board.Player1Pieces[0].IsCaptured = true;
-            _rules.FastForwardAvailableMoves(board);
 
-            board.Player1Pieces[0].HasAvailableMoves().Should().BeFalse();
+            var piece = (PieceMinified)board.Player1Pieces[0];
+            piece.IsCaptured = true;
 
-            board.Player2Pieces[0].HasAvailableMoves().Should().BeFalse();
+            board.Player1Pieces[0] = piece;
+            board = _rules.FastForwardAvailableMoves(board);
 
-            board.Player1Pieces[1].GetAvailableMoves()
+            var afterRulesAppending1 = (PieceMinified)board.Player1Pieces[0];
+            afterRulesAppending1.HasAvailableMoves().Should().BeFalse();
+
+            var afterRulesAppending2 = (PieceMinified)board.Player1Pieces[1];
+            afterRulesAppending2.GetAvailableMoves()
                 .Should()
                 .BeEquivalentTo(new Cell[] { new Cell(2, 1), new Cell(), new Cell(), new Cell() });
+        }
+
+        [Fact]
+        public void CheckersRulesPrimitiveTest_2()
+        {
+            var board = BoardMinifiedTest.CreateSampleBoard();
+            board.Player1PiecesCount--;
+
+            var pieceToCapture = new PieceMinified(1, 2, false, false, true);
+            board.Pieces[1, 2] = new BoardCell(1, false);
+
+            board.Player2Pieces[1] = pieceToCapture;
+
+            board = _rules.FastForwardAvailableMoves(board);
+
+            var afterRulesAppending1 = (PieceMinified)board.Player1Pieces[0];
+            afterRulesAppending1.GetAvailableMoves()
+                .Should()
+                .BeEquivalentTo(new Cell[] { new Cell(2, 1), new Cell(), new Cell(), new Cell() });
+
+            var afterRulesAppending2 = (PieceMinified)board.Player1Pieces[1];
+            afterRulesAppending2.HasAvailableMoves().Should().BeFalse();
         }
     }
 }

@@ -2,17 +2,24 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace Checkers.Minifications
 {
+    [StructLayout(LayoutKind.Explicit)]
     internal struct PieceMinified : IEquatable<PieceMinified>
     {
+        [FieldOffset(0)]
+        public int Value;
+
+        [FieldOffset(0)]
         public byte X;
+        [FieldOffset(1)]
         public byte Y;
-
+        [FieldOffset(2)]
         private byte _type;
-
+        [FieldOffset(3)]
         private AvailableMoves _availableMoves;
 
         public bool CanGoDown
@@ -123,6 +130,7 @@ namespace Checkers.Minifications
 
         public PieceMinified(byte x, byte y, bool isWhite, bool canGoUp, bool canGoDown)
         {
+            Value = 0;
             X = x;
             Y = y;
             _type = 0;
@@ -148,6 +156,7 @@ namespace Checkers.Minifications
 
         public PieceMinified(byte x, byte y, bool isWhite, bool canGoUp, bool canGoDown, bool isQueen)
         {
+            Value = 0;
             X = x;
             Y = y;
             _type = 0;
@@ -159,6 +168,15 @@ namespace Checkers.Minifications
             CanGoUp = canGoUp;
             IsCaptured = false;
             CanGoDown = canGoDown;
+        }
+
+        public PieceMinified(int value)
+        {
+            X = 0;
+            Y = 0;
+            _type = 0;
+            _availableMoves = new AvailableMoves();
+            Value = value;
         }
 
         public Cell[] GetAvailableMoves()
@@ -191,5 +209,8 @@ namespace Checkers.Minifications
         {
             return _type == 0;
         }
+
+        public static implicit operator int(PieceMinified p) => p.Value;
+        public static explicit operator PieceMinified(int i) => new PieceMinified(i);
     }
 }

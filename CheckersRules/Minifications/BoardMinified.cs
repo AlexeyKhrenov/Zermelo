@@ -9,19 +9,17 @@ using System.Text;
 namespace Checkers.Minifications
 {
     // todo - this should become a struct with methods
-    internal struct BoardMinified
+    unsafe internal struct BoardMinified
     {
         // todo rename to board cell
         public BoardCell[,] Pieces { get; set; }
 
-        // todo - change it to fixed
-        public PieceMinified[] Player1Pieces;
+        public const byte BufferSize = 20;
+        public fixed int Player1Pieces[BufferSize];
 
-        public PieceMinified[] Player2Pieces;
+        public fixed int Player2Pieces[BufferSize];
 
         public bool ActivePlayer { get; set; }
-
-        public PieceMinified[] ActiveSet => ActivePlayer ? Player1Pieces : Player2Pieces;
 
         // little optimisation for GameNode evaluation
         public byte Player1PiecesCount { get; set; }
@@ -32,8 +30,6 @@ namespace Checkers.Minifications
         public BoardMinified(int size)
         {
             Pieces = new BoardCell[size, size];
-            Player1Pieces = new PieceMinified[20];
-            Player2Pieces = new PieceMinified[20];
             ActivePlayer = true;
             Player1PiecesCount = 0;
             Player2PiecesCount = 0;
@@ -58,7 +54,7 @@ namespace Checkers.Minifications
             if (player)
             {
                 Player1PiecesCount--;
-                var toRemove = Player1Pieces[index];
+                var toRemove = (PieceMinified)Player1Pieces[index];
                 toRemove.IsCaptured = true;
                 toRemove.ClearMoves();
                 Player1Pieces[index] = toRemove;
@@ -67,7 +63,7 @@ namespace Checkers.Minifications
             else
             {
                 Player2PiecesCount--;
-                var toRemove = Player2Pieces[index];
+                var toRemove = (PieceMinified)Player2Pieces[index];
                 toRemove.IsCaptured = true;
                 toRemove.ClearMoves();
                 Player2Pieces[index] = toRemove;
@@ -84,14 +80,18 @@ namespace Checkers.Minifications
 
             if (player)
             {
-                Player1Pieces[i].X = x1;
-                Player1Pieces[i].Y = y1;
+                var piece = (PieceMinified)Player1Pieces[i];
+                piece.X = x1;
+                piece.Y = y1;
+                Player1Pieces[i] = piece;
                 return;
             }
             else
             {
-                Player2Pieces[i].X = x1;
-                Player2Pieces[i].Y = y1;
+                var piece = (PieceMinified)Player2Pieces[i];
+                piece.X = x1;
+                piece.Y = y1;
+                Player2Pieces[i] = piece;
                 return;
             }
 
@@ -105,29 +105,43 @@ namespace Checkers.Minifications
             if (player)
             {
                 Player1PiecesCount++;
-                RestorePiece(Player1Pieces, captured);
+                // todo - we know the size of BoardMinified fixed buffers in advance
+                for (byte i = 0; i < BufferSize; i++)
+                {
+                    var piece = (PieceMinified)Player1Pieces[i];
+                    if (piece.IsEmpty())
+                    {
+                        throw new ArgumentException("Couldn't find the required piece");
+                    }
+
+                    if (piece.Equals(captured))
+                    {
+                        Pieces[captured.X, captured.Y] = new BoardCell(i, captured.IsWhite);
+                        piece.IsCaptured = false;
+                        Player1Pieces[i] = piece;
+                        break;
+                    }
+                }
             }
             else
             {
                 Player2PiecesCount++;
-                RestorePiece(Player2Pieces, captured);
-            }
-        }
-
-        private void RestorePiece(PieceMinified[] playersPieces, PieceMinified captured)
-        {
-            for (byte i = 0; i < playersPieces.Length; i++)
-            {
-                if (playersPieces[i].IsEmpty())
+                // todo - we know the size of BoardMinified fixed buffers in advance
+                for (byte i = 0; i < BufferSize; i++)
                 {
-                    throw new ArgumentException("Couldn't find the required piece");
-                }
+                    var piece = (PieceMinified)Player2Pieces[i];
+                    if (piece.IsEmpty())
+                    {
+                        throw new ArgumentException("Couldn't find the required piece");
+                    }
 
-                if (playersPieces[i].IsCaptured && playersPieces[i].Equals(captured))
-                {
-                    Pieces[captured.X, captured.Y] = new BoardCell(i, captured.IsWhite);
-                    playersPieces[i].IsCaptured = false;
-                    return;
+                    if (piece.Equals(captured))
+                    {
+                        Pieces[captured.X, captured.Y] = new BoardCell(i, captured.IsWhite);
+                        piece.IsCaptured = false;
+                        Player2Pieces[i] = piece;
+                        break;
+                    }
                 }
             }
         }
@@ -137,15 +151,19 @@ namespace Checkers.Minifications
             var index = Pieces[x, y].GetIndex();
             if (player)
             {
-                Player1Pieces[index].CanGoDown = canGoDown;
-                Player1Pieces[index].CanGoUp = canGoUp;
-                Player1Pieces[index].IsQueen = isQueen;
+                var piece = (PieceMinified)Player1Pieces[index];
+                piece.CanGoDown = canGoDown;
+                piece.CanGoUp = canGoUp;
+                piece.IsQueen = isQueen;
+                Player1Pieces[index] = piece;
             }
             else
             {
-                Player2Pieces[index].CanGoDown = canGoDown;
-                Player2Pieces[index].CanGoUp = canGoUp;
-                Player2Pieces[index].IsQueen = isQueen;
+                var piece = (PieceMinified)Player2Pieces[index];
+                piece.CanGoDown = canGoDown;
+                piece.CanGoUp = canGoUp;
+                piece.IsQueen = isQueen;
+                Player2Pieces[index] = piece;
             }
         }
 
@@ -154,73 +172,103 @@ namespace Checkers.Minifications
             var cell = Pieces[x, y];
             if (player)
             {
-                return Player1Pieces[cell.GetIndex()];
+                return (PieceMinified)Player1Pieces[cell.GetIndex()];
             }
             else
             {
-                return Player2Pieces[cell.GetIndex()];
+                return (PieceMinified)Player2Pieces[cell.GetIndex()];
             }
         }
 
         public void UpdatePieceAvailableMoves(PieceMinified piece, bool player)
         {
             var cell = Pieces[piece.X, piece.Y];
+            var index = cell.GetIndex();
             if (player)
             {
-                // todo - refactor callstack
-                Player1Pieces[cell.GetIndex()].UpdateAvailableMoves(piece);
+                var target = (PieceMinified)Player1Pieces[index];
+                target.UpdateAvailableMoves(piece);
+                Player1Pieces[index] = target;
             }
             else
             {
-                Player2Pieces[cell.GetIndex()].UpdateAvailableMoves(piece);
+                var target = (PieceMinified)Player2Pieces[index];
+                target.UpdateAvailableMoves(piece);
+                Player2Pieces[index] = target;
             }
         }
 
         // todo - remove after it becomes a structure
         public void ClearMoves()
         {
-            for (var i = 0; i < Player1Pieces.Length; i++)
+            for (var i = 0; i < BufferSize; i++)
             {
-                if (Player1Pieces[i].IsEmpty())
+                var piece = (PieceMinified)Player1Pieces[i];
+                if (piece.IsEmpty())
                 {
                     break;
                 }
-                Player1Pieces[i].ClearMoves();
+                piece.ClearMoves();
+                Player1Pieces[i] = piece;
             }
 
-            for (var i = 0; i < Player2Pieces.Length; i++)
+            for (var i = 0; i < BufferSize; i++)
             {
-                if (Player2Pieces[i].IsEmpty())
+                var piece = (PieceMinified)Player2Pieces[i];
+                if (piece.IsEmpty())
                 {
                     break;
                 }
-                Player2Pieces[i].ClearMoves();
-            }
-        }
-
-        public void Validate()
-        {
-            var index = 0;
-            for (var i = 0; i < Player1Pieces.Length; i++)
-            {
-                if (Player1Pieces[i].IsEmpty())
-                {
-                    break;
-                }
-                if (!Player1Pieces[i].IsCaptured)
-                {
-                    index++;
-                }
-            }
-            if (index != Player1PiecesCount)
-            {
-                throw new InvalidOperationException();
+                piece.ClearMoves();
+                Player2Pieces[i] = piece;
             }
         }
 
         public object Clone()
         {
             throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// not optimized
+        /// </summary>
+        public List<PieceMinified> GetPlayer1PiecesList()
+        {
+            var result = new List<PieceMinified>();
+            fixed (int* player1Ptr = Player1Pieces)
+            {
+                for (var i = 0; i < BufferSize; i++)
+                {
+                    var piece = (PieceMinified)(*(player1Ptr + i));
+                    if (piece.IsEmpty())
+                    {
+                        break;
+                    }
+                    result.Add(piece);
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// not optimized
+        /// </summary>
+        public List<PieceMinified> GetPlayer2PiecesList()
+        {
+            var result = new List<PieceMinified>();
+            fixed (int* player2Ptr = Player2Pieces)
+            {
+                for (var i = 0; i < BufferSize; i++)
+                {
+                    var piece = (PieceMinified)(*(player2Ptr + i));
+                    if (piece.IsEmpty())
+                    {
+                        break;
+                    }
+                    result.Add(piece);
+                }
+            }
+            return result;
         }
     }
 }

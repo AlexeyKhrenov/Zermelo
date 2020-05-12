@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace CheckersAI.CheckersGameTree
 {
-    internal class Brancher : IBrancher<GameNode, BoardMinified, sbyte>
+    internal unsafe class Brancher : IBrancher<GameNode, BoardMinified, sbyte>
     {
         CheckersRules _rules;
         IEvaluator<BoardMinified, sbyte> _evaluator;
@@ -26,8 +26,12 @@ namespace CheckersAI.CheckersGameTree
 
             practiceBoard = _rules.FastForwardAvailableMoves(practiceBoard);
 
-            foreach (var piece in practiceBoard.ActiveSet)
+            int* activeSetPtr = practiceBoard.ActivePlayer ? practiceBoard.Player1Pieces : practiceBoard.Player2Pieces;
+
+            for (var i = 0; i < BoardMinified.BufferSize; i++)
             {
+                var piece = (PieceMinified)(*(activeSetPtr + i));
+
                 if (piece.IsEmpty())
                 {
                     break;
@@ -52,14 +56,14 @@ namespace CheckersAI.CheckersGameTree
 
             foreach (var child in children)
             {
-                var localState = _stateTransitions.GoDown(practiceBoard, child);
+                var copy = _stateTransitions.Copy(practiceBoard);
+                var localState = _stateTransitions.GoDown(copy, child);
                 child.TerminationResult = _evaluator.Evaluate(localState);
                 child.IsEvaluated = true;
-                _stateTransitions.GoUp(localState, child);
             }
 
             node.Children = children.ToArray();
-            InsertionSort(node.Children, node.IsMaxPlayer);
+            //InsertionSort(node.Children, node.IsMaxPlayer);
         }
 
         private static void InsertionSort(GameNode[] childNodes, bool isMaxPlayer)
