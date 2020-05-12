@@ -15,7 +15,7 @@ namespace Checkers.Minifications
         // todo rename to board cell
         public byte[] Pieces { get; set; }
 
-        public const byte BufferSize = 20;
+        public const byte BufferSize = 12;
         public fixed int Player1Pieces[BufferSize];
 
         public fixed int Player2Pieces[BufferSize];
