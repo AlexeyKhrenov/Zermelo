@@ -93,7 +93,7 @@ namespace ZermeloUnitTests.GameTreeSearch
 
             var (result, maxPly) = _wrapper.Run(practiceBoard, root, sbyte.MinValue, sbyte.MaxValue, 12, _cts.Token);
             var bestMove = result.Peek().Move;
-            bestMove.From.Should().BeEquivalentTo(new Cell(1, 3));
+            bestMove.From.Should().BeEquivalentTo(new Cell(3, 3));
             bestMove.To.Should().BeEquivalentTo(new Cell(2, 2));
         }
 
@@ -195,8 +195,8 @@ namespace ZermeloUnitTests.GameTreeSearch
 
             var (result, maxPly) = _wrapper.Run(practiceBoard, root, sbyte.MinValue, sbyte.MaxValue, 3, _cts.Token);
             var bestMove = result.Peek().Move;
-            bestMove.From.Should().BeEquivalentTo(new Cell(3, 0));
-            bestMove.To.Should().BeEquivalentTo(new Cell(2, 1));
+            bestMove.From.Should().BeEquivalentTo(new Cell(1, 0));
+            bestMove.To.Should().BeEquivalentTo(new Cell(0, 1));
         }
     }
 }
