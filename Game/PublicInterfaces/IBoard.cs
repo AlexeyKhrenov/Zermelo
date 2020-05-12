@@ -14,7 +14,7 @@ namespace Game.PublicInterfaces
 
         IPlayer Player2 { get; }
 
-        int Size { get; }
+        byte Size { get; }
 
         IEnumerable<IFigure> Figures { get; }
 

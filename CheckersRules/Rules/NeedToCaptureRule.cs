@@ -52,7 +52,7 @@ namespace Checkers.Rules
                     continue;
                 }
 
-                piece = Check(piece, board.Pieces, size);
+                piece = Check(piece, board, size);
                 noNeedToCallNext |= piece.HasAvailableMoves();
                 *currentPtr = piece;
             }
@@ -61,19 +61,19 @@ namespace Checkers.Rules
         }
 
         // returns true if a piece to capture was detected
-        public static PieceMinified Check(PieceMinified piece, BoardCell[,] pieces, int size)
+        public static PieceMinified Check(PieceMinified piece, BoardMinified board, int size)
         {
             if (piece.Y > 1)
             {
                 // left
                 if (piece.X > 1)
                 {
-                    piece = CheckDirection(piece, pieces, -1, -1);
+                    piece = CheckDirection(piece, board, -1, -1);
                 }
                 // right
                 if (piece.X < size - 2)
                 {
-                    piece = CheckDirection(piece, pieces, 1, -1);
+                    piece = CheckDirection(piece, board, 1, -1);
                 }
             }
             if (piece.Y < size - 2)
@@ -81,25 +81,26 @@ namespace Checkers.Rules
                 // left
                 if (piece.X > 1)
                 {
-                    piece = CheckDirection(piece, pieces, -1, 1);
+                    piece = CheckDirection(piece, board, -1, 1);
                 }
 
                 // right
                 if (piece.X < size - 2)
                 {
-                    piece = CheckDirection(piece, pieces, 1, 1);
+                    piece = CheckDirection(piece, board, 1, 1);
                 }
             }
 
             return piece;
         }
 
-        private static PieceMinified CheckDirection(PieceMinified piece, BoardCell[,] pieces, sbyte directionRight, sbyte directionDown)
+        private static PieceMinified CheckDirection(PieceMinified piece, BoardMinified board, sbyte directionRight, sbyte directionDown)
         {
-            var target = pieces[piece.X + directionRight, piece.Y + directionDown];
+            var target = board.GetBoardCell((byte)(piece.X + directionRight), (byte)(piece.Y + directionDown));
             if (!target.IsEmpty() && target.IsWhite() != piece.IsWhite)
             {
-                if (pieces[piece.X + 2 * directionRight, piece.Y + 2 * directionDown].IsEmpty())
+                var second = board.GetBoardCell((byte)(piece.X + 2 * directionRight), (byte)(piece.Y + 2 * directionDown));
+                if (second.IsEmpty())
                 {
                     piece.AddAvailableMove(directionRight, directionDown, true);
                 }

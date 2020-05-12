@@ -19,12 +19,12 @@ namespace ZermeloCheckers
     {
         private MainViewModel _mainViewModel;
         private CheckersFactory _factory;
-        private int _gameSize;
+        private byte _gameSize;
         private int _defaultTimeToThink;
 
         public void AppStartup(object sender, StartupEventArgs e)
         {
-            _gameSize = int.Parse(FindResource("GameSize").ToString());
+            _gameSize = byte.Parse(FindResource("GameSize").ToString());
             _defaultTimeToThink = int.Parse(FindResource("DefaultTimeToThink").ToString());
             _factory = new CheckersFactory();
             _mainViewModel = new MainViewModel();

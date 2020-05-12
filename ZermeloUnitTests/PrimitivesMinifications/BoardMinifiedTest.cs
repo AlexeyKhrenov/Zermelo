@@ -58,8 +58,8 @@ namespace ZermeloUnitTests.PrimitivesMinifications
             board.Player1Pieces[0] = new PieceMinified(1, 2, true, true, false, false);
             board.Player1Pieces[1] = new PieceMinified(2, 3, true, true, false, false);
 
-            board.Pieces[1, 2] = new BoardCell(0, true);
-            board.Pieces[2, 3] = new BoardCell(1, true);
+            board.SetBoardCell(1, 2, new BoardCell(0, true));
+            board.SetBoardCell(2, 3, new BoardCell(1, true));
 
             board.RemovePiece(1, 2, true);
             board.MovePiece(2, 3, 1, 2, true);
@@ -78,9 +78,9 @@ namespace ZermeloUnitTests.PrimitivesMinifications
             board.Player1Pieces[1] = new PieceMinified(3, 2, true, true, false, false);
             board.Player2Pieces[0] = new PieceMinified(1, 0, true, true, false, false);
 
-            board.Pieces[1, 0] = new BoardCell(0, false);
-            board.Pieces[0, 3] = new BoardCell(0, true);
-            board.Pieces[3, 2] = new BoardCell(1, true);
+            board.SetBoardCell(1, 0, new BoardCell(0, false));
+            board.SetBoardCell(0, 3, new BoardCell(0, true));
+            board.SetBoardCell(3, 2, new BoardCell(1, true));
 
             board.Player1PiecesCount = 2;
             board.Player2PiecesCount = 1;

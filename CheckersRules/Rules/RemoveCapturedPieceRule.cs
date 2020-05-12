@@ -16,7 +16,7 @@ namespace Checkers.Rules
                 var capturedPieceX = (latestMove.From.X + latestMove.To.X) / 2;
                 var capturedPieceY = (latestMove.From.Y + latestMove.To.Y) / 2;
 
-                latestMove.Captured = board.RemovePiece(capturedPieceX, capturedPieceY, !board.ActivePlayer);
+                latestMove.Captured = board.RemovePiece((byte)capturedPieceX, (byte)capturedPieceY, !board.ActivePlayer);
             }
 
             return Next(board, latestMove);

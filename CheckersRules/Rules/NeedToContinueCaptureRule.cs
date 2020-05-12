@@ -15,7 +15,7 @@ namespace Checkers.Rules
                 var piece = board.GetPiece(latestMove.To.X, latestMove.To.Y, latestMove.Player);
                 piece.ClearMoves();
 
-                var newPiece = NeedToCaptureRule.Check(piece, board.Pieces, board.GetSize());
+                var newPiece = NeedToCaptureRule.Check(piece, board, board.GetSize());
                 if (newPiece.HasAvailableMoves())
                 {
                     board.ClearMoves();
@@ -38,7 +38,7 @@ namespace Checkers.Rules
                 var piece = board.GetPiece(toUndo.From.X, toUndo.From.Y, toUndo.Player);
                 piece.ClearMoves();
 
-                var newPiece = NeedToCaptureRule.Check(piece, board.Pieces, board.GetSize());
+                var newPiece = NeedToCaptureRule.Check(piece, board, board.GetSize());
                 if (newPiece.HasAvailableMoves())
                 {
                     board.ClearMoves();

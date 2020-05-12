@@ -29,7 +29,7 @@ namespace Checkers.Rules
                 {
                     var piece = new PieceMinified(x, y, isWhite, true, false);
                     player1Figures[i] = piece;
-                    board.Pieces[x, y] = new BoardCell(i, isWhite);
+                    board.SetBoardCell(x, y, new BoardCell(i, isWhite));
                     i++;
                 }
             }
@@ -42,7 +42,7 @@ namespace Checkers.Rules
                 {
                     var piece = new PieceMinified(x, y, !isWhite, false, true);
                     player2Figures[i] = piece;
-                    board.Pieces[x, y] = new BoardCell(i, isWhite);
+                    board.SetBoardCell(x, y, new BoardCell(i, isWhite));
                     i++;
                 }
             }

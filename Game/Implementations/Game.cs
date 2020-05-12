@@ -25,7 +25,7 @@ namespace Game.Implementations
 
         public IHistoryItem LatestMove => _history.Latest;
 
-        public Game(IGameRules rules, IPlayer player1, IPlayer player2, IHistory history, int size)
+        public Game(IGameRules rules, IPlayer player1, IPlayer player2, IHistory history, byte size)
         {
             // remove this intialization
             player1.Figures = new List<IFigure>();

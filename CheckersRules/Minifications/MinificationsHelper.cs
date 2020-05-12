@@ -46,7 +46,7 @@ namespace Checkers.Minifications
 
                 if (!minPiece.IsCaptured)
                 {
-                    min.Pieces[minPiece.X, minPiece.Y] = new BoardCell(i, minPiece.IsWhite);
+                    min.SetBoardCell(minPiece.X, minPiece.Y, new BoardCell(i, minPiece.IsWhite));
                 }
             }
 
@@ -57,7 +57,7 @@ namespace Checkers.Minifications
 
                 if (!minPiece.IsCaptured)
                 {
-                    min.Pieces[minPiece.X, minPiece.Y] = new BoardCell(i, minPiece.IsWhite);
+                    min.SetBoardCell(minPiece.X, minPiece.Y, new BoardCell(i, minPiece.IsWhite));
                 }
             }
 

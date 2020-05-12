@@ -17,7 +17,7 @@ namespace ZermeloUnitTests.Mocks
 
         public IPlayer Player2 { get; private set; }
 
-        public int Size { get; private set; }
+        public byte Size { get; private set; }
 
         public bool InvertedCoordinates { get; private set; }
 
@@ -37,7 +37,7 @@ namespace ZermeloUnitTests.Mocks
             }
         }
 
-        public BoardMock(string[] boardStr, int size, bool invertedCoordinates)
+        public BoardMock(string[] boardStr, byte size, bool invertedCoordinates)
         {
             InvertedCoordinates = invertedCoordinates;
             Size = size;

@@ -49,7 +49,7 @@ namespace ZermeloUnitTests.Rules
             board.Player1PiecesCount--;
 
             var pieceToCapture = new PieceMinified(1, 2, false, false, true);
-            board.Pieces[1, 2] = new BoardCell(1, false);
+            board.SetBoardCell(1, 2, new BoardCell(1, false));
 
             board.Player2Pieces[1] = pieceToCapture;
 

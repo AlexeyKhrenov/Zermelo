@@ -13,7 +13,7 @@ namespace Game
             IGameRules rules,
             IPlayer player1,
             IPlayer player2,
-            int gameSize
+            byte gameSize
         )
         {
             var history = new History();

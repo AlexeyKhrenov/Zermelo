@@ -16,11 +16,11 @@ namespace Game.Implementations
 
         public IPlayer AwaitingPlayer { get; set; }
 
-        public int Size { get; private set; }
+        public byte Size { get; private set; }
 
         public IEnumerable<IFigure> Figures => Player1.Figures.Union(Player2.Figures);
 
-        public Board(IPlayer player1, IPlayer player2, int size)
+        public Board(IPlayer player1, IPlayer player2, byte size)
         {
             Size = size;
             Player1 = player1;

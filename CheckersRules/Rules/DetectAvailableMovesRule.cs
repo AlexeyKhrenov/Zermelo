@@ -42,12 +42,12 @@ namespace Checkers.Rules
                     //left
                     if (piece.X > 0)
                     {
-                        piece = Check(piece, board.Pieces, -1, -1);
+                        piece = Check(piece, board, -1, -1);
                     }
                     //right
                     if (piece.X < size - 1)
                     {
-                        piece = Check(piece, board.Pieces, -1, 1);
+                        piece = Check(piece, board, -1, 1);
                     }
                 }
 
@@ -56,12 +56,12 @@ namespace Checkers.Rules
                     //left
                     if (piece.X > 0)
                     {
-                        piece = Check(piece, board.Pieces, 1, -1);
+                        piece = Check(piece, board, 1, -1);
                     }
                     //right
                     if (piece.X < size - 1)
                     {
-                        piece = Check(piece, board.Pieces, 1, 1);
+                        piece = Check(piece, board, 1, 1);
                     }
                 }
 
@@ -71,9 +71,10 @@ namespace Checkers.Rules
             return board;
         }
 
-        public PieceMinified Check(PieceMinified piece, BoardCell[,] pieces, sbyte directionDown, sbyte directionRight)
+        public PieceMinified Check(PieceMinified piece, BoardMinified board, sbyte directionDown, sbyte directionRight)
         {
-            if (pieces[piece.X + directionRight, piece.Y + directionDown].IsEmpty())
+            var boardCell = board.GetBoardCell((byte)(piece.X + directionRight), (byte)(piece.Y + directionDown));
+            if (boardCell.IsEmpty())
             {
                 piece.AddAvailableMove(directionRight, directionDown, false);
             }

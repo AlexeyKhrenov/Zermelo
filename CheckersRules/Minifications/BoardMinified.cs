@@ -3,6 +3,7 @@ using Game.PublicInterfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -12,7 +13,7 @@ namespace Checkers.Minifications
     unsafe internal struct BoardMinified
     {
         // todo rename to board cell
-        public BoardCell[,] Pieces { get; set; }
+        public BoardCell[] Pieces { get; set; }
 
         public const byte BufferSize = 20;
         public fixed int Player1Pieces[BufferSize];
@@ -27,9 +28,12 @@ namespace Checkers.Minifications
         // little optimisation for GameNode evaluation
         public byte Player2PiecesCount { get; set; }
 
-        public BoardMinified(int size)
+        private byte _size;
+
+        public BoardMinified(byte size)
         {
-            Pieces = new BoardCell[size, size];
+            _size = size;
+            Pieces = new BoardCell[size * size];
             ActivePlayer = true;
             Player1PiecesCount = 0;
             Player2PiecesCount = 0;
@@ -43,40 +47,42 @@ namespace Checkers.Minifications
         // todo - create property
         public byte GetSize()
         {
-            return (byte)Pieces.GetLength(0);
+            return _size;
         }
 
-        public PieceMinified RemovePiece(int x, int y, bool player)
+        public PieceMinified RemovePiece(byte x, byte y, bool player)
         {
-            var index = Pieces[x, y].GetIndex();
-            Pieces[x, y].RemovePiece();
+            var cell = GetBoardCell(x, y);
+            var i = cell.GetIndex();
+            ClearBoardCell(x, y);
 
             if (player)
             {
                 Player1PiecesCount--;
-                var toRemove = (PieceMinified)Player1Pieces[index];
+                var toRemove = (PieceMinified)Player1Pieces[i];
                 toRemove.IsCaptured = true;
                 toRemove.ClearMoves();
-                Player1Pieces[index] = toRemove;
+                Player1Pieces[i] = toRemove;
                 return toRemove;
             }
             else
             {
                 Player2PiecesCount--;
-                var toRemove = (PieceMinified)Player2Pieces[index];
+                var toRemove = (PieceMinified)Player2Pieces[i];
                 toRemove.IsCaptured = true;
                 toRemove.ClearMoves();
-                Player2Pieces[index] = toRemove;
+                Player2Pieces[i] = toRemove;
                 return toRemove;
             }
         }
 
         public void MovePiece(byte x0, byte y0, byte x1, byte y1, bool player)
         {
-            var i = Pieces[x0, y0].GetIndex();
+            var cell = GetBoardCell(x0, y0);
+            var i = cell.GetIndex();
 
-            Pieces[x1, y1] = Pieces[x0, y0];
-            Pieces[x0, y0].RemovePiece();
+            SetBoardCell(x1, y1, cell);
+            ClearBoardCell(x0, y0);
 
             if (player)
             {
@@ -116,7 +122,7 @@ namespace Checkers.Minifications
 
                     if (piece.Equals(captured))
                     {
-                        Pieces[captured.X, captured.Y] = new BoardCell(i, captured.IsWhite);
+                        SetBoardCell(captured.X, captured.Y, new BoardCell(i, captured.IsWhite));
                         piece.IsCaptured = false;
                         Player1Pieces[i] = piece;
                         break;
@@ -137,7 +143,7 @@ namespace Checkers.Minifications
 
                     if (piece.Equals(captured))
                     {
-                        Pieces[captured.X, captured.Y] = new BoardCell(i, captured.IsWhite);
+                        SetBoardCell(captured.X, captured.Y, new BoardCell(i, captured.IsWhite));
                         piece.IsCaptured = false;
                         Player2Pieces[i] = piece;
                         break;
@@ -148,7 +154,7 @@ namespace Checkers.Minifications
 
         public void ChangePieceType(byte x, byte y, bool canGoDown, bool canGoUp, bool isQueen, bool player)
         {
-            var index = Pieces[x, y].GetIndex();
+            var index = GetBoardCell(x, y).GetIndex();
             if (player)
             {
                 var piece = (PieceMinified)Player1Pieces[index];
@@ -167,9 +173,25 @@ namespace Checkers.Minifications
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public BoardCell GetBoardCell(byte x, byte y)
+        {
+            return Pieces[_size * y + x];
+        }
+
+        public void SetBoardCell(byte x, byte y, BoardCell boardCell)
+        {
+            Pieces[_size * y + x] = boardCell;
+        }
+
+        public void ClearBoardCell(byte x, byte y)
+        {
+            Pieces[_size * y + x].RemovePiece();
+        }
+
         public PieceMinified GetPiece(byte x, byte y, bool player)
         {
-            var cell = Pieces[x, y];
+            var cell = GetBoardCell(x, y);
             if (player)
             {
                 return (PieceMinified)Player1Pieces[cell.GetIndex()];
@@ -182,7 +204,7 @@ namespace Checkers.Minifications
 
         public void UpdatePieceAvailableMoves(PieceMinified piece, bool player)
         {
-            var cell = Pieces[piece.X, piece.Y];
+            var cell = GetBoardCell(piece.X, piece.Y);
             var index = cell.GetIndex();
             if (player)
             {

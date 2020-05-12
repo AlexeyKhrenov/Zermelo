@@ -6,7 +6,7 @@ namespace ZermeloCheckers.GameFactory
 {
     public class GameRequest
     {
-        public int GameSize { get; }
+        public byte GameSize { get; }
 
         public string Player1Name { get; set; }
 
@@ -16,7 +16,7 @@ namespace ZermeloCheckers.GameFactory
 
         public bool IsPlayer2ComputerPlayer { get; set; }
 
-        public GameRequest(int gameSize)
+        public GameRequest(byte gameSize)
         {
             GameSize = gameSize;
         }

@@ -32,7 +32,7 @@ namespace CheckersAI.CheckersGameTree
         {
             // todo - change state.Pieces to fixed too
             var target = state;
-            target.Pieces = state.Pieces.Clone() as BoardCell[,];
+            target.Pieces = state.Pieces.Clone() as BoardCell[];
             return target;
         }
     }
