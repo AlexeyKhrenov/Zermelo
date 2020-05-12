@@ -1,7 +1,5 @@
-﻿using CheckersAI.InternalInterfaces;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
+using CheckersAI.InternalInterfaces;
 
 namespace CheckersAI.TreeSearch
 {
@@ -19,10 +17,7 @@ namespace CheckersAI.TreeSearch
                 return node;
             }
 
-            if (_root == null)
-            {
-                return _root;
-            }
+            if (_root == null) return _root;
 
             var queue = new Queue<TNode>();
             queue.Enqueue(_root);
@@ -34,19 +29,13 @@ namespace CheckersAI.TreeSearch
                 {
                     return nextNode;
                 }
-                else
-                {
-                    if (nextNode.Children != null)
-                    {
-                        foreach (var child in nextNode.Children)
-                        {
-                            queue.Enqueue(child);
-                        }
-                    }
 
-                    // todo - implement explicit garbage collection 
-                    nextNode.Children = null;
-                }
+                if (nextNode.Children != null)
+                    foreach (var child in nextNode.Children)
+                        queue.Enqueue(child);
+
+                // todo - implement explicit garbage collection 
+                nextNode.Children = null;
             }
 
             _root = node;

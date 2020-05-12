@@ -1,7 +1,4 @@
 ﻿using Checkers.Minifications;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Xunit;
 
 namespace ZermeloUnitTests.PrimitivesMinifications

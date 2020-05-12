@@ -1,12 +1,8 @@
-﻿using Checkers;
-using FluentAssertions;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Checkers;
 using Game.Implementations;
 using Game.Primitives;
-using Game.PublicInterfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Xunit;
 using ZermeloUnitTests.Mocks;
 
@@ -18,7 +14,7 @@ namespace ZermeloUnitTests.Rules
         public void CheckersRulesTest_1()
         {
             // ARRANGE
-            var sourceBoardStr = new string[]
+            var sourceBoardStr = new[]
             {
                 "_b_b",
                 "____",
@@ -27,7 +23,7 @@ namespace ZermeloUnitTests.Rules
             };
             var sourceBoard = new BoardMock(sourceBoardStr, 4, false);
 
-            var targetBoardStr = new string[]
+            var targetBoardStr = new[]
             {
                 "_b_b",
                 "____",
@@ -37,9 +33,9 @@ namespace ZermeloUnitTests.Rules
             var targetBoard = new BoardMock(targetBoardStr, 4, false);
             targetBoard.SwitchPlayers();
             targetBoard.Player2.Figures.First(f => f.X == 1 && f.Y == 0).AvailableMoves =
-                new List<Cell>() { new Cell(0, 1), new Cell(2, 1) };
+                new List<Cell> {new Cell(0, 1), new Cell(2, 1)};
             targetBoard.Player2.Figures.First(f => f.X == 3 && f.Y == 0).AvailableMoves =
-                new List<Cell>() { new Cell(2, 1) };
+                new List<Cell> {new Cell(2, 1)};
 
             var move = new HistoryItem(sourceBoard.ActivePlayer, new Move(new Cell(2, 3), new Cell(3, 2)));
 
@@ -54,7 +50,7 @@ namespace ZermeloUnitTests.Rules
         public void CheckersRulesTest_2()
         {
             // ARRANGE
-            var sourceBoardStr = new string[]
+            var sourceBoardStr = new[]
             {
                 "_b_b",
                 "____",
@@ -63,7 +59,7 @@ namespace ZermeloUnitTests.Rules
             };
             var sourceBoard = new BoardMock(sourceBoardStr, 4, false);
 
-            var targetBoardStr = new string[]
+            var targetBoardStr = new[]
             {
                 "_b_b",
                 "__w_",
@@ -73,9 +69,9 @@ namespace ZermeloUnitTests.Rules
             var targetBoard = new BoardMock(targetBoardStr, 4, false);
             targetBoard.SwitchPlayers();
             targetBoard.Player2.Figures.First(f => f.X == 3 && f.Y == 0).AvailableMoves =
-                new List<Cell>() { new Cell(1, 2) };
+                new List<Cell> {new Cell(1, 2)};
             targetBoard.Player2.Figures.First(f => f.X == 1 && f.Y == 0).AvailableMoves =
-                new List<Cell>() { new Cell(3, 2) };
+                new List<Cell> {new Cell(3, 2)};
 
             var capturedPiece = new Piece(1, 2, false, false, false);
             capturedPiece.IsCaptured = true;
@@ -94,7 +90,7 @@ namespace ZermeloUnitTests.Rules
         public void CheckersRulesTest_3()
         {
             // ARRANGE
-            var sourceBoardStr = new string[]
+            var sourceBoardStr = new[]
             {
                 "___b",
                 "__b_",
@@ -103,7 +99,7 @@ namespace ZermeloUnitTests.Rules
             };
             var sourceBoard = new BoardMock(sourceBoardStr, 4, false);
 
-            var targetBoardStr = new string[]
+            var targetBoardStr = new[]
             {
                 "_W_b",
                 "____",
@@ -113,7 +109,7 @@ namespace ZermeloUnitTests.Rules
             var targetBoard = new BoardMock(targetBoardStr, 4, false);
             targetBoard.SwitchPlayers();
             targetBoard.Player2.Figures.First(f => f.X == 3 && f.Y == 0).AvailableMoves =
-                new List<Cell>() { new Cell(2, 1) };
+                new List<Cell> {new Cell(2, 1)};
 
             var capturedPiece = new Piece(2, 1, false, false, false);
             capturedPiece.IsCaptured = true;
@@ -132,7 +128,7 @@ namespace ZermeloUnitTests.Rules
         public void CheckersRulesTest_4()
         {
             // ARRANGE
-            var sourceBoardStr = new string[]
+            var sourceBoardStr = new[]
             {
                 "____",
                 "____",
@@ -142,7 +138,7 @@ namespace ZermeloUnitTests.Rules
             var sourceBoard = new BoardMock(sourceBoardStr, 4, false);
             sourceBoard.SwitchPlayers();
 
-            var targetBoardStr = new string[]
+            var targetBoardStr = new[]
             {
                 "____",
                 "____",
@@ -151,7 +147,7 @@ namespace ZermeloUnitTests.Rules
             };
             var targetBoard = new BoardMock(targetBoardStr, 4, false);
             targetBoard.Player1.Figures.First(f => f.X == 1 && f.Y == 2).AvailableMoves =
-                new List<Cell>() { new Cell(0, 3), new Cell(0, 1), new Cell(2, 1),};
+                new List<Cell> {new Cell(0, 3), new Cell(0, 1), new Cell(2, 1)};
 
             var move = new HistoryItem(sourceBoard.ActivePlayer, new Move(new Cell(3, 2), new Cell(2, 3)));
 
@@ -166,7 +162,7 @@ namespace ZermeloUnitTests.Rules
         public void CheckersRulesTest_5()
         {
             // ARRANGE
-            var sourceBoardStr = new string[]
+            var sourceBoardStr = new[]
             {
                 "_____",
                 "_b___",
@@ -176,7 +172,7 @@ namespace ZermeloUnitTests.Rules
             };
             var sourceBoard = new BoardMock(sourceBoardStr, 5, false);
 
-            var targetBoardStr = new string[]
+            var targetBoardStr = new[]
             {
                 "_____",
                 "_b___",
@@ -186,7 +182,7 @@ namespace ZermeloUnitTests.Rules
             };
             var targetBoard = new BoardMock(targetBoardStr, 5, false);
             targetBoard.Player1.Figures.First(f => f.X == 0 && f.Y == 2).AvailableMoves =
-                new List<Cell>() { new Cell(2, 0) };
+                new List<Cell> {new Cell(2, 0)};
 
             var capturedPiece = new Piece(1, 3, false, false, false);
             capturedPiece.IsCaptured = true;

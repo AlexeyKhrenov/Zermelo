@@ -1,29 +1,23 @@
 ﻿namespace CheckersAI.InternalInterfaces
 {
-    internal interface IAlfaBetaNode<TNode, TMetric> : INode<TNode, TMetric> 
+    internal interface IAlfaBetaNode<TNode, TMetric> : INode<TNode, TMetric>
         where TNode : class, INode<TNode, TMetric>
         where TMetric : struct
     {
-        TMetric Alfa { get; set; }
-
-        TMetric Beta { get; set; }
-
         TNode Parent { get; }
 
-        bool TryLockNode(); //todo - rename
+        bool IsFinalized { get; }
+
+        TMetric TerminationResult { get; }
+
+        bool IsEvaluated { get; }
+
+        bool TryLockNode();
 
         void Update(TNode child);
 
         void Update(TMetric result);
 
         void UpdateAlfaBeta(TNode parent);
-
-        bool IsFinalized { get; }
-
-        bool WasCutoff { get; }
-
-        TMetric TerminationResult { get; }
-
-        bool IsEvaluated { get; }
     }
 }

@@ -1,120 +1,89 @@
-﻿using Game.Primitives;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using System.Text;
+using Game.Primitives;
 
 namespace Checkers.Minifications
 {
     [StructLayout(LayoutKind.Explicit)]
     internal struct PieceMinified : IEquatable<PieceMinified>
     {
-        [FieldOffset(0)]
-        public int Value;
+        [FieldOffset(0)] public int Value;
 
-        [FieldOffset(0)]
-        public byte X;
-        [FieldOffset(1)]
-        public byte Y;
-        [FieldOffset(2)]
-        private byte _type;
-        [FieldOffset(3)]
-        private AvailableMoves _availableMoves;
+        [FieldOffset(0)] public byte X;
+        [FieldOffset(1)] public byte Y;
+        [FieldOffset(2)] private byte _type;
+        [FieldOffset(3)] private AvailableMoves _availableMoves;
 
         public bool CanGoDown
         {
-            get { return (_type & (byte)PieceMinifiedType.CanGoDown) != 0; }
+            get => (_type & (byte) PieceMinifiedType.CanGoDown) != 0;
             set
             {
-                if (value == true)
-                {
-                    _type = (byte)(_type | (byte)PieceMinifiedType.CanGoDown);
-                }
+                if (value)
+                    _type = (byte) (_type | (byte) PieceMinifiedType.CanGoDown);
                 else
-                {
-                    _type = (byte)(_type & ~(byte)PieceMinifiedType.CanGoDown);
-                }
+                    _type = (byte) (_type & ~(byte) PieceMinifiedType.CanGoDown);
             }
         }
 
         public bool IsCaptured
         {
-            get { return (_type & (byte)PieceMinifiedType.Captured) != 0; }
+            get => (_type & (byte) PieceMinifiedType.Captured) != 0;
             set
             {
-                if (value == true)
-                {
-                    _type = (byte)(_type | (byte)PieceMinifiedType.Captured);
-                }
+                if (value)
+                    _type = (byte) (_type | (byte) PieceMinifiedType.Captured);
                 else
-                {
-                    _type = (byte)(_type & ~(byte)PieceMinifiedType.Captured);
-                }
+                    _type = (byte) (_type & ~(byte) PieceMinifiedType.Captured);
             }
         }
 
         public bool CanGoUp
         {
-            get { return (_type & (byte)PieceMinifiedType.CanGoUp) != 0; }
+            get => (_type & (byte) PieceMinifiedType.CanGoUp) != 0;
             set
             {
-                if (value == true)
-                {
-                    _type = (byte)(_type | (byte)PieceMinifiedType.CanGoUp);
-                }
+                if (value)
+                    _type = (byte) (_type | (byte) PieceMinifiedType.CanGoUp);
                 else
-                {
-                    _type = (byte)(_type & ~(byte)PieceMinifiedType.CanGoUp);
-                }
+                    _type = (byte) (_type & ~(byte) PieceMinifiedType.CanGoUp);
             }
         }
 
         public bool IsWhite
         {
-            get { return (_type & (byte)PieceMinifiedType.White) != 0; }
+            get => (_type & (byte) PieceMinifiedType.White) != 0;
             set
             {
-                if (value == true)
-                {
-                    _type = (byte)(_type | (byte)PieceMinifiedType.White);
-                }
+                if (value)
+                    _type = (byte) (_type | (byte) PieceMinifiedType.White);
                 else
-                {
-                    _type = (byte)(_type & ~(byte)PieceMinifiedType.White);
-                }
+                    _type = (byte) (_type & ~(byte) PieceMinifiedType.White);
             }
         }
 
         public bool IsQueen
         {
-            get { return (_type & (byte)PieceMinifiedType.Queen) != 0; }
+            get => (_type & (byte) PieceMinifiedType.Queen) != 0;
             set
             {
-                if (value == true)
-                {
-                    _type = (byte)(_type | (byte)PieceMinifiedType.Queen);
-                }
+                if (value)
+                    _type = (byte) (_type | (byte) PieceMinifiedType.Queen);
                 else
-                {
-                    _type = (byte)(_type & ~(byte)PieceMinifiedType.Queen);
-                }
+                    _type = (byte) (_type & ~(byte) PieceMinifiedType.Queen);
             }
         }
 
         public bool IsBlack
         {
-            get { return (_type & (byte)PieceMinifiedType.Black) != 0; }
+            get => (_type & (byte) PieceMinifiedType.Black) != 0;
             set
             {
-                if (value == true)
-                {
-                    _type = (byte)(_type | (byte)PieceMinifiedType.Black);
-                }
+                if (value)
+                    _type = (byte) (_type | (byte) PieceMinifiedType.Black);
                 else
-                {
-                    _type = (byte)(_type & ~(byte)PieceMinifiedType.Black);
-                }
+                    _type = (byte) (_type & ~(byte) PieceMinifiedType.Black);
             }
         }
 
@@ -197,7 +166,7 @@ namespace Checkers.Minifications
 
         public bool Equals(PieceMinified other)
         {
-            return (((other._type ^ _type) & 15) == 0) && other.X == X && other.Y == Y;
+            return ((other._type ^ _type) & 15) == 0 && other.X == X && other.Y == Y;
         }
 
         public bool IsEmpty()
@@ -205,7 +174,14 @@ namespace Checkers.Minifications
             return _type == 0;
         }
 
-        public static implicit operator int(PieceMinified p) => p.Value;
-        public static explicit operator PieceMinified(int i) => Unsafe.As<int, PieceMinified>(ref i);
+        public static implicit operator int(PieceMinified p)
+        {
+            return p.Value;
+        }
+
+        public static explicit operator PieceMinified(int i)
+        {
+            return Unsafe.As<int, PieceMinified>(ref i);
+        }
     }
 }

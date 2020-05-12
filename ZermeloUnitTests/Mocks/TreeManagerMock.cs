@@ -1,8 +1,5 @@
 ﻿using CheckersAI.CheckersGameTree;
 using CheckersAI.InternalInterfaces;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ZermeloUnitTests.Mocks
 {

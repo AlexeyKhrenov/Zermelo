@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using System.Text;
+﻿using System.Runtime.CompilerServices;
 
 namespace Checkers.Minifications
 {
     public struct BoardCell
     {
         /// <summary>
-        /// 000000 01 stands for white
-        /// 000000 10 stands for black
-        /// another 6 digits represent index of PieceMinified inside array of Player pieces
+        ///     000000 01 stands for white
+        ///     000000 10 stands for black
+        ///     another 6 digits represent index of PieceMinified inside array of Player pieces
         /// </summary>
         private byte _value;
 
@@ -21,7 +18,7 @@ namespace Checkers.Minifications
 
         public BoardCell(byte index, bool isWhite)
         {
-            _value = (byte)((byte)(index << 2) + (isWhite ? 1 : 2));
+            _value = (byte) ((byte) (index << 2) + (isWhite ? 1 : 2));
         }
 
         public BoardCell(byte value)
@@ -36,7 +33,7 @@ namespace Checkers.Minifications
 
         public byte GetIndex()
         {
-            return (byte)(_value >> 2);
+            return (byte) (_value >> 2);
         }
 
         public void RemovePiece()
@@ -44,7 +41,14 @@ namespace Checkers.Minifications
             _value = 0;
         }
 
-        public static implicit operator byte(BoardCell p) => p._value;
-        public static explicit operator BoardCell(byte b) => Unsafe.As<byte, BoardCell>(ref b);
+        public static implicit operator byte(BoardCell p)
+        {
+            return p._value;
+        }
+
+        public static explicit operator BoardCell(byte b)
+        {
+            return Unsafe.As<byte, BoardCell>(ref b);
+        }
     }
 }

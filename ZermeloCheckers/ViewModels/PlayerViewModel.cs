@@ -1,10 +1,4 @@
-﻿using CheckersAI;
-using Game.PublicInterfaces;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Text;
+﻿using System.ComponentModel;
 using System.Windows.Input;
 using ZermeloCheckers.Misc;
 using ZermeloCheckers.Models;
@@ -13,13 +7,31 @@ namespace ZermeloCheckers.ViewModels
 {
     public class PlayerViewModel : BaseViewModel
     {
-        public string Name
+        private string _defaultName;
+        private bool _isButtonsEnabled;
+
+        private bool _isEnabled;
+        private PlayerModel _model;
+
+        public PlayerViewModel(string name)
         {
-            get { return _model?.Name ?? _defaultName;}
-            set { _defaultName = value; RaisePropertyChanged(); }
+            Name = name;
+
+            StopThinkingCommand = new RelayCommand(obj => OnStopThinking());
+            UndoCommand = new RelayCommand(obj => OnUndo());
         }
 
-        public bool IsHumanPlayer => _model != null ? !_model.IsComputerPlayer : false;
+        public string Name
+        {
+            get => _model?.Name ?? _defaultName;
+            set
+            {
+                _defaultName = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        public bool IsHumanPlayer => !_model?.IsComputerPlayer ?? false;
 
         public bool IsComputerPlayer => _model?.IsComputerPlayer ?? false;
 
@@ -29,8 +41,8 @@ namespace ZermeloCheckers.ViewModels
 
         public int TimeToThink
         {
-            get { return _model?.TimeToThinkMs ?? -1; }
-            set { _model.UpdateTimeToThink(value); }
+            get => _model?.TimeToThinkMs ?? -1;
+            set => _model.UpdateTimeToThink(value);
         }
 
         public ICommand StopThinkingCommand { get; set; }
@@ -39,27 +51,22 @@ namespace ZermeloCheckers.ViewModels
 
         public bool IsButtonsEnabled
         {
-            get { return _isButtonsEnabled; }
-            set { _isButtonsEnabled = value; RaisePropertyChanged(); }
+            get => _isButtonsEnabled;
+            set
+            {
+                _isButtonsEnabled = value;
+                RaisePropertyChanged();
+            }
         }
 
         public bool IsSliderEnabled
         {
-            get { return _isEnabled; }
-            set { _isEnabled = value; RaisePropertyChanged(); }
-        }
-
-        private bool _isEnabled;
-        private bool _isButtonsEnabled;
-        private string _defaultName;
-        private PlayerModel _model;
-
-        public PlayerViewModel(string name)
-        {
-            Name = name;
-
-            StopThinkingCommand = new RelayCommand(obj => OnStopThinking());
-            UndoCommand = new RelayCommand(obj => OnUndo());
+            get => _isEnabled;
+            set
+            {
+                _isEnabled = value;
+                RaisePropertyChanged();
+            }
         }
 
         public void FromModel(PlayerModel model)
@@ -78,25 +85,18 @@ namespace ZermeloCheckers.ViewModels
 
         public override void ModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == "IsComputerPlayer")
-            {
-                RaisePropertyChanged("IsHumanPlayer");
-            }
+            if (e.PropertyName == "IsComputerPlayer") RaisePropertyChanged("IsHumanPlayer");
 
             if (e.PropertyName == "IsActive" || e.PropertyName == "IsUndoEnabled")
             {
                 if (_model.IsActive)
                 {
                     IsSliderEnabled = false;
-                    
+
                     if (_model.IsComputerPlayer)
-                    {
                         IsButtonsEnabled = true;
-                    }
                     else
-                    {
                         IsButtonsEnabled = _model.IsUndoEnabled;
-                    }
                 }
                 else
                 {

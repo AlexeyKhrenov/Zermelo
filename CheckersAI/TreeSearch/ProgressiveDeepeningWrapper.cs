@@ -1,18 +1,18 @@
-﻿using CheckersAI.InternalInterfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Runtime;
-using System.Text;
-using System.Threading; 
+using System.Threading;
+using CheckersAI.InternalInterfaces;
 
 namespace CheckersAI.TreeSearch
 {
-    internal class ProgressiveDeepeningWrapper<TNode, TMetric, TState> : IProgressiveDeepeningWrapper<TNode, TMetric, TState>
+    internal class
+        ProgressiveDeepeningWrapper<TNode, TMetric, TState> : IProgressiveDeepeningWrapper<TNode, TMetric, TState>
         where TNode : INode<TNode, TMetric>
         where TMetric : struct
         where TState : struct
     {
-        private ISearch<TNode, TMetric, TState> _search;
+        private readonly ISearch<TNode, TMetric, TState> _search;
 
         public ProgressiveDeepeningWrapper(ISearch<TNode, TMetric, TState> search)
         {
@@ -34,15 +34,10 @@ namespace CheckersAI.TreeSearch
             {
                 while (!ct.IsCancellationRequested)
                 {
-                    if (depth > maxDepth)
-                    {
-                        break;
-                    }
+                    if (depth > maxDepth) break;
 
                     if (depth != 0)
-                    {
                         mfp = new MemoryFailPoint(_search.EstimateRequiredMemoryUsageIncrementInMb(depth - 1, depth));
-                    }
 
                     _search.Search(node, depth, alfa, beta, state, ct);
 
@@ -51,10 +46,7 @@ namespace CheckersAI.TreeSearch
                     while (nextNode != null)
                     {
                         result.Enqueue(nextNode);
-                        if (nextNode.IsMaxPlayer != node.IsMaxPlayer)
-                        {
-                            break;
-                        }
+                        if (nextNode.IsMaxPlayer != node.IsMaxPlayer) break;
                         nextNode = nextNode.BestChild;
                     }
 
@@ -63,8 +55,12 @@ namespace CheckersAI.TreeSearch
                     depth++;
                 }
             }
-            catch (InsufficientMemoryException) { }
-            catch (OperationCanceledException) { }
+            catch (InsufficientMemoryException)
+            {
+            }
+            catch (OperationCanceledException)
+            {
+            }
             finally
             {
                 mfp?.Dispose();
@@ -84,12 +80,8 @@ namespace CheckersAI.TreeSearch
                 var next = queue.Dequeue();
                 next.Clear();
                 if (next.Children != null)
-                {
                     foreach (var child in next.Children)
-                    {
                         queue.Enqueue(child);
-                    }
-                }
             }
         }
     }

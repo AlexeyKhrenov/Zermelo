@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Game.PublicInterfaces
+﻿namespace Game.PublicInterfaces
 {
     public interface IGameRules
     {
         void PlaceFigures(IBoard board);
 
         /// <summary>
-        /// return winner or null
+        ///     return winner or null
         /// </summary>
         IPlayer MakeMove(IBoard board, IHistoryItem latestMove);
 

@@ -1,10 +1,6 @@
-﻿using Checkers.Minifications;
-using CheckersAI.CheckersGameTree;
-using CheckersAI.InternalInterfaces;
-using Game.Primitives;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Threading;
+using CheckersAI.InternalInterfaces;
 
 namespace CheckersAI.TreeSearch
 {
@@ -13,12 +9,12 @@ namespace CheckersAI.TreeSearch
         where TMetric : struct
         where TState : struct
     {
-        private IEvaluator<TState, TMetric> _evaluator;
-        private IBrancher<TNode, TState, TMetric> _brancher;
-        private IComparator<TMetric> _comparator;
-        private IStateTransitions<TState, TNode, TMetric> _stateTransitions;
-        private TMetric _maxValue;
-        private TMetric _minValue;
+        private readonly IBrancher<TNode, TState, TMetric> _brancher;
+        private readonly IComparator<TMetric> _comparator;
+        private readonly IEvaluator<TState, TMetric> _evaluator;
+        private readonly TMetric _maxValue;
+        private readonly TMetric _minValue;
+        private readonly IStateTransitions<TState, TNode, TMetric> _stateTransitions;
 
         public SerialAlfaBetaSearch(
             IEvaluator<TState, TMetric> evaluator,
@@ -39,17 +35,14 @@ namespace CheckersAI.TreeSearch
 
         public int EstimateRequiredMemoryUsageIncrementInMb(int startDepth, int endDepth)
         {
-            return 1;
+            return (int)Math.Pow(2.2, endDepth);
         }
 
         public TMetric Search(TNode node, int depth, TMetric alfa, TMetric beta, TState state, CancellationToken ct)
         {
             ct.ThrowIfCancellationRequested();
 
-            if (node.Children == null && depth > 0)
-            {
-                _brancher.Branch(node, state);
-            }
+            if (node.Children == null && depth > 0) _brancher.Branch(node, state);
 
             if (depth == 0 || node.Children.Length == 0)
             {
@@ -73,10 +66,7 @@ namespace CheckersAI.TreeSearch
                         node.BestChild = child;
                     }
 
-                    if (!_comparator.IsBigger(beta, result))
-                    {
-                        break;
-                    }
+                    if (!_comparator.IsBigger(beta, result)) break;
 
                     alfa = _comparator.IsBigger(result, alfa) ? result : alfa;
                 }
@@ -85,34 +75,29 @@ namespace CheckersAI.TreeSearch
                 node.Result = maxVal;
                 return maxVal;
             }
-            else
+
+            var minVal = _maxValue;
+            foreach (var child in node.Children)
             {
-                var minVal = _maxValue;
-                foreach (var child in node.Children)
+                var childState = _stateTransitions.GoDown(state, child);
+
+                var result = Search(child, depth - 1, alfa, beta, childState, ct);
+                state = _stateTransitions.GoUp(childState, child);
+
+                if (!_comparator.IsBigger(result, minVal))
                 {
-                    var childState = _stateTransitions.GoDown(state, child);
-
-                    var result = Search(child, depth - 1, alfa, beta, childState, ct);
-                    state = _stateTransitions.GoUp(childState, child);
-
-                    if (!_comparator.IsBigger(result, minVal))
-                    {
-                        minVal = result;
-                        node.BestChild = child;
-                    }
-
-                    if (!_comparator.IsBigger(result, alfa))
-                    {
-                        break;
-                    }
-
-                    beta = _comparator.IsBigger(beta, result) ? result : beta;
+                    minVal = result;
+                    node.BestChild = child;
                 }
 
-                // todo - refactor - remove extra variables
-                node.Result = minVal;
-                return minVal;
+                if (!_comparator.IsBigger(result, alfa)) break;
+
+                beta = _comparator.IsBigger(beta, result) ? result : beta;
             }
+
+            // todo - refactor - remove extra variables
+            node.Result = minVal;
+            return minVal;
         }
     }
 }

@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Checkers.Minifications
 {
@@ -12,6 +10,6 @@ namespace Checkers.Minifications
         Queen = 4,
         Captured = 8,
         CanGoDown = 16,
-        CanGoUp = 32,
+        CanGoUp = 32
     }
 }

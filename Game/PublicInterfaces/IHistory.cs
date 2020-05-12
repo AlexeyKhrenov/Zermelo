@@ -3,12 +3,11 @@
     // todo - consider deleting this interface
     public interface IHistory
     {
-        void Push(IHistoryItem historyItem);
-
         int Length { get; }
 
-        IHistoryItem Pop();
-
         IHistoryItem Latest { get; }
+        void Push(IHistoryItem historyItem);
+
+        IHistoryItem Pop();
     }
 }

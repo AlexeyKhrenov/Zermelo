@@ -1,9 +1,5 @@
-﻿using CheckersAI.InternalInterfaces;
-using System;
-using System.Collections.Generic;
-using System.Runtime;
-using System.Text;
-using System.Threading;
+﻿using System.Threading;
+using CheckersAI.InternalInterfaces;
 
 namespace CheckersAI.TreeSearch
 {
@@ -12,13 +8,13 @@ namespace CheckersAI.TreeSearch
         where TMetric : struct
         where TState : struct
     {
-        private IEvaluator<TState, TMetric> _evaluator;
-        private IBrancher<TNode, TState, TMetric> _brancher;
-        private IComparator<TMetric> _comparator;
-        private IStateTransitions<TState, TNode, TMetric> _stateTransitions;
-        private ManualResetEvent _manualResetEvent;
+        private readonly IBrancher<TNode, TState, TMetric> _brancher;
         private CancellationToken _cancellationToken;
+        private IComparator<TMetric> _comparator;
         private CountdownEvent _currentGenerationCounter;
+        private readonly IEvaluator<TState, TMetric> _evaluator;
+        private ManualResetEvent _manualResetEvent;
+        private readonly IStateTransitions<TState, TNode, TMetric> _stateTransitions;
 
         public DynamicTreeSplitting(
             IEvaluator<TState, TMetric> evaluator,
@@ -34,7 +30,8 @@ namespace CheckersAI.TreeSearch
             _manualResetEvent = new ManualResetEvent(false);
         }
 
-        public TMetric Search(TNode node, int depth, TMetric alfa, TMetric beta, TState state, CancellationToken cancellationToken)
+        public TMetric Search(TNode node, int depth, TMetric alfa, TMetric beta, TState state,
+            CancellationToken cancellationToken)
         {
             _cancellationToken = cancellationToken;
             cancellationToken.Register(CancelOperation);
@@ -57,37 +54,30 @@ namespace CheckersAI.TreeSearch
             return node.Result;
         }
 
+        // todo - implement after mesuring
+        public int EstimateRequiredMemoryUsageIncrementInMb(int startDepth, int endDepth)
+        {
+            return 1;
+        }
+
         private void GoDown(TNode node, TState state, int depth, TNode splittedFrom)
         {
-            if (_cancellationToken.IsCancellationRequested)
-            {
-                return;
-            }
+            if (_cancellationToken.IsCancellationRequested) return;
 
-            if (splittedFrom.IsFinalized)
-            {
-                return;
-            }
+            if (splittedFrom.IsFinalized) return;
 
             if (depth == 0)
             {
                 if (node.IsEvaluated)
-                {
                     node.Update(node.TerminationResult);
-                }
                 else
-                {
                     node.Update(_evaluator.Evaluate(state));
-                }
-                
+
                 GoUp(node, depth, state);
                 return;
             }
 
-            if (node.Children == null)
-            {
-                _brancher.Branch(node, state);
-            }
+            if (node.Children == null) _brancher.Branch(node, state);
 
             if (node.Children.Length == 0)
             {
@@ -97,7 +87,6 @@ namespace CheckersAI.TreeSearch
             }
 
             foreach (var child in node.Children)
-            {
                 if (child.TryLockNode())
                 {
                     child.UpdateAlfaBeta(node);
@@ -105,15 +94,11 @@ namespace CheckersAI.TreeSearch
                     GoDown(child, state, depth - 1, splittedFrom);
                     break;
                 }
-            }
         }
 
         private void GoUp(TNode node, int depth, TState state)
         {
-            if (_cancellationToken.IsCancellationRequested)
-            {
-                return;
-            }
+            if (_cancellationToken.IsCancellationRequested) return;
 
             var parent = node.Parent;
             if (parent != null)
@@ -123,34 +108,23 @@ namespace CheckersAI.TreeSearch
                 state = _stateTransitions.GoUp(state, node);
 
                 if (parent.IsFinalized)
-                {
                     GoUp(parent, depth + 1, state);
-                }
                 else
-                {
                     SplitNode(parent, depth + 1, state);
-                }
             }
             else
             {
-                if (node.IsFinalized)
-                {
-                    _manualResetEvent.Set();
-                }
+                if (node.IsFinalized) _manualResetEvent.Set();
             }
         }
 
         private void SplitNode(TNode node, int depth, TState state)
         {
-            if (_cancellationToken.IsCancellationRequested)
-            {
-                return;
-            }
+            if (_cancellationToken.IsCancellationRequested) return;
 
             TNode continuationNode = null;
 
             foreach (var child in node.Children)
-            {
                 if (child.TryLockNode() && _currentGenerationCounter.TryAddCount())
                 {
                     if (continuationNode == null)
@@ -173,7 +147,6 @@ namespace CheckersAI.TreeSearch
                         );
                     }
                 }
-            }
 
             if (continuationNode != null)
             {
@@ -187,12 +160,6 @@ namespace CheckersAI.TreeSearch
         private void CancelOperation()
         {
             _manualResetEvent.Set();
-        }
-
-        // todo - implement after mesuring
-        public int EstimateRequiredMemoryUsageIncrementInMb(int startDepth, int endDepth)
-        {
-            return 1;
         }
     }
 }

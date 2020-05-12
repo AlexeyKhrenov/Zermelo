@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -11,14 +9,14 @@ namespace Game.PublicInterfaces
         string Name { get; }
 
         /// <summary>
-        /// defines behavior of IGame when undoing moves
+        ///     defines behavior of IGame when undoing moves
         /// </summary>
         bool IsComputerPlayer { get; }
 
         bool IsActive { get; set; }
 
-        Task MakeMove(IGame game, CancellationToken cancellationToken);
-
         List<IFigure> Figures { get; set; }
+
+        Task MakeMove(IGame game, CancellationToken cancellationToken);
     }
 }

@@ -1,11 +1,4 @@
-﻿using Checkers;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using ZermeloCheckers.GameFactory;
 using ZermeloCheckers.Models;
 using ZermeloCheckers.ViewModels;
@@ -13,14 +6,14 @@ using ZermeloCheckers.ViewModels;
 namespace ZermeloCheckers
 {
     /// <summary>
-    /// All viewmodels are assembled here
+    ///     All viewmodels are assembled here
     /// </summary>
     public partial class App : Application
     {
-        private MainViewModel _mainViewModel;
+        private int _defaultTimeToThink;
         private CheckersFactory _factory;
         private byte _gameSize;
-        private int _defaultTimeToThink;
+        private MainViewModel _mainViewModel;
 
         public void AppStartup(object sender, StartupEventArgs e)
         {
@@ -29,7 +22,7 @@ namespace ZermeloCheckers
             _factory = new CheckersFactory();
             _mainViewModel = new MainViewModel();
 
-            MainWindow mainWindow = new MainWindow(_gameSize);
+            var mainWindow = new MainWindow(_gameSize);
             mainWindow.DataContext = _mainViewModel;
 
             // it doesn't work from XAML
@@ -46,7 +39,7 @@ namespace ZermeloCheckers
             var newGameViewModel = new NewGameViewModel();
             newGameViewModel.FromModel(gameRequest);
 
-            NewGameWindow newGameWindow = new NewGameWindow();
+            var newGameWindow = new NewGameWindow();
             newGameWindow.DataContext = newGameViewModel;
             if (newGameWindow.ShowDialog() == true)
             {

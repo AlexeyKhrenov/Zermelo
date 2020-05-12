@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading;
 
 namespace CheckersAI.InternalInterfaces
@@ -11,7 +9,7 @@ namespace CheckersAI.InternalInterfaces
         where TState : struct
     {
         /// <summary>
-        /// Returns chain of maximizing or minimizing nodes
+        ///     Returns chain of maximizing or minimizing nodes
         /// </summary>
         (Queue<TNode>, int) Run(TState state,
             TNode node,

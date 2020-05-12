@@ -1,34 +1,20 @@
-﻿using Game.Primitives;
+﻿using System.Collections.Generic;
+using Game.Primitives;
 using Game.PublicInterfaces;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace ZermeloCheckers.Models
 {
     // todo - remove INotifyPropertyChanged if not needed
     public class GameModel : BaseModel
     {
+        private readonly IGame _game;
+
+        private bool _isBlocked;
+
+        public bool IsUndoEnabled;
         public PlayerModel Player1Model;
 
         public PlayerModel Player2Model;
-
-        public IEnumerable<IFigure> Figures => _game.Board.Figures;
-
-        public bool IsUndoEnabled;
-
-        public bool IsBlocked
-        {
-            get { return _isBlocked; }
-            set { _isBlocked = value; RaisePropertyChanged(); }
-        }
-
-        private bool _isBlocked;
-        private IGame _game;
 
         public GameModel(IGame game, int defaultTimeToThink)
         {
@@ -41,6 +27,18 @@ namespace ZermeloCheckers.Models
 
             InvokeUiUpdate();
             NextMove();
+        }
+
+        public IEnumerable<IFigure> Figures => _game.Board.Figures;
+
+        public bool IsBlocked
+        {
+            get => _isBlocked;
+            set
+            {
+                _isBlocked = value;
+                RaisePropertyChanged();
+            }
         }
 
         public void Move(Move move)

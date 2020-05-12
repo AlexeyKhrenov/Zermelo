@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace CheckersAI.CheckersGameTree
 {
@@ -10,6 +8,6 @@ namespace CheckersAI.CheckersGameTree
         IsEvaluated = 1,
         WasCutOff = 2,
         IsMaxPlayer = 4,
-        IsFinalized = 8,
+        IsFinalized = 8
     }
 }

@@ -1,18 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using ZermeloCheckers.Misc;
 using ZermeloCheckers.ViewModels;
 
@@ -22,40 +13,40 @@ namespace ZermeloCheckers
     {
         public static DependencyProperty FiguresProperty;
 
-        private FigureViewModel selectedFigure;
-        private BoardSquare[,] squares;
-
         public static DependencyProperty IsBlockedProperty;
 
-        public ObservableCollection<FigureViewModel> Figures
-        {
-            get { return (ObservableCollection<FigureViewModel>) GetValue(FiguresProperty); }
-            set { SetValue(FiguresProperty, value); }
-        }
-
-        public bool IsBlocked
-        {
-            get { return (bool)GetValue(IsBlockedProperty); }
-            set { SetValue(IsBlockedProperty, value); }
-        }
+        private FigureViewModel selectedFigure;
+        private BoardSquare[,] squares;
 
         static BoardControl()
         {
             FiguresProperty = DependencyProperty.Register(
                 "Figures", typeof(ObservableCollection<FigureViewModel>), typeof(BoardControl),
-                new FrameworkPropertyMetadata(new PropertyChangedCallback(WholeSetOfFiguresChanged))
+                new FrameworkPropertyMetadata(WholeSetOfFiguresChanged)
             );
 
             IsBlockedProperty = DependencyProperty.Register(
                 "IsBlocked", typeof(bool), typeof(BoardControl),
-                new FrameworkPropertyMetadata(new PropertyChangedCallback(IsBlockedPropertyChanged))
+                new FrameworkPropertyMetadata(IsBlockedPropertyChanged)
             );
+        }
+
+        public ObservableCollection<FigureViewModel> Figures
+        {
+            get => (ObservableCollection<FigureViewModel>) GetValue(FiguresProperty);
+            set => SetValue(FiguresProperty, value);
+        }
+
+        public bool IsBlocked
+        {
+            get => (bool) GetValue(IsBlockedProperty);
+            set => SetValue(IsBlockedProperty, value);
         }
 
         private static void WholeSetOfFiguresChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var board = (BoardControl)d;
-            var newValue = (ObservableCollection<FigureViewModel>)e.NewValue;
+            var board = (BoardControl) d;
+            var newValue = (ObservableCollection<FigureViewModel>) e.NewValue;
 
             newValue.CollectionChanged += (sender, e) =>
                 board.Dispatcher.Invoke(() => board.Figures_CollectionChanged(sender, e));
@@ -71,17 +62,13 @@ namespace ZermeloCheckers
 
         private static void IsBlockedPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var board = (BoardControl)d;
+            var board = (BoardControl) d;
 
-            var newValue = (bool)e.NewValue;
+            var newValue = (bool) e.NewValue;
 
-            if (newValue == true)
-            {
+            if (newValue)
                 if (board.selectedFigure != null)
-                {
                     board.DeselectFigure(board.selectedFigure);
-                }
-            }
         }
 
         private void Figures_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -90,25 +77,14 @@ namespace ZermeloCheckers
             var newItems = e.NewItems;
 
             if (oldItems != null)
-            {
                 foreach (var item in oldItems)
-                {
                     RemoveFigure(item as FigureViewModel);
-                }
-            }
 
             if (newItems != null)
-            {
                 foreach (var item in newItems)
-                {
                     AddFigure(item as FigureViewModel);
-                }
-            }
 
-            if (selectedFigure != null)
-            {
-                DeselectFigure(selectedFigure);
-            }
+            if (selectedFigure != null) DeselectFigure(selectedFigure);
         }
 
         private void RemoveFigure(FigureViewModel figure)
@@ -126,37 +102,29 @@ namespace ZermeloCheckers
         // todo - consider changing to the game model
         public void Initialize(int gameSize)
         {
-            squares = new BoardSquare[gameSize,gameSize];
+            squares = new BoardSquare[gameSize, gameSize];
 
             var squareSize = Math.Min(Width, Height) / gameSize;
             var gridLength = new GridLength(squareSize);
 
-            for (var i = 0; i < gameSize; i++)
-            {
-                this.ColumnDefinitions.Add(new ColumnDefinition() { Width = gridLength });
-            }
+            for (var i = 0; i < gameSize; i++) ColumnDefinitions.Add(new ColumnDefinition {Width = gridLength});
 
-            for (var i = 0; i < gameSize; i++)
-            {
-                this.RowDefinitions.Add(new RowDefinition() { Height = gridLength });
-            }
+            for (var i = 0; i < gameSize; i++) RowDefinitions.Add(new RowDefinition {Height = gridLength});
 
             for (byte y = 0; y < gameSize; y++)
+            for (byte x = 0; x < gameSize; x++)
             {
-                for (byte x = 0; x < gameSize; x++)
-                {
-                    var square = new BoardSquare();
-                    square.X = x;
-                    square.Y = y;
-                    square.IsBlack = (y + x) % 2 != 0;
-                    square.OnMouseClick += OnSquareMouseClick;
+                var square = new BoardSquare();
+                square.X = x;
+                square.Y = y;
+                square.IsBlack = (y + x) % 2 != 0;
+                square.OnMouseClick += OnSquareMouseClick;
 
-                    SetColumn(square, x);
-                    SetRow(square, y);
-                    Children.Add(square);
+                SetColumn(square, x);
+                SetRow(square, y);
+                Children.Add(square);
 
-                    squares[x, y] = square;
-                }
+                squares[x, y] = square;
             }
         }
 
@@ -167,10 +135,7 @@ namespace ZermeloCheckers
 
         private void SelectFigure(BoardSquare square)
         {
-            if (Figures == null)
-            {
-                return;
-            }
+            if (Figures == null) return;
 
             var figure = Figures.FirstOrDefault(x => x.HasCoordinates(square.X, square.Y));
 
@@ -180,12 +145,8 @@ namespace ZermeloCheckers
                 selectedSquare.Select();
 
                 if (figure.AvailableMoves != null)
-                {
                     foreach (var allowedMove in figure.AvailableMoves)
-                    {
                         squares[allowedMove.X, allowedMove.Y].SelectAllowedMove();
-                    }
-                }
 
                 selectedFigure = figure;
             }
@@ -197,23 +158,16 @@ namespace ZermeloCheckers
             selectedSquare.Deselect();
 
             if (figure.AvailableMoves != null)
-            {
                 foreach (var allowedMove in figure.AvailableMoves)
-                {
                     squares[allowedMove.X, allowedMove.Y].DeselectAllowedMove();
-                }
-            }
 
             selectedFigure = null;
         }
 
         private void OnSquareMouseClick(object sender, RoutedEventArgs e)
         {
-            if (IsBlocked)
-            {
-                return;
-            }
-            var square = (BoardSquare)sender;
+            if (IsBlocked) return;
+            var square = (BoardSquare) sender;
             if (selectedFigure != null)
             {
                 var figure = selectedFigure;

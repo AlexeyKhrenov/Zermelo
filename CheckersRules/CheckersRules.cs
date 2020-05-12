@@ -6,17 +6,18 @@ using Game.PublicInterfaces;
 [assembly: InternalsVisibleTo("ZermeloUnitTests")]
 [assembly: InternalsVisibleTo("CheckersAI")]
 [assembly: InternalsVisibleTo("Benchmarking")]
+
 namespace Checkers
 {
     internal class CheckersRules : IGameRules
     {
-        private AbstractRule ChainOfRules;
-        private AbstractRule InitialPositionRules;
+        private readonly AbstractRule ChainOfRules;
 
         // optimisation for StateTransitions
-        private AbstractRule FastForwardAvailableMovesRules;
-        private AbstractRule FastForwardMoveRules;
-        private AbstractRule FastForwardUndoMoveRules;
+        private readonly AbstractRule FastForwardAvailableMovesRules;
+        private readonly AbstractRule FastForwardMoveRules;
+        private readonly AbstractRule FastForwardUndoMoveRules;
+        private readonly AbstractRule InitialPositionRules;
 
         public CheckersRules()
         {
@@ -50,7 +51,7 @@ namespace Checkers
         public void PlaceFigures(IBoard board)
         {
             var min = board.ToMinified();
-            min = InitialPositionRules.ApplyRule(min, null);   
+            min = InitialPositionRules.ApplyRule(min, null);
             min.ToMaximized(board);
         }
 
@@ -65,15 +66,9 @@ namespace Checkers
             minBoard.ToMaximized(board);
             minMove.Maximize(move);
 
-            if (minBoard.Player1PiecesCount == 0)
-            {
-                return board.Player1;
-            }
+            if (minBoard.Player1PiecesCount == 0) return board.Player1;
 
-            if (minBoard.Player2PiecesCount == 0)
-            {
-                return board.Player2;
-            }
+            if (minBoard.Player2PiecesCount == 0) return board.Player2;
             return null;
         }
 
@@ -115,7 +110,8 @@ namespace Checkers
             return FastForwardMoveRules.ApplyRule(board, move);
         }
 
-        internal BoardMinified FastForwardUndoMove(BoardMinified board, HistoryItemMinified move, HistoryItemMinified undoMove)
+        internal BoardMinified FastForwardUndoMove(BoardMinified board, HistoryItemMinified move,
+            HistoryItemMinified undoMove)
         {
             return FastForwardUndoMoveRules.UndoRule(board, move, undoMove);
         }

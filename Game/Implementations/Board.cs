@@ -1,25 +1,11 @@
-﻿using Game.PublicInterfaces;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using Game.PublicInterfaces;
 
 namespace Game.Implementations
 {
     public class Board : IBoard
     {
-        public IPlayer Player1 { get; private set; }
-
-        public IPlayer Player2 { get; private set; }
-
-        public IPlayer ActivePlayer { get; set; }
-
-        public IPlayer AwaitingPlayer { get; set; }
-
-        public byte Size { get; private set; }
-
-        public IEnumerable<IFigure> Figures => Player1.Figures.Union(Player2.Figures);
-
         public Board(IPlayer player1, IPlayer player2, byte size)
         {
             Size = size;
@@ -30,6 +16,18 @@ namespace Game.Implementations
             ActivePlayer = player1;
             AwaitingPlayer = player2;
         }
+
+        public IPlayer Player1 { get; }
+
+        public IPlayer Player2 { get; }
+
+        public IPlayer ActivePlayer { get; set; }
+
+        public IPlayer AwaitingPlayer { get; set; }
+
+        public byte Size { get; }
+
+        public IEnumerable<IFigure> Figures => Player1.Figures.Union(Player2.Figures);
 
         public void SwitchPlayers()
         {

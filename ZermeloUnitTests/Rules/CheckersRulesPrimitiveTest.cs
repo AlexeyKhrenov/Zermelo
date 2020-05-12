@@ -2,9 +2,6 @@
 using Checkers.Minifications;
 using FluentAssertions;
 using Game.Primitives;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Xunit;
 using ZermeloUnitTests.PrimitivesMinifications;
 
@@ -12,14 +9,14 @@ namespace ZermeloUnitTests.Rules
 {
     public unsafe class CheckersRulesPrimitiveTest
     {
-        private CheckersRules _rules;
-        private Cell[] _emptyAvailableMoves;
-
         public CheckersRulesPrimitiveTest()
         {
-            _emptyAvailableMoves = new Cell[] { new Cell(), new Cell(), new Cell(), new Cell() };
+            _emptyAvailableMoves = new[] {new Cell(), new Cell(), new Cell(), new Cell()};
             _rules = new CheckersRules();
         }
+
+        private readonly CheckersRules _rules;
+        private Cell[] _emptyAvailableMoves;
 
         [Fact]
         public void CheckersRulesPrimitiveTest_1()
@@ -27,19 +24,19 @@ namespace ZermeloUnitTests.Rules
             var board = BoardMinifiedTest.CreateSampleBoard();
             board.Player1PiecesCount--;
 
-            var piece = (PieceMinified)board.Player1Pieces[0];
+            var piece = (PieceMinified) board.Player1Pieces[0];
             piece.IsCaptured = true;
 
             board.Player1Pieces[0] = piece;
             board = _rules.FastForwardAvailableMoves(board);
 
-            var afterRulesAppending1 = (PieceMinified)board.Player1Pieces[0];
+            var afterRulesAppending1 = (PieceMinified) board.Player1Pieces[0];
             afterRulesAppending1.HasAvailableMoves().Should().BeFalse();
 
-            var afterRulesAppending2 = (PieceMinified)board.Player1Pieces[1];
+            var afterRulesAppending2 = (PieceMinified) board.Player1Pieces[1];
             afterRulesAppending2.GetAvailableMoves()
                 .Should()
-                .BeEquivalentTo(new Cell[] { new Cell(2, 1), new Cell(), new Cell(), new Cell() });
+                .BeEquivalentTo(new[] {new Cell(2, 1), new Cell(), new Cell(), new Cell()});
         }
 
         [Fact]
@@ -55,12 +52,12 @@ namespace ZermeloUnitTests.Rules
 
             board = _rules.FastForwardAvailableMoves(board);
 
-            var afterRulesAppending1 = (PieceMinified)board.Player1Pieces[0];
+            var afterRulesAppending1 = (PieceMinified) board.Player1Pieces[0];
             afterRulesAppending1.GetAvailableMoves()
                 .Should()
-                .BeEquivalentTo(new Cell[] { new Cell(2, 1), new Cell(), new Cell(), new Cell() });
+                .BeEquivalentTo(new[] {new Cell(2, 1), new Cell(), new Cell(), new Cell()});
 
-            var afterRulesAppending2 = (PieceMinified)board.Player1Pieces[1];
+            var afterRulesAppending2 = (PieceMinified) board.Player1Pieces[1];
             afterRulesAppending2.HasAvailableMoves().Should().BeFalse();
         }
     }

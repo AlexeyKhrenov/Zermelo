@@ -1,15 +1,29 @@
 ﻿using Checkers.Minifications;
 using FluentAssertions;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Xunit;
-using ZermeloUnitTests.Mocks;
 
 namespace ZermeloUnitTests.PrimitivesMinifications
 {
     public unsafe class BoardMinifiedTest
     {
+        internal static BoardMinified CreateSampleBoard()
+        {
+            var board = new BoardMinified(4);
+
+            board.Player1Pieces[0] = new PieceMinified(0, 3, true, true, false, false);
+            board.Player1Pieces[1] = new PieceMinified(3, 2, true, true, false, false);
+            board.Player2Pieces[0] = new PieceMinified(1, 0, true, true, false, false);
+
+            board.SetBoardCell(1, 0, new BoardCell(0, false));
+            board.SetBoardCell(0, 3, new BoardCell(0, true));
+            board.SetBoardCell(3, 2, new BoardCell(1, true));
+
+            board.Player1PiecesCount = 2;
+            board.Player2PiecesCount = 1;
+
+            return board;
+        }
+
         [Fact]
         public void BoardMinifiedTest_1()
         {
@@ -19,7 +33,7 @@ namespace ZermeloUnitTests.PrimitivesMinifications
             board.Player1PiecesCount.Should().Be(1);
             board.Player2PiecesCount.Should().Be(1);
 
-            var piece = (PieceMinified)board.Player1Pieces[0];
+            var piece = (PieceMinified) board.Player1Pieces[0];
             piece.IsCaptured.Should().BeTrue();
         }
 
@@ -32,7 +46,7 @@ namespace ZermeloUnitTests.PrimitivesMinifications
             board.Player1PiecesCount.Should().Be(2);
             board.Player2PiecesCount.Should().Be(1);
 
-            var piece = (PieceMinified)board.Player1Pieces[0];
+            var piece = (PieceMinified) board.Player1Pieces[0];
             piece.X.Should().Be(0);
             piece.Y.Should().Be(2);
         }
@@ -68,24 +82,6 @@ namespace ZermeloUnitTests.PrimitivesMinifications
             board.RestorePiece(new PieceMinified(1, 2, true, true, false), true);
 
             board.Player1PiecesCount.Should().Be(2);
-        }
-
-        internal static BoardMinified CreateSampleBoard()
-        {
-            var board = new BoardMinified(4);
-
-            board.Player1Pieces[0] = new PieceMinified(0, 3, true, true, false, false);
-            board.Player1Pieces[1] = new PieceMinified(3, 2, true, true, false, false);
-            board.Player2Pieces[0] = new PieceMinified(1, 0, true, true, false, false);
-
-            board.SetBoardCell(1, 0, new BoardCell(0, false));
-            board.SetBoardCell(0, 3, new BoardCell(0, true));
-            board.SetBoardCell(3, 2, new BoardCell(1, true));
-
-            board.Player1PiecesCount = 2;
-            board.Player2PiecesCount = 1;
-
-            return board;
         }
     }
 }

@@ -1,38 +1,35 @@
-﻿using Checkers;
+﻿using System.Threading;
+using Checkers;
 using Checkers.Minifications;
 using CheckersAI.CheckersGameTree;
 using CheckersAI.InternalInterfaces;
-using CheckersAI.TreeSearch;
 using FluentAssertions;
 using Game.Primitives;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading;
 using Xunit;
 using ZermeloUnitTests.Mocks;
+using ServiceLocator = CheckersAI.ServiceLocator;
 
 namespace ZermeloUnitTests.GameTreeSearch
 {
     public class ProgressiveDeepeningSequentialTest
     {
-        private ISearch<GameNode, sbyte, BoardMinified> _search;
-        private IProgressiveDeepeningWrapper<GameNode, sbyte, BoardMinified> _wrapper;
-        private CheckersRules _rules;
-        private CancellationTokenSource _cts;
-
         public ProgressiveDeepeningSequentialTest()
         {
-            _search = CheckersAI.ServiceLocator.CreateSerialGameTreeSearch();
-            _wrapper = CheckersAI.ServiceLocator.CreateProgressiveDeepeningWrapper(_search);
+            _search = ServiceLocator.CreateSerialGameTreeSearch();
+            _wrapper = ServiceLocator.CreateProgressiveDeepeningWrapper(_search);
             _rules = new CheckersRules();
             _cts = new CancellationTokenSource();
         }
 
+        private readonly ISearch<GameNode, sbyte, BoardMinified> _search;
+        private readonly IProgressiveDeepeningWrapper<GameNode, sbyte, BoardMinified> _wrapper;
+        private CheckersRules _rules;
+        private readonly CancellationTokenSource _cts;
+
         [Fact]
         public void DynamicDeepeningSequentialTest_1()
         {
-            var sourceBoardStr = new string[]
+            var sourceBoardStr = new[]
             {
                 "B___",
                 "____",
@@ -55,7 +52,7 @@ namespace ZermeloUnitTests.GameTreeSearch
         public void DynamicDeepeningSequentialTest_2()
         {
             // ARRANGE
-            var sourceBoardStr = new string[]
+            var sourceBoardStr = new[]
             {
                 "____",
                 "_b__",
@@ -78,7 +75,7 @@ namespace ZermeloUnitTests.GameTreeSearch
         public void DynamicDeepeningSequentialTest_3()
         {
             // ARRANGE
-            var sourceBoardStr = new string[]
+            var sourceBoardStr = new[]
             {
                 "b_b_",
                 "____",
@@ -101,7 +98,7 @@ namespace ZermeloUnitTests.GameTreeSearch
         public void DynamicDeepeningSequentialTest_4()
         {
             // ARRANGE
-            var sourceBoardStr = new string[]
+            var sourceBoardStr = new[]
             {
                 "___b__",
                 "______",
@@ -126,7 +123,7 @@ namespace ZermeloUnitTests.GameTreeSearch
         public void DynamicDeepeningSequentialTest_5()
         {
             // ARRANGE
-            var sourceBoardStr = new string[]
+            var sourceBoardStr = new[]
             {
                 "__b___",
                 "______",
@@ -151,7 +148,7 @@ namespace ZermeloUnitTests.GameTreeSearch
         public void DynamicDeepeningSequentialTest_6()
         {
             // ARRANGE
-            var sourceBoardStr = new string[]
+            var sourceBoardStr = new[]
             {
                 "______",
                 "______",
@@ -176,7 +173,7 @@ namespace ZermeloUnitTests.GameTreeSearch
         public void DynamicDeepeningSequentialTest_7()
         {
             // ARRANGE
-            var sourceBoardStr = new string[]
+            var sourceBoardStr = new[]
             {
                 "_b_b_b",
                 "______",

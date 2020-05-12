@@ -1,12 +1,9 @@
-﻿using Game.Implementations;
-using Game.Primitives;
-using Game.PublicInterfaces;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Windows.Input;
+using Game.Primitives;
+using Game.PublicInterfaces;
 using ZermeloCheckers.Misc;
 using ZermeloCheckers.Models;
 
@@ -14,13 +11,11 @@ namespace ZermeloCheckers.ViewModels
 {
     public class MainViewModel : BaseViewModel
     {
-        public PlayerViewModel Player1;
-        public PlayerViewModel Player2;
-
-        public bool IsBlocked => _model?.IsBlocked ?? false;
+        private ObservableCollection<FigureViewModel> _figures;
 
         private GameModel _model;
-        private ObservableCollection<FigureViewModel> _figures;
+        public PlayerViewModel Player1;
+        public PlayerViewModel Player2;
 
         public MainViewModel()
         {
@@ -30,12 +25,11 @@ namespace ZermeloCheckers.ViewModels
             Player2 = new PlayerViewModel("Computer player 2");
         }
 
+        public bool IsBlocked => _model?.IsBlocked ?? false;
+
         public ObservableCollection<FigureViewModel> Figures
         {
-            get
-            {
-                return _figures;
-            }
+            get => _figures;
             set
             {
                 _figures = value;
@@ -56,13 +50,11 @@ namespace ZermeloCheckers.ViewModels
             var toBeRemoved = uiFigures.Except(modelFigures).ToList();
 
             // todo - refactor this
-            var toBeUpdated = modelFigures.Join(uiFigures, x => x.GetHashCode(), x => x.GetHashCode(), (x,y) => new KeyValuePair<IFigure, FigureViewModel>(x,y)).ToList();
+            var toBeUpdated = modelFigures.Join(uiFigures, x => x.GetHashCode(), x => x.GetHashCode(),
+                (x, y) => new KeyValuePair<IFigure, FigureViewModel>(x, y)).ToList();
             var toBeInserted = modelFigures.Except(uiFigures).ToList();
 
-            foreach (var r in toBeRemoved)
-            {
-                uiFigures.Remove(r as FigureViewModel);
-            }
+            foreach (var r in toBeRemoved) uiFigures.Remove(r as FigureViewModel);
 
             foreach (var i in toBeInserted)
             {
@@ -71,10 +63,7 @@ namespace ZermeloCheckers.ViewModels
                 uiFigures.Add(newUiFigure);
             }
 
-            foreach (var u in toBeUpdated)
-            {
-                u.Value.AvailableMoves = u.Key.AvailableMoves;
-            }
+            foreach (var u in toBeUpdated) u.Value.AvailableMoves = u.Key.AvailableMoves;
         }
 
         public void FromModel(GameModel model)
@@ -83,12 +72,8 @@ namespace ZermeloCheckers.ViewModels
 
             // still better then iterating through whole board
             if (Figures != null)
-            {
                 for (var i = Figures.Count - 1; i >= 0; i--)
-                {
                     Figures.Remove(Figures[i]);
-                }
-            }
 
             _model.PropertyChanged += ModelPropertyChanged;
 
@@ -101,10 +86,7 @@ namespace ZermeloCheckers.ViewModels
 
         public override void ModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == "Figures")
-            {
-                OnFiguresUpdated();
-            }
+            if (e.PropertyName == "Figures") OnFiguresUpdated();
 
             base.ModelPropertyChanged(sender, e);
         }

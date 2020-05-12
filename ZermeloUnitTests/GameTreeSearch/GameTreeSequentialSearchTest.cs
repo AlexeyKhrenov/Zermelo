@@ -1,35 +1,33 @@
-﻿using Checkers;
+﻿using System.Threading;
+using Checkers;
 using Checkers.Minifications;
 using CheckersAI.CheckersGameTree;
 using CheckersAI.InternalInterfaces;
-using CheckersAI.TreeSearch;
 using FluentAssertions;
 using Game.Primitives;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
 using Xunit;
 using ZermeloUnitTests.Mocks;
+using ServiceLocator = CheckersAI.ServiceLocator;
 
 namespace ZermeloUnitTests.GameTreeSearch
 {
     public class GameTreeSequentialSearchTest
     {
-        private ISearch<GameNode, sbyte, BoardMinified> _search;
-        private CheckersRules _rules;
-        private CancellationTokenSource _cts;
-
         public GameTreeSequentialSearchTest()
         {
-            _search = CheckersAI.ServiceLocator.CreateSerialGameTreeSearch();
+            _search = ServiceLocator.CreateSerialGameTreeSearch();
             _rules = new CheckersRules();
             _cts = new CancellationTokenSource();
         }
 
+        private readonly ISearch<GameNode, sbyte, BoardMinified> _search;
+        private CheckersRules _rules;
+        private readonly CancellationTokenSource _cts;
+
         [Fact]
         public void GameTreeSequentialSearch_1()
         {
-            var sourceBoardStr = new string[]
+            var sourceBoardStr = new[]
             {
                 "B___",
                 "____",
@@ -52,7 +50,7 @@ namespace ZermeloUnitTests.GameTreeSearch
         public void GameTreeSequentialSearch_2()
         {
             // ARRANGE
-            var sourceBoardStr = new string[]
+            var sourceBoardStr = new[]
             {
                 "____",
                 "_b__",
@@ -75,7 +73,7 @@ namespace ZermeloUnitTests.GameTreeSearch
         public void GameTreeSequentialSearch_3()
         {
             // ARRANGE
-            var sourceBoardStr = new string[]
+            var sourceBoardStr = new[]
             {
                 "b_b_",
                 "____",
@@ -98,7 +96,7 @@ namespace ZermeloUnitTests.GameTreeSearch
         public void GameTreeSequentialSearch_4()
         {
             // ARRANGE
-            var sourceBoardStr = new string[]
+            var sourceBoardStr = new[]
             {
                 "___b__",
                 "______",
@@ -123,7 +121,7 @@ namespace ZermeloUnitTests.GameTreeSearch
         public void GameTreeSequentialSearch_5()
         {
             // ARRANGE
-            var sourceBoardStr = new string[]
+            var sourceBoardStr = new[]
             {
                 "__b___",
                 "______",
@@ -148,7 +146,7 @@ namespace ZermeloUnitTests.GameTreeSearch
         public void GameTreeSequentialSearch_6()
         {
             // ARRANGE
-            var sourceBoardStr = new string[]
+            var sourceBoardStr = new[]
             {
                 "______",
                 "______",
@@ -174,7 +172,7 @@ namespace ZermeloUnitTests.GameTreeSearch
         public void GameTreeSequentialSearch_7()
         {
             // ARRANGE
-            var sourceBoardStr = new string[]
+            var sourceBoardStr = new[]
             {
                 "_b_b_b",
                 "______",

@@ -1,9 +1,4 @@
 ﻿using Checkers.Minifications;
-using Game.PublicInterfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Checkers.Rules
 {
@@ -17,8 +12,8 @@ namespace Checkers.Rules
             var piece = board.GetPiece(x, y, latestMove.Player);
             if (!piece.IsQueen)
             {
-                bool v1 = (piece.CanGoDown && y == board.GetSize() - 1);
-                bool v2 = (piece.CanGoUp && y == 0);
+                var v1 = piece.CanGoDown && y == board.GetSize() - 1;
+                var v2 = piece.CanGoUp && y == 0;
 
                 if (v1 || v2)
                 {
@@ -30,7 +25,8 @@ namespace Checkers.Rules
             return Next(board, latestMove);
         }
 
-        public override BoardMinified UndoRule(BoardMinified board, HistoryItemMinified toUndo, HistoryItemMinified lastMoveBeforeUndo)
+        public override BoardMinified UndoRule(BoardMinified board, HistoryItemMinified toUndo,
+            HistoryItemMinified lastMoveBeforeUndo)
         {
             if (toUndo.IsPieceChangeType)
             {
@@ -38,13 +34,9 @@ namespace Checkers.Rules
 
                 piece.IsQueen = false;
                 if (toUndo.To.Y > toUndo.From.Y)
-                {
                     board.ChangePieceType(piece.X, piece.Y, true, false, false, toUndo.Player);
-                }
                 else
-                {
                     board.ChangePieceType(piece.X, piece.Y, false, true, false, toUndo.Player);
-                }
             }
 
             return NextUndo(board, toUndo, lastMoveBeforeUndo);

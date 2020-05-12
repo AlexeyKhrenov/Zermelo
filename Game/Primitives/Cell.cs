@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Game.Primitives
+﻿namespace Game.Primitives
 {
     public readonly struct Cell
     {

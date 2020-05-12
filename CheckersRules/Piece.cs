@@ -1,56 +1,11 @@
-﻿using Game.Primitives;
+﻿using System.Collections.Generic;
+using Game.Primitives;
 using Game.PublicInterfaces;
-using System.Collections.Generic;
 
 namespace Checkers
 {
     internal class Piece : IFigure
     {
-        public byte X { get; set; }
-
-        public byte Y { get; set; }
-
-        public List<Cell> AvailableMoves { get; set; }
-
-        public bool CanGoUp { get; set; }
-
-        public bool CanGoDown { get; set; }
-
-        public bool IsWhite { get; set; }
-
-        public bool IsQueen { get; set; }
-
-        public bool IsCaptured { get; set; }
-
-        public string Type
-        {
-            get
-            {
-                if (IsWhite)
-                {
-                    if (IsQueen)
-                    {
-                        return PieceTypes.WhiteQueen.ToString();
-                    }
-                    else
-                    {
-                        return PieceTypes.White.ToString();
-                    }
-                }
-                else
-                {
-                    if (IsQueen)
-                    {
-                        return PieceTypes.BlackQueen.ToString();
-                    }
-                    else
-                    {
-                        return PieceTypes.Black.ToString();
-                    }
-                }
-            }
-        }
-
         public Piece(byte x, byte y, bool isWhite, bool canGoUp, bool canGoDown)
         {
             X = x;
@@ -72,20 +27,49 @@ namespace Checkers
             IsQueen = isQueen;
         }
 
-        // todo - consider changing to smaller value types
-        public override int GetHashCode()
+        public bool CanGoUp { get; set; }
+
+        public bool CanGoDown { get; set; }
+
+        public bool IsWhite { get; set; }
+
+        public bool IsQueen { get; set; }
+        public byte X { get; set; }
+
+        public byte Y { get; set; }
+
+        public List<Cell> AvailableMoves { get; set; }
+
+        public bool IsCaptured { get; set; }
+
+        public string Type
         {
-            return (X << 8) + Y;
+            get
+            {
+                if (IsWhite)
+                {
+                    if (IsQueen) return PieceTypes.WhiteQueen.ToString();
+
+                    return PieceTypes.White.ToString();
+                }
+
+                if (IsQueen) return PieceTypes.BlackQueen.ToString();
+
+                return PieceTypes.Black.ToString();
+            }
         }
 
         public bool Equals(IFigure other)
         {
-            if (other == null)
-            {
-                return false;
-            }
+            if (other == null) return false;
 
             return X == other.X && Y == other.Y && Type == other.Type;
+        }
+
+        // todo - consider changing to smaller value types
+        public override int GetHashCode()
+        {
+            return (X << 8) + Y;
         }
     }
 }

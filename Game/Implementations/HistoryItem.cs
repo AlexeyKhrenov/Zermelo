@@ -5,16 +5,6 @@ namespace Game.Implementations
 {
     public class HistoryItem : IHistoryItem
     {
-        public IPlayer Player { get; private set; }
-
-        public Move Move { get;set; }
-
-        public bool IsPieceChangeType { get; set; }
-
-        public bool IsKill { get; set; }
-
-        public IFigure Captured { get; set; }
-
         public HistoryItem(IPlayer player, Move move)
         {
             IsPieceChangeType = false;
@@ -24,6 +14,16 @@ namespace Game.Implementations
             Player = player;
             Move = move;
         }
+
+        public IPlayer Player { get; }
+
+        public Move Move { get; set; }
+
+        public bool IsPieceChangeType { get; set; }
+
+        public bool IsKill { get; set; }
+
+        public IFigure Captured { get; set; }
 
         public override string ToString()
         {

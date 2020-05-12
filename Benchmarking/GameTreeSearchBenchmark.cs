@@ -1,46 +1,44 @@
-﻿using BenchmarkDotNet.Attributes;
+﻿using System;
+using System.Threading;
+using BenchmarkDotNet.Attributes;
+using BenchmarkDotNet.Order;
 using Checkers.Minifications;
 using CheckersAI;
-using CheckersAI.ByteTree;
 using CheckersAI.CheckersGameTree;
 using CheckersAI.InternalInterfaces;
-using CheckersAI.TreeSearch;
-using System;
-using System.Threading;
 using ZermeloUnitTests.Mocks;
 
 namespace Benchmarking
 {
     [PlainExporter]
     [MemoryDiagnoser]
-    [Orderer(BenchmarkDotNet.Order.SummaryOrderPolicy.FastestToSlowest)]
+    [Orderer(SummaryOrderPolicy.FastestToSlowest)]
     [RankColumn]
     public class GameTreeSearchBenchmark
     {
-        GameNode node1;
-        GameNode node2;
+        private CancellationTokenSource _cts;
+        private GameNode _node1;
+        private GameNode _node2;
 
-        BoardMinified practiceBoard1;
-        BoardMinified practiceBoard2;
+        private BoardMinified _practiceBoard1;
+        private BoardMinified _practiceBoard2;
 
-        ISearch<GameNode, sbyte, BoardMinified> search1;
-        ISearch<GameNode, sbyte, BoardMinified> search2;
+        private ISearch<GameNode, sbyte, BoardMinified> _search1;
+        private ISearch<GameNode, sbyte, BoardMinified> _search2;
 
-        IProgressiveDeepeningWrapper<GameNode, sbyte, BoardMinified> wrapper1;
-        IProgressiveDeepeningWrapper<GameNode, sbyte, BoardMinified> wrapper2;
-
-        CancellationTokenSource cts;
+        private IProgressiveDeepeningWrapper<GameNode, sbyte, BoardMinified> _wrapper1;
+        private IProgressiveDeepeningWrapper<GameNode, sbyte, BoardMinified> _wrapper2;
 
         [GlobalSetup]
         public void GlobalSetup()
         {
-            search1 = ServiceLocator.CreateSerialGameTreeSearch();
-            search2 = ServiceLocator.CreateDynamicTreeSplittingGameTreeSearch();
+            _search1 = ServiceLocator.CreateSerialGameTreeSearch();
+            _search2 = ServiceLocator.CreateDynamicTreeSplittingGameTreeSearch();
 
-            wrapper1 = ServiceLocator.CreateProgressiveDeepeningWrapper(search1);
-            wrapper2 = ServiceLocator.CreateProgressiveDeepeningWrapper(search2);
+            _wrapper1 = ServiceLocator.CreateProgressiveDeepeningWrapper(_search1);
+            _wrapper2 = ServiceLocator.CreateProgressiveDeepeningWrapper(_search2);
 
-            var sourceBoardStr = new string[]
+            var sourceBoardStr = new[]
             {
                 "_b_b_b",
                 "b_b_b_",
@@ -52,27 +50,27 @@ namespace Benchmarking
             var sourceBoard1 = new BoardMock(sourceBoardStr, 6, false);
             var sourceBoard2 = new BoardMock(sourceBoardStr, 6, false);
 
-            practiceBoard1 = sourceBoard1.ToMinified();
-            practiceBoard2 = sourceBoard2.ToMinified();
+            _practiceBoard1 = sourceBoard1.ToMinified();
+            _practiceBoard2 = sourceBoard2.ToMinified();
 
-            cts = new CancellationTokenSource();
+            _cts = new CancellationTokenSource();
 
-            node1 = new GameNode();
-            node2 = new GameNode();
+            _node1 = new GameNode();
+            _node2 = new GameNode();
         }
 
         public void RunSerialGameTreeSearchBenchmark()
         {
-            var result = wrapper1.Run(practiceBoard1, node1, sbyte.MinValue, sbyte.MaxValue, 10, cts.Token);
-            node1.Children = null;
+            var result = _wrapper1.Run(_practiceBoard1, _node1, sbyte.MinValue, sbyte.MaxValue, 10, _cts.Token);
+            _node1.Children = null;
             GC.Collect();
         }
 
         [Benchmark]
         public void RunDynamicTreeSplittingBenchmark()
         {
-            var result = wrapper2.Run(practiceBoard1, node2, sbyte.MinValue, sbyte.MaxValue, 10, cts.Token);
-            node2.Children = null;
+            var result = _wrapper2.Run(_practiceBoard2, _node2, sbyte.MinValue, sbyte.MaxValue, 10, _cts.Token);
+            _node2.Children = null;
             GC.Collect();
         }
     }

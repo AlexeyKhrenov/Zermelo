@@ -1,9 +1,7 @@
-﻿using Checkers.Minifications;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.IO;
 using System.Runtime.InteropServices;
-using System.Text;
+using Checkers.Minifications;
 
 namespace Benchmarking
 {
@@ -13,7 +11,7 @@ namespace Benchmarking
 
         public static void Measure()
         {
-            var rslt = new string[]
+            var rslt = new[]
             {
                 MeasureSize<PieceMinified>(),
                 MeasureSize<BoardMinified>(),

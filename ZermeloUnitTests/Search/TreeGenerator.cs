@@ -1,11 +1,12 @@
-﻿using CheckersAI.ByteTree;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text;
+using CheckersAI.ByteTree;
 
 [assembly: InternalsVisibleTo("Benchmarking")]
+
 namespace ZermeloUnitTests.Search
 {
     internal static class TreeGenerator
@@ -40,7 +41,7 @@ namespace ZermeloUnitTests.Search
 
                 for (var i = 0; i < buffer.Length; i++)
                 {
-                    builder.Append((sbyte)buffer[i]);
+                    builder.Append((sbyte) buffer[i]);
                     builder.Append(' ');
                 }
 
@@ -48,7 +49,7 @@ namespace ZermeloUnitTests.Search
             }
 
             builder.Remove(builder.Length - 1, 1);
-            
+
             return builder.ToString();
         }
 
@@ -65,11 +66,8 @@ namespace ZermeloUnitTests.Search
                 sum += (int) Math.Pow(branchingFactor, depth);
             }
 
-            if (sum != bytes.Length)
-            {
-                throw new ArgumentException("Tree of unequal depth");
-            }
-            
+            if (sum != bytes.Length) throw new ArgumentException("Tree of unequal depth");
+
             var queue = new Queue<ByteNode>();
             var startDequeue = false;
             var bottomLevel = (int) Math.Pow(branchingFactor, depth);
@@ -78,19 +76,13 @@ namespace ZermeloUnitTests.Search
             {
                 ByteNode node;
 
-                if (queue.Count == bottomLevel)
-                {
-                    startDequeue = true;
-                }
+                if (queue.Count == bottomLevel) startDequeue = true;
 
                 if (startDequeue)
                 {
                     var children = new ByteNode[branchingFactor];
-                    for (var j = 0; j < branchingFactor; j++)
-                    {
-                        children[j] = queue.Dequeue();
-                    }
-                    
+                    for (var j = 0; j < branchingFactor; j++) children[j] = queue.Dequeue();
+
                     node = new ByteNode(sbyte.Parse(bytes[i]), !children[0].IsMaxPlayer, children);
                 }
                 else
@@ -98,7 +90,7 @@ namespace ZermeloUnitTests.Search
                     var children = new ByteNode[0];
                     node = new ByteNode(sbyte.Parse(bytes[i]), depth % 2 == 0, children);
                 }
-                    
+
                 queue.Enqueue(node);
             }
 
@@ -115,34 +107,25 @@ namespace ZermeloUnitTests.Search
             while (sum < bytes.Length)
             {
                 depth++;
-                sum += (int)Math.Pow(branchingFactor, depth);
+                sum += (int) Math.Pow(branchingFactor, depth);
             }
 
-            if (sum != bytes.Length)
-            {
-                throw new ArgumentException("Tree of unequal depth");
-            }
+            if (sum != bytes.Length) throw new ArgumentException("Tree of unequal depth");
 
             var queue = new Queue<AlfaBetaByteNode>();
             var startDequeue = false;
-            var bottomLevel = (int)Math.Pow(branchingFactor, depth);
+            var bottomLevel = (int) Math.Pow(branchingFactor, depth);
 
             for (var i = bytes.Length - 1; i >= 0; i--)
             {
                 AlfaBetaByteNode node;
 
-                if (queue.Count == bottomLevel)
-                {
-                    startDequeue = true;
-                }
+                if (queue.Count == bottomLevel) startDequeue = true;
 
                 if (startDequeue)
                 {
                     var children = new AlfaBetaByteNode[branchingFactor];
-                    for (var j = 0; j < branchingFactor; j++)
-                    {
-                        children[j] = queue.Dequeue();
-                    }
+                    for (var j = 0; j < branchingFactor; j++) children[j] = queue.Dequeue();
 
                     node = new AlfaBetaByteNode(sbyte.Parse(bytes[i]), !children[0].IsMaxPlayer, children);
                 }

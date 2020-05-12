@@ -1,17 +1,14 @@
-﻿using CheckersAI.ByteTree;
+﻿using System.Threading;
+using CheckersAI.ByteTree;
 using CheckersAI.TreeSearch;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading;
 using Xunit;
 
 namespace ZermeloUnitTests.Search
 {
     public class DynamicTreeSearchTest
     {
-        private DynamicTreeSplitting<AlfaBetaByteNode, sbyte, sbyte> _search;
-        private CancellationTokenSource _cts;
+        private readonly CancellationTokenSource _cts;
+        private readonly DynamicTreeSplitting<AlfaBetaByteNode, sbyte, sbyte> _search;
 
         public DynamicTreeSearchTest()
         {

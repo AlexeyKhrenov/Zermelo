@@ -1,9 +1,4 @@
 ﻿using Checkers.Minifications;
-using Game.PublicInterfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Checkers.Rules
 {
@@ -15,7 +10,8 @@ namespace Checkers.Rules
             return Next(board, latestMove);
         }
 
-        public override BoardMinified UndoRule(BoardMinified board, HistoryItemMinified toUndo, HistoryItemMinified lastMoveBeforeUndo)
+        public override BoardMinified UndoRule(BoardMinified board, HistoryItemMinified toUndo,
+            HistoryItemMinified lastMoveBeforeUndo)
         {
             board.MovePiece(toUndo.To.X, toUndo.To.Y, toUndo.From.X, toUndo.From.Y, toUndo.Player);
             return NextUndo(board, toUndo, lastMoveBeforeUndo);

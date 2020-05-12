@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-using Game.Implementations;
+﻿using System.Collections.Generic;
 using Game.Primitives;
 using Game.PublicInterfaces;
 
@@ -10,21 +6,6 @@ namespace Game.Implementations
 {
     public class Game : IGame
     {
-        public int Size { get; set; }
-
-        private IGameRules Rules { get; set; }
-
-        public IBoard Board { get; private set; }
-
-        public int HistoryLength => _history?.Length ?? 0;
-
-        private IHistory _history { get; set; }
-
-        public IPlayer Winner { get; private set; }
-
-
-        public IHistoryItem LatestMove => _history.Latest;
-
         public Game(IGameRules rules, IPlayer player1, IPlayer player2, IHistory history, byte size)
         {
             // remove this intialization
@@ -38,6 +19,20 @@ namespace Game.Implementations
             Board = new Board(player1, player2, size);
             Rules.PlaceFigures(Board);
         }
+
+        private IGameRules Rules { get; }
+
+        private IHistory _history { get; }
+        public int Size { get; set; }
+
+        public IBoard Board { get; }
+
+        public int HistoryLength => _history?.Length ?? 0;
+
+        public IPlayer Winner { get; private set; }
+
+
+        public IHistoryItem LatestMove => _history.Latest;
 
         public void Move(Move move)
         {
@@ -56,10 +51,7 @@ namespace Game.Implementations
 
                 Rules.Undo(Board, move, lastMoveBeforeUndo);
 
-                if (player == move.Player)
-                {
-                    break;
-                }
+                if (player == move.Player) break;
             }
         }
 
@@ -67,18 +59,9 @@ namespace Game.Implementations
         {
             get
             {
-                if (_history.Length == 0)
-                {
-                    return false;
-                }
-                if (Board.Player1.IsComputerPlayer && Board.Player2.IsComputerPlayer)
-                {
-                    return false;
-                }
-                if (_history.Length == 1 && _history.Latest.Player.IsComputerPlayer)
-                {
-                    return false;
-                }
+                if (_history.Length == 0) return false;
+                if (Board.Player1.IsComputerPlayer && Board.Player2.IsComputerPlayer) return false;
+                if (_history.Length == 1 && _history.Latest.Player.IsComputerPlayer) return false;
                 return true;
             }
         }

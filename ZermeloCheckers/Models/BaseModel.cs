@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Text;
 
 namespace ZermeloCheckers.Models
 {
@@ -14,7 +11,5 @@ namespace ZermeloCheckers.Models
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(memberName));
         }
-
-
     }
 }

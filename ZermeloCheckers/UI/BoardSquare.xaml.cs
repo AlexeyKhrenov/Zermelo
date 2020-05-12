@@ -6,13 +6,15 @@ namespace ZermeloCheckers
 {
     public partial class BoardSquare : UserControl, INotifyPropertyChanged
     {
-        public event RoutedEventHandler OnMouseClick;
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
         public byte X;
 
         public byte Y;
+
+        public BoardSquare()
+        {
+            InitializeComponent();
+            IsBlack = false;
+        }
 
         public bool IsBlack { get; set; }
 
@@ -20,11 +22,8 @@ namespace ZermeloCheckers
 
         public bool IsAllowedMove { get; set; }
 
-        public BoardSquare()
-        {
-            InitializeComponent();
-            IsBlack = false;
-        }
+        public event PropertyChangedEventHandler PropertyChanged;
+        public event RoutedEventHandler OnMouseClick;
 
         public void AddFigure(UIElement figure)
         {

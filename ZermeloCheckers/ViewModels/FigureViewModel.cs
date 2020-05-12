@@ -7,24 +7,32 @@ namespace ZermeloCheckers.ViewModels
 {
     public class FigureViewModel : IFigure
     {
+        public delegate void FigureMovedHandler(object sender, byte x0, byte y0, byte x1, byte y1);
+
         public byte X { get; set; }
 
         public byte Y { get; set; }
 
         public string Type { get; set; }
 
-        public delegate void FigureMovedHandler(object sender, byte x0, byte y0, byte x1, byte y1);
-        public event FigureMovedHandler FigureMoved;
-
         public List<Cell> AvailableMoves { get; set; }
 
         public bool IsCaptured { get; set; }
+
+        public bool Equals(IFigure other)
+        {
+            if (other == null) return false;
+
+            return X == other.X && Y == other.Y && Type == other.Type;
+        }
+
+        public event FigureMovedHandler FigureMoved;
 
         public bool HasCoordinates(int x, int y)
         {
             return X == x && Y == y;
         }
-         
+
         public bool TryMoveFigure(byte x1, byte y1)
         {
             if (IsMoveAllowed(x1, y1))
@@ -48,16 +56,6 @@ namespace ZermeloCheckers.ViewModels
         public override int GetHashCode()
         {
             return (X << 8) + Y;
-        }
-
-        public bool Equals(IFigure other)
-        {
-            if (other == null)
-            {
-                return false;
-            }
-
-            return X == other.X && Y == other.Y && Type == other.Type;
         }
     }
 }

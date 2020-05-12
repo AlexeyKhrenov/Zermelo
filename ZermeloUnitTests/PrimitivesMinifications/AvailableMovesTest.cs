@@ -7,7 +7,7 @@ namespace ZermeloUnitTests.PrimitivesMinifications
 {
     public class AvailableMovesTest
     {
-        private Cell _emptyCell = new Cell();
+        private readonly Cell _emptyCell = new Cell();
 
         [Theory]
         [InlineData(1, 1, false, 3, 3, 4, 4)]
@@ -16,7 +16,8 @@ namespace ZermeloUnitTests.PrimitivesMinifications
         [InlineData(-1, 1, true, 3, 3, 1, 5)]
         [InlineData(-1, 0, false, 3, 3, 2, 2)]
         [InlineData(-1, 1, false, 3, 3, 2, 4)]
-        public void AvailableMovesTest_1(sbyte directionRight, sbyte directionDown, bool isCapture, byte x0, byte y0, byte x1, byte y1)
+        public void AvailableMovesTest_1(sbyte directionRight, sbyte directionDown, bool isCapture, byte x0, byte y0,
+            byte x1, byte y1)
         {
             var availableMoves = new AvailableMoves();
             availableMoves.AddDirection(directionRight, directionDown, isCapture);
@@ -32,7 +33,7 @@ namespace ZermeloUnitTests.PrimitivesMinifications
         [Theory]
         [InlineData(1, 1, 1, -1, false, 3, 3, 4, 4, 4, 2)]
         [InlineData(1, 1, -1, -1, true, 3, 3, 5, 5, 1, 1)]
-        [InlineData(-1, 1, 1, -1, false,3, 3, 4, 2, 2, 4)]
+        [InlineData(-1, 1, 1, -1, false, 3, 3, 4, 2, 2, 4)]
         [InlineData(1, -1, -1, -1, true, 3, 3, 5, 1, 1, 1)]
         public void AvailableMovesTest_2(
             sbyte directionRight1,

@@ -1,23 +1,23 @@
-﻿using BenchmarkDotNet.Attributes;
-
+﻿using System.Threading;
+using BenchmarkDotNet.Attributes;
+using BenchmarkDotNet.Order;
 using CheckersAI.ByteTree;
 using CheckersAI.TreeSearch;
-using System.Threading;
 using ZermeloUnitTests.Search;
 
 namespace Benchmarking
 {
     [MemoryDiagnoser]
-    [Orderer(BenchmarkDotNet.Order.SummaryOrderPolicy.FastestToSlowest)]
+    [Orderer(SummaryOrderPolicy.FastestToSlowest)]
     [RankColumn]
     public class ByteTreeSearchBenchmarks
     {
-        private SerialAlfaBetaSearch<ByteNode, sbyte, sbyte> _serial;
-        private ByteNode _serialTree;
-        private CancellationTokenSource _cts;
+        private readonly CancellationTokenSource _cts;
 
-        private DynamicTreeSplitting<AlfaBetaByteNode, sbyte, sbyte> _dynamic;
-        private AlfaBetaByteNode _dynamicTree;
+        private readonly DynamicTreeSplitting<AlfaBetaByteNode, sbyte, sbyte> _dynamic;
+        private readonly AlfaBetaByteNode _dynamicTree;
+        private readonly SerialAlfaBetaSearch<ByteNode, sbyte, sbyte> _serial;
+        private readonly ByteNode _serialTree;
 
         public ByteTreeSearchBenchmarks()
         {
@@ -25,7 +25,7 @@ namespace Benchmarking
             var brancher = new Brancher();
             var evaluator = new Evaluator();
             var stateTransitions = new StateTransitions();
-            
+
             _serial = new SerialAlfaBetaSearch<ByteNode, sbyte, sbyte>(
                 evaluator,
                 brancher,

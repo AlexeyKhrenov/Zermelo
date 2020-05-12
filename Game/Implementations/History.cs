@@ -1,18 +1,18 @@
-﻿using Game.PublicInterfaces;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Game.PublicInterfaces;
 
 namespace Game.Implementations
 {
     public class History : IHistory
     {
-        private Stack<IHistoryItem> _stack;
-
-        public int Length => _stack.Count;
+        private readonly Stack<IHistoryItem> _stack;
 
         public History()
         {
             _stack = new Stack<IHistoryItem>();
         }
+
+        public int Length => _stack.Count;
 
         public IHistoryItem Pop()
         {

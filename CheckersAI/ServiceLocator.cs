@@ -54,7 +54,7 @@ namespace CheckersAI
             );
         }
 
-        internal static IProgressiveDeepeningWrapper<GameNode, sbyte, BoardMinified> 
+        internal static IProgressiveDeepeningWrapper<GameNode, sbyte, BoardMinified>
             CreateProgressiveDeepeningWrapper(ISearch<GameNode, sbyte, BoardMinified> search)
         {
             return new ProgressiveDeepeningWrapper<GameNode, sbyte, BoardMinified>(search);

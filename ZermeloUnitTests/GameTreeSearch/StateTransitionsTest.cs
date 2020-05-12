@@ -3,29 +3,25 @@ using Checkers.Minifications;
 using CheckersAI.CheckersGameTree;
 using FluentAssertions;
 using Game.Primitives;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Xunit;
 using ZermeloUnitTests.Mocks;
 
 namespace ZermeloUnitTests.GameTreeSearch
 {
-    
     public unsafe class StateTransitionsTest
     {
-        private StateTransitions _stateTransitions;
-
         public StateTransitionsTest()
         {
             _stateTransitions = new StateTransitions(new CheckersRules());
         }
 
+        private readonly StateTransitions _stateTransitions;
+
         [Fact]
         public void StateTransitionsTest_1()
         {
             // ARRANGE
-            var sourceBoardStr = new string[]
+            var sourceBoardStr = new[]
             {
                 "____",
                 "____",
@@ -35,7 +31,7 @@ namespace ZermeloUnitTests.GameTreeSearch
             var sourceBoard = new BoardMock(sourceBoardStr, 4, false);
             sourceBoard.SwitchPlayers();
 
-            var targetBoardStr = new string[]
+            var targetBoardStr = new[]
             {
                 "____",
                 "____",
@@ -56,8 +52,8 @@ namespace ZermeloUnitTests.GameTreeSearch
 
             practiceBoardSource.ClearMoves();
 
-            var pieceSource = (PieceMinified)practiceBoardSource.Player1Pieces[0];
-            var pieceTarget = (PieceMinified)practiceBoardTarget.Player1Pieces[0];
+            var pieceSource = (PieceMinified) practiceBoardSource.Player1Pieces[0];
+            var pieceTarget = (PieceMinified) practiceBoardTarget.Player1Pieces[0];
 
             pieceSource.Should().BeEquivalentTo(pieceTarget);
             pieceSource.Should().BeEquivalentTo(pieceTarget);

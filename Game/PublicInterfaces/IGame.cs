@@ -6,10 +6,6 @@ namespace Game.PublicInterfaces
     {
         int Size { get; }
 
-        void Move(Move move);
-
-        void Undo(IPlayer player);
-
         int HistoryLength { get; }
 
         IBoard Board { get; }
@@ -19,5 +15,9 @@ namespace Game.PublicInterfaces
         bool CanUndo { get; }
 
         IPlayer Winner { get; }
+
+        void Move(Move move);
+
+        void Undo(IPlayer player);
     }
 }

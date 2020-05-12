@@ -1,5 +1,5 @@
-﻿using CheckersAI.InternalInterfaces;
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
+using CheckersAI.InternalInterfaces;
 
 namespace CheckersAI.ByteTree
 {

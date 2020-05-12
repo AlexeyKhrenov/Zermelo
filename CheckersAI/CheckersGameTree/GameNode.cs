@@ -1,102 +1,28 @@
-﻿using Checkers.Minifications;
+﻿using System;
+using System.Threading;
+using Checkers.Minifications;
 using CheckersAI.InternalInterfaces;
 using Game.Primitives;
 using Game.PublicInterfaces;
-using System;
-using System.Runtime.InteropServices;
-using System.Threading;
 
 namespace CheckersAI.CheckersGameTree
 {
-    internal class GameNode : INode<GameNode, sbyte>, IAlfaBetaNode<GameNode, sbyte>
+    internal class GameNode : IAlfaBetaNode<GameNode, sbyte>
     {
-        public sbyte TerminationResult { get; set; }
-
-        public sbyte Result { get; set; }
-
-        public GameNode Parent { get; set; }
-
-        public GameNode[] Children { get; set; }
-
-        public GameNode BestChild { get; set; }
-
-        public HistoryItemMinified Move { get; set; }
-
         private volatile sbyte _alfa;
-        public sbyte Alfa { get { return _alfa; } set { _alfa = value; } }
 
         private volatile sbyte _beta;
-        public sbyte Beta { get { return _beta; } set { _beta = value; } }
+        internal int ChildAddressBit;
+        private int _cutoffChildrenFlag;
+        internal int ExpectedFinalizedFlag;
+        private int _isFinalizedFlag;
 
-        public bool IsFinalized
-        {
-            get { return (_state & (byte)GameNodeType.IsFinalized) != 0; }
-            set
-            {
-                if (value == true)
-                {
-                    _state = (byte)(_state | (byte)GameNodeType.IsFinalized);
-                }
-                else
-                {
-                    _state = (byte)(_state & ~(byte)GameNodeType.IsFinalized);
-                }
-            }
-        }
+        private int _isLocked;
 
-        public bool IsEvaluated
-        {
-            get { return (_state & (byte)GameNodeType.IsEvaluated) != 0; }
-            set
-            {
-                if (value == true)
-                {
-                    _state = (byte)(_state | (byte)GameNodeType.IsEvaluated);
-                }
-                else
-                {
-                    _state = (byte)(_state & ~(byte)GameNodeType.IsEvaluated);
-                }
-            }
-        }
-
-        public bool WasCutoff
-        {
-            get { return (_state & (byte)GameNodeType.WasCutOff) != 0; }
-            set
-            {
-                if (value == true)
-                {
-                    _state = (byte)(_state | (byte)GameNodeType.WasCutOff);
-                }
-                else
-                {
-                    _state = (byte)(_state & ~(byte)GameNodeType.WasCutOff);
-                }
-            }
-        }
-
-        public bool IsMaxPlayer
-        {
-            get { return (_state & (byte)GameNodeType.IsMaxPlayer) != 0; }
-            set
-            {
-                if (value == true)
-                {
-                    _state = (byte)(_state | (byte)GameNodeType.IsMaxPlayer);
-                }
-                else
-                {
-                    _state = (byte)(_state & ~(byte)GameNodeType.IsMaxPlayer);
-                }
-            }
-        }
+        // todo - consider making it thread-safe
+        private readonly object _lock1 = new object();
 
         private byte _state;
-        internal int _expectedFinalizedFlag;
-        internal int _cutoffChildrenFlag;
-        internal int _isFinalizedFlag;
-        internal int _childAddressBit;
 
         public GameNode()
         {
@@ -118,31 +44,148 @@ namespace CheckersAI.CheckersGameTree
                 Move.Minify(item, board);
                 IsMaxPlayer = isMaxPlayer;
             }
-            
+
             Clear();
         }
 
-        // don't call this method often - not optimized
-        public Move GetBestMove()
+        public HistoryItemMinified Move { get; set; }
+        public sbyte TerminationResult { get; set; }
+
+        public GameNode Parent { get; set; }
+
+        public sbyte Alfa
         {
-            if (Children != null && Children.Length != 0)
+            get => _alfa;
+            set => _alfa = value;
+        }
+
+        public sbyte Beta
+        {
+            get => _beta;
+            set => _beta = value;
+        }
+
+        public bool IsFinalized
+        {
+            get => (_state & (byte) GameNodeType.IsFinalized) != 0;
+            set
             {
-                foreach (var child in Children)
+                if (value)
+                    _state = (byte) (_state | (byte) GameNodeType.IsFinalized);
+                else
+                    _state = (byte) (_state & ~(byte) GameNodeType.IsFinalized);
+            }
+        }
+
+        public bool IsEvaluated
+        {
+            get => (_state & (byte) GameNodeType.IsEvaluated) != 0;
+            set
+            {
+                if (value)
+                    _state = (byte) (_state | (byte) GameNodeType.IsEvaluated);
+                else
+                    _state = (byte) (_state & ~(byte) GameNodeType.IsEvaluated);
+            }
+        }
+
+        public bool WasCutoff
+        {
+            get => (_state & (byte) GameNodeType.WasCutOff) != 0;
+            set
+            {
+                if (value)
+                    _state = (byte) (_state | (byte) GameNodeType.WasCutOff);
+                else
+                    _state = (byte) (_state & ~(byte) GameNodeType.WasCutOff);
+            }
+        }
+
+        public void Update(sbyte result)
+        {
+            IsFinalized = true;
+            Result = result;
+        }
+
+        public bool TryLockNode()
+        {
+            return 0 == Interlocked.CompareExchange(ref _isLocked, 1, 0);
+        }
+
+        public void UpdateAlfaBeta(GameNode parent)
+        {
+            Alfa = parent.Alfa;
+            Beta = parent.Beta;
+        }
+
+        public void Update(GameNode child)
+        {
+            lock (_lock1)
+            {
+                if (!child.WasCutoff)
                 {
-                    if (child.Result == Result)
+                    _isFinalizedFlag |= child.ChildAddressBit;
+
+                    if (IsMaxPlayer)
                     {
-                        return new Move(child.Move.From, child.Move.To);
+                        if (child.Result >= Result)
+                        {
+                            Result = child.Result;
+                            BestChild = child;
+                        }
+
+                        Alfa = Result > Alfa ? Result : Alfa;
+                    }
+                    else
+                    {
+                        if (child.Result <= Result)
+                        {
+                            Result = child.Result;
+                            BestChild = child;
+                        }
+
+                        Beta = Result < Beta ? Result : Beta;
+                    }
+
+                    if (Alfa > Beta)
+                    {
+                        WasCutoff = true;
+                        IsFinalized = true;
+                    }
+                }
+                else
+                {
+                    _isFinalizedFlag |= child.ChildAddressBit;
+                    _cutoffChildrenFlag |= child.ChildAddressBit;
+
+                    if (_cutoffChildrenFlag == ExpectedFinalizedFlag)
+                    {
+                        WasCutoff = true;
+                        IsFinalized = true;
+                        return;
                     }
                 }
             }
 
-            throw new InvalidOperationException("A node is not evaluated yet");
+            if (_isFinalizedFlag == ExpectedFinalizedFlag) IsFinalized = true;
         }
 
-        // todo - implement
-        public override int GetHashCode()
+        public sbyte Result { get; set; }
+
+        public GameNode[] Children { get; set; }
+
+        public GameNode BestChild { get; set; }
+
+        public bool IsMaxPlayer
         {
-            return base.GetHashCode();
+            get => (_state & (byte) GameNodeType.IsMaxPlayer) != 0;
+            set
+            {
+                if (value)
+                    _state = (byte) (_state | (byte) GameNodeType.IsMaxPlayer);
+                else
+                    _state = (byte) (_state & ~(byte) GameNodeType.IsMaxPlayer);
+            }
         }
 
         public bool Equals(GameNode other)
@@ -160,99 +203,35 @@ namespace CheckersAI.CheckersGameTree
             _cutoffChildrenFlag = 0;
 
             if (IsMaxPlayer)
-            {
                 Result = sbyte.MinValue;
-            }
             else
-            {
                 Result = sbyte.MaxValue;
-            }
 
             BestChild = null;
+        }
+
+        // don't call this method often - not optimized
+        public Move GetBestMove()
+        {
+            if (Children != null && Children.Length != 0)
+                foreach (var child in Children)
+                    if (child.Result == Result)
+                        return new Move(child.Move.From, child.Move.To);
+
+            throw new InvalidOperationException("A node is not evaluated yet");
+        }
+
+        // todo - implement
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
         }
 
         public override string ToString()
         {
             if (Move != null)
-            {
                 return $"{Move.From.X},{Move.From.Y}->{Move.To.X},{Move.To.Y}  Result:{Result}";
-            }
-            else
-            {
-                return $"Move is NULL. Result: {Result}";
-            }
-        }
-
-        public void Update(sbyte result)
-        {
-            IsFinalized = true;
-            Result = result;
-        }
-
-        private int _isLocked;
-        public bool TryLockNode()
-        {
-            return 0 == Interlocked.CompareExchange(ref _isLocked, 1, 0);
-        }
-
-        public void UpdateAlfaBeta(GameNode parent)
-        {
-            Alfa = parent.Alfa;
-            Beta = parent.Beta;
-        }
-
-        // todo - consider making it thread-safe
-        object _lock1 = new object();
-        public void Update(GameNode child)
-        {
-            lock (_lock1)
-            {
-                if (!child.WasCutoff)
-                {
-                    _isFinalizedFlag |= child._childAddressBit;
-
-                    if (IsMaxPlayer)
-                    {
-                        if (child.Result >= Result)
-                        {
-                            Result = child.Result;
-                            BestChild = child;
-                        }
-                        Alfa = Result > Alfa ? Result : Alfa;
-                    }
-                    else
-                    {
-                        if (child.Result <= Result)
-                        {
-                            Result = child.Result;
-                            BestChild = child;
-                        }
-                        Beta = Result < Beta ? Result : Beta;
-                    }
-
-                    if (Alfa > Beta)
-                    {
-                        WasCutoff = true;
-                        IsFinalized = true;
-                    }
-                }
-                else
-                {
-                    _isFinalizedFlag |= child._childAddressBit;
-                    _cutoffChildrenFlag |= child._childAddressBit;
-
-                    if (_cutoffChildrenFlag == _expectedFinalizedFlag)
-                    {
-                        WasCutoff = true;
-                        IsFinalized = true;
-                        return;
-                    }
-                }
-            }
-            if (_isFinalizedFlag == _expectedFinalizedFlag)
-            {
-                IsFinalized = true;
-            }
+            return $"Move is NULL. Result: {Result}";
         }
     }
 }

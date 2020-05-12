@@ -1,15 +1,19 @@
-﻿using Game.PublicInterfaces;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Game.PublicInterfaces;
 
 namespace Game.Implementations
 {
     public class HumanPlayer : IPlayer
     {
-        private string _name;
+        private readonly string _name;
+
+        public HumanPlayer(string name)
+        {
+            _name = name;
+        }
+
         public string Name => _name + " (human)";
 
         public bool IsComputerPlayer => false;
@@ -17,11 +21,6 @@ namespace Game.Implementations
         public List<IFigure> Figures { get; set; }
 
         public bool IsActive { get; set; }
-
-        public HumanPlayer(string name)
-        {
-            _name = name;
-        }
 
         public Task MakeMove(IGame game, CancellationToken cancellationToken)
         {

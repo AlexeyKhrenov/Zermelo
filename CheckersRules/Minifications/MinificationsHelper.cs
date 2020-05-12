@@ -1,12 +1,9 @@
-﻿using Game.PublicInterfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
+using Game.PublicInterfaces;
 
 namespace Checkers.Minifications
 {
-    internal unsafe static class MinificationsHelper
+    internal static unsafe class MinificationsHelper
     {
         public static PieceMinified ToMinified(this Piece from)
         {
@@ -41,28 +38,22 @@ namespace Checkers.Minifications
             // todo - change to one loop
             for (byte i = 0; i < from.Player1.Figures.Count; i++)
             {
-                var minPiece = ((Piece)from.Player1.Figures[i]).ToMinified();
+                var minPiece = ((Piece) from.Player1.Figures[i]).ToMinified();
                 min.Player1Pieces[i] = minPiece;
 
-                if (!minPiece.IsCaptured)
-                {
-                    min.SetBoardCell(minPiece.X, minPiece.Y, new BoardCell(i, minPiece.IsWhite));
-                }
+                if (!minPiece.IsCaptured) min.SetBoardCell(minPiece.X, minPiece.Y, new BoardCell(i, minPiece.IsWhite));
             }
 
             for (byte i = 0; i < from.Player2.Figures.Count; i++)
             {
-                var minPiece = ((Piece)from.Player2.Figures[i]).ToMinified();
+                var minPiece = ((Piece) from.Player2.Figures[i]).ToMinified();
                 min.Player2Pieces[i] = minPiece;
 
-                if (!minPiece.IsCaptured)
-                {
-                    min.SetBoardCell(minPiece.X, minPiece.Y, new BoardCell(i, minPiece.IsWhite));
-                }
+                if (!minPiece.IsCaptured) min.SetBoardCell(minPiece.X, minPiece.Y, new BoardCell(i, minPiece.IsWhite));
             }
 
-            min.Player1PiecesCount = (byte)from.Player1.Figures.Count;
-            min.Player2PiecesCount = (byte)from.Player2.Figures.Count;
+            min.Player1PiecesCount = (byte) from.Player1.Figures.Count;
+            min.Player2PiecesCount = (byte) from.Player2.Figures.Count;
 
             return min;
         }
@@ -72,20 +63,11 @@ namespace Checkers.Minifications
             to.Player1.Figures.Clear();
             to.Player2.Figures.Clear();
 
-            foreach (var piece in from.GetPlayer1PiecesList())
-            {
-                to.Player1.Figures.Add(piece.ToMaximized());
-            }
+            foreach (var piece in from.GetPlayer1PiecesList()) to.Player1.Figures.Add(piece.ToMaximized());
 
-            foreach (var piece in from.GetPlayer2PiecesList())
-            {
-                to.Player2.Figures.Add(piece.ToMaximized());
-            }
+            foreach (var piece in from.GetPlayer2PiecesList()) to.Player2.Figures.Add(piece.ToMaximized());
 
-            if (to.ActivePlayer != (from.ActivePlayer ? to.Player1 : to.Player2))
-            {
-                to.SwitchPlayers();
-            }
+            if (to.ActivePlayer != (from.ActivePlayer ? to.Player1 : to.Player2)) to.SwitchPlayers();
 
             to.ActivePlayer.IsActive = true;
             to.AwaitingPlayer.IsActive = false;

@@ -1,8 +1,7 @@
-﻿using Game.PublicInterfaces;
-
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using Game.PublicInterfaces;
 using ZermeloCheckers.ViewModels;
 
 namespace ZermeloCheckers.Misc
@@ -11,7 +10,7 @@ namespace ZermeloCheckers.Misc
     {
         public static FigureViewModel ToViewModel(this IFigure figure)
         {
-            return new FigureViewModel()
+            return new FigureViewModel
             {
                 X = figure.X,
                 Y = figure.Y,
@@ -24,25 +23,20 @@ namespace ZermeloCheckers.Misc
         public static UIElement ToUIElement(this FigureViewModel figure)
         {
             if (figure.Type == "WhiteQueen" || figure.Type == "BlackQueen")
-            {
-                return new Rectangle()
+                return new Rectangle
                 {
                     Height = 26,
                     Width = 26,
                     Fill = figure.Type != "WhiteQueen" ? Brushes.Black : Brushes.White,
                     Stroke = Brushes.Tan,
-                    StrokeThickness = 5,
+                    StrokeThickness = 5
                 };
-            }
-            else
+            return new Rectangle
             {
-                return new Rectangle()
-                {
-                    Height = 26,
-                    Width = 26,
-                    Fill = figure.Type != "White" ? Brushes.Black : Brushes.White,
-                };
-            }
+                Height = 26,
+                Width = 26,
+                Fill = figure.Type != "White" ? Brushes.Black : Brushes.White
+            };
         }
     }
 }

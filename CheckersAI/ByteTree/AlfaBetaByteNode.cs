@@ -1,18 +1,34 @@
-﻿using CheckersAI.InternalInterfaces;
-using System;
+﻿using System;
 using System.Threading;
+using CheckersAI.InternalInterfaces;
 
 namespace CheckersAI.ByteTree
 {
     public class AlfaBetaByteNode : IAlfaBetaNode<AlfaBetaByteNode, sbyte>
     {
+        private int _isLocked;
+
+        // todo - consider making it thread-safe
+        private readonly object _lock1 = new object();
+
+        private AlfaBetaByteNode(bool isMaxPlayer)
+        {
+            IsMaxPlayer = isMaxPlayer;
+            Clear();
+        }
+
+        public AlfaBetaByteNode(sbyte valueChange, bool isMaxPlayer, AlfaBetaByteNode[] children) : this(isMaxPlayer)
+        {
+            ValueChange = valueChange;
+            Children = children;
+
+            foreach (var child in Children) child.Parent = this;
+        }
+
+        public sbyte ValueChange { get; }
         public sbyte TerminationResult { get; set; }
 
         public bool IsEvaluated { get; set; }
-
-        public bool WasSplitted { get; set; }
-
-        public sbyte ValueChange { get; set; }
 
         public sbyte Alfa { get; set; }
 
@@ -24,30 +40,13 @@ namespace CheckersAI.ByteTree
 
         public AlfaBetaByteNode[] Children { get; set; }
 
-        public bool IsMaxPlayer { get; private set; }
+        public bool IsMaxPlayer { get; }
 
         public sbyte Result { get; set; }
 
         public AlfaBetaByteNode BestChild { get; set; }
 
         public bool WasCutoff { get; set; }
-
-        public AlfaBetaByteNode(bool isMaxPlayer)
-        {
-            IsMaxPlayer = isMaxPlayer;
-            Clear();
-        }
-
-        public AlfaBetaByteNode(sbyte valueChange, bool isMaxPlayer, AlfaBetaByteNode[] children) : this(isMaxPlayer)
-        {
-            ValueChange = valueChange;
-            Children = children;
-
-            foreach (var child in Children)
-            {
-                child.Parent = this;
-            }
-        }
 
         public void Clear()
         {
@@ -57,13 +56,9 @@ namespace CheckersAI.ByteTree
             _isLocked = 0;
 
             if (IsMaxPlayer)
-            {
                 Result = sbyte.MinValue;
-            }
             else
-            {
                 Result = sbyte.MaxValue;
-            }
         }
 
         public bool Equals(AlfaBetaByteNode other)
@@ -71,7 +66,6 @@ namespace CheckersAI.ByteTree
             throw new NotImplementedException();
         }
 
-        private int _isLocked;
         public bool TryLockNode()
         {
             return 0 == Interlocked.CompareExchange(ref _isLocked, 1, 0);
@@ -83,8 +77,6 @@ namespace CheckersAI.ByteTree
             Beta = parent.Beta;
         }
 
-        // todo - consider making it thread-safe
-        object _lock1 = new object();
         public void Update(AlfaBetaByteNode child)
         {
             lock (_lock1)
@@ -111,12 +103,8 @@ namespace CheckersAI.ByteTree
                 }
 
                 foreach (var c in Children)
-                {
                     if (!c.IsFinalized)
-                    {
                         return;
-                    }
-                }
                 IsFinalized = true;
             }
         }

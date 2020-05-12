@@ -1,14 +1,14 @@
+using System.Threading;
 using CheckersAI.ByteTree;
 using CheckersAI.TreeSearch;
-using System.Threading;
 using Xunit;
 
 namespace ZermeloUnitTests.Search
 {
     public class SearchWithoutBranchingTest
     {
-        private SerialAlfaBetaSearch<ByteNode, sbyte, sbyte> _search;
-        private CancellationTokenSource _cts;
+        private readonly CancellationTokenSource _cts;
+        private readonly SerialAlfaBetaSearch<ByteNode, sbyte, sbyte> _search;
 
         public SearchWithoutBranchingTest()
         {

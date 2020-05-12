@@ -1,15 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace ZermeloCheckers
 {
@@ -27,71 +19,11 @@ namespace ZermeloCheckers
         public static readonly DependencyProperty StopThinkingCommandProperty;
         public static readonly DependencyProperty UndoCommandProperty;
 
-        public string Title
-        {
-            get { return (string)GetValue(TitleProperty); }
-            set { SetValue(TitleProperty, value); }
-        }
-
-        public int TimeToThink
-        {
-            get { return (int)GetValue(TimeToThinkProperty); }
-            set { SetValue(TimeToThinkProperty, value); }
-        }
-
-        public int Ply
-        {
-            get { return (int)GetValue(PlyProperty); }
-            set { SetValue(PlyProperty, value); }
-        }
-
-        public bool IsButtonsEnabled
-        {
-            get { return (bool)GetValue(IsButtonsEnabledProperty); }
-            set { SetValue(IsButtonsEnabledProperty, value); }
-        }
-
-        public bool IsActive
-        {
-            get { return (bool)GetValue(IsActiveProperty); }
-            set { SetValue(IsActiveProperty, value); }
-        }
-
-        public bool IsSliderEnabled
-        {
-            get { return (bool)GetValue(IsSliderEnabledProperty); }
-            set { SetValue(IsSliderEnabledProperty, value); }
-        }
-
-        public bool IsComputerPlayer
-        {
-            get { return (bool)GetValue(IsComputerPlayerProperty); }
-            set { SetValue(IsComputerPlayerProperty, value); }
-        }
-
-        public bool IsHumanPlayer
-        {
-            get { return (bool)GetValue(IsHumanPlayerProperty); }
-            set { SetValue(IsHumanPlayerProperty, value); }
-        }
-
-        public ICommand StopThinkingCommand
-        {
-            get { return (ICommand)GetValue(StopThinkingCommandProperty); }
-            set { SetValue(StopThinkingCommandProperty, value); }
-        }
-
-        public ICommand UndoCommand
-        {
-            get { return (ICommand)GetValue(UndoCommandProperty); }
-            set { SetValue(UndoCommandProperty, value); }
-        }
-
         static PlayerControl()
         {
             TimeToThinkProperty = DependencyProperty.Register(
                 "TimeToThink", typeof(int), typeof(PlayerControl),
-                new FrameworkPropertyMetadata(new PropertyChangedCallback(OnTimeToThinkChanged))
+                new FrameworkPropertyMetadata(OnTimeToThinkChanged)
             );
 
             PlyProperty = DependencyProperty.Register(
@@ -137,10 +69,70 @@ namespace ZermeloCheckers
             Slider.ValueChanged += Slider_ValueChanged;
         }
 
+        public string Title
+        {
+            get => (string) GetValue(TitleProperty);
+            set => SetValue(TitleProperty, value);
+        }
+
+        public int TimeToThink
+        {
+            get => (int) GetValue(TimeToThinkProperty);
+            set => SetValue(TimeToThinkProperty, value);
+        }
+
+        public int Ply
+        {
+            get => (int) GetValue(PlyProperty);
+            set => SetValue(PlyProperty, value);
+        }
+
+        public bool IsButtonsEnabled
+        {
+            get => (bool) GetValue(IsButtonsEnabledProperty);
+            set => SetValue(IsButtonsEnabledProperty, value);
+        }
+
+        public bool IsActive
+        {
+            get => (bool) GetValue(IsActiveProperty);
+            set => SetValue(IsActiveProperty, value);
+        }
+
+        public bool IsSliderEnabled
+        {
+            get => (bool) GetValue(IsSliderEnabledProperty);
+            set => SetValue(IsSliderEnabledProperty, value);
+        }
+
+        public bool IsComputerPlayer
+        {
+            get => (bool) GetValue(IsComputerPlayerProperty);
+            set => SetValue(IsComputerPlayerProperty, value);
+        }
+
+        public bool IsHumanPlayer
+        {
+            get => (bool) GetValue(IsHumanPlayerProperty);
+            set => SetValue(IsHumanPlayerProperty, value);
+        }
+
+        public ICommand StopThinkingCommand
+        {
+            get => (ICommand) GetValue(StopThinkingCommandProperty);
+            set => SetValue(StopThinkingCommandProperty, value);
+        }
+
+        public ICommand UndoCommand
+        {
+            get => (ICommand) GetValue(UndoCommandProperty);
+            set => SetValue(UndoCommandProperty, value);
+        }
+
         public static void OnTimeToThinkChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
-            var playerControl = (PlayerControl)sender;
-            var value = (int)e.NewValue;
+            var playerControl = (PlayerControl) sender;
+            var value = (int) e.NewValue;
             if (value == -1)
             {
                 playerControl.Slider.Value = 101;
@@ -159,17 +151,13 @@ namespace ZermeloCheckers
         {
             // todo - use default coeff as dependency property
 
-            var value = (int)Math.Pow(e.NewValue * 2, 2);
+            var value = (int) Math.Pow(e.NewValue * 2, 2);
             if (TimeToThink != value)
             {
                 if (value > 40000)
-                {
-                    TimeToThink = (-1);
-                }
+                    TimeToThink = -1;
                 else
-                {
                     TimeToThink = value;
-                }
             }
         }
 

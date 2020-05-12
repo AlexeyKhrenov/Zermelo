@@ -1,33 +1,21 @@
-﻿using Checkers.Minifications;
-using CheckersAI.CheckersGameTree;
-using CheckersAI.InternalInterfaces;
-using CheckersAI.TreeSearch;
-using Game.Primitives;
-using Game.PublicInterfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
+using Checkers.Minifications;
+using CheckersAI.CheckersGameTree;
+using CheckersAI.InternalInterfaces;
+using Game.Primitives;
+using Game.PublicInterfaces;
 
 namespace CheckersAI
 {
     public class ComputerPlayer : IPlayer
     {
-        public string Name => _name + " (computer)";
-
-        public bool IsComputerPlayer => true;
-
-        public bool IsActive { get; set; }
-
-        public List<IFigure> Figures { get; set; }
-
-        public int Ply { get; private set; }
-
-        private string _name;
-        private IProgressiveDeepeningWrapper<GameNode, sbyte, BoardMinified> _search;
-        private ITreeManager<GameNode, sbyte> _treeManager;
+        private readonly string _name;
+        private readonly IProgressiveDeepeningWrapper<GameNode, sbyte, BoardMinified> _search;
+        private readonly ITreeManager<GameNode, sbyte> _treeManager;
 
         internal ComputerPlayer(string name,
             IProgressiveDeepeningWrapper<GameNode, sbyte, BoardMinified> search,
@@ -37,6 +25,15 @@ namespace CheckersAI
             _search = search;
             _treeManager = treeManager;
         }
+
+        public int Ply { get; private set; }
+        public string Name => _name + " (computer)";
+
+        public bool IsComputerPlayer => true;
+
+        public bool IsActive { get; set; }
+
+        public List<IFigure> Figures { get; set; }
 
         public Task MakeMove(IGame game, CancellationToken ct)
         {
@@ -48,7 +45,8 @@ namespace CheckersAI
             root = _treeManager.GoDownToNode(root);
 
             // add registration to abort threads
-            var (plannedMoves, maxPly) = _search.Run(practiceBoard, root, sbyte.MinValue, sbyte.MaxValue, int.MaxValue, ct);
+            var (plannedMoves, maxPly) =
+                _search.Run(practiceBoard, root, sbyte.MinValue, sbyte.MaxValue, int.MaxValue, ct);
 
             Ply = maxPly;
             StopThinking(game, plannedMoves);
@@ -58,7 +56,6 @@ namespace CheckersAI
         private void StopThinking(IGame game, Queue<GameNode> plannedMoves)
         {
             while (game.Board.ActivePlayer == this)
-            {
                 if (plannedMoves == null || plannedMoves.Count == 0)
                 {
                     MakeRandomNextMove(game);
@@ -69,7 +66,6 @@ namespace CheckersAI
                     game.Move(new Move(nextMove.Move.From, nextMove.Move.To));
                     _treeManager.GoDownToNode(nextMove);
                 }
-            }
 
             GC.Collect();
         }
@@ -80,10 +76,7 @@ namespace CheckersAI
 
             var moveIndex = new Random().Next(0, availableMoves.Count);
 
-            if (availableMoves.Count == 0)
-            {
-                return;
-            }
+            if (availableMoves.Count == 0) return;
 
             var move = availableMoves[moveIndex];
 

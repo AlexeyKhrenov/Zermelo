@@ -1,18 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Text;
-using ZermeloCheckers.GameFactory;
+﻿using ZermeloCheckers.GameFactory;
 
 namespace ZermeloCheckers.ViewModels
 {
     public class NewGameViewModel : BaseViewModel
     {
+        private bool _isOkButtonEnabled;
         private bool _isPlayer1Computer;
+
+        private bool _isPlayer2Computer;
+
+        private GameRequest _model;
+
+        private string _player1Name;
+
+        private string _player2Name;
+
         public bool IsPlayer1Computer
         {
-            get { return _isPlayer1Computer; }
+            get => _isPlayer1Computer;
             set
             {
                 _isPlayer1Computer = value;
@@ -21,10 +26,9 @@ namespace ZermeloCheckers.ViewModels
             }
         }
 
-        private bool _isPlayer2Computer;
         public bool IsPlayer2Computer
         {
-            get {return _isPlayer2Computer; }
+            get => _isPlayer2Computer;
             set
             {
                 _isPlayer2Computer = value;
@@ -33,10 +37,9 @@ namespace ZermeloCheckers.ViewModels
             }
         }
 
-        private string _player1Name;
         public string Player1Name
         {
-            get { return _player1Name; }
+            get => _player1Name;
             set
             {
                 _player1Name = value;
@@ -46,10 +49,9 @@ namespace ZermeloCheckers.ViewModels
             }
         }
 
-        private string _player2Name;
         public string Player2Name
         {
-            get { return _player2Name; }
+            get => _player2Name;
             set
             {
                 _player2Name = value;
@@ -59,17 +61,14 @@ namespace ZermeloCheckers.ViewModels
             }
         }
 
-        private bool _isOkButtonEnabled;
         public bool IsOkButtonEnabled
         {
-            get { return _isOkButtonEnabled; }
-            set { _isOkButtonEnabled = value; RaisePropertyChanged(); }
-        }
-
-        private GameRequest _model;
-
-        public NewGameViewModel()
-        {
+            get => _isOkButtonEnabled;
+            set
+            {
+                _isOkButtonEnabled = value;
+                RaisePropertyChanged();
+            }
         }
 
         public void FromModel(GameRequest model)
@@ -85,10 +84,7 @@ namespace ZermeloCheckers.ViewModels
         private void CheckOkButtonEnabled()
         {
             var isEnabled = !string.IsNullOrWhiteSpace(Player1Name) && !string.IsNullOrWhiteSpace(Player2Name);
-            if (IsOkButtonEnabled != isEnabled)
-            {
-                IsOkButtonEnabled = isEnabled;
-            }
+            if (IsOkButtonEnabled != isEnabled) IsOkButtonEnabled = isEnabled;
         }
     }
 }
