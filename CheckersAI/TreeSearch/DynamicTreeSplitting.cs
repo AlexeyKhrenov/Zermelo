@@ -8,7 +8,7 @@ using System.Threading;
 namespace CheckersAI.TreeSearch
 {
     internal class DynamicTreeSplitting<TNode, TMetric, TState> : ISearch<TNode, TMetric, TState>
-        where TNode : IAlfaBetaNode<TNode, TMetric>
+        where TNode : class, IAlfaBetaNode<TNode, TMetric>
         where TMetric : struct
         where TState : struct
     {
@@ -147,22 +147,39 @@ namespace CheckersAI.TreeSearch
                 return;
             }
 
+            TNode continuationNode = null;
+
             foreach (var child in node.Children)
             {
                 if (child.TryLockNode() && _currentGenerationCounter.TryAddCount())
                 {
-                    // todo - rework closure
-                    var stateCopy = _stateTransitions.Copy(state);
-                    var localState = _stateTransitions.GoDown(stateCopy, child);
-                    ThreadPool.QueueUserWorkItem(
-                        obj =>
-                        {
-                            child.UpdateAlfaBeta(node);
-                            GoDown(child, localState, depth - 1, node);
-                            _currentGenerationCounter.Signal();
-                        }
-                    );
+                    if (continuationNode == null)
+                    {
+                        continuationNode = child;
+                    }
+                    else
+                    {
+                        // todo - rework closure
+                        var stateCopy = _stateTransitions.Copy(state);
+                        var localState = _stateTransitions.GoDown(stateCopy, child);
+                        ThreadPool.QueueUserWorkItem(
+                            obj =>
+                            {
+                                child.UpdateAlfaBeta(node);
+                                GoDown(child, localState, depth - 1, node);
+                                _currentGenerationCounter.Signal();
+                            }
+                        );
+                    }
                 }
+            }
+
+            if (continuationNode != null)
+            {
+                continuationNode.UpdateAlfaBeta(node);
+                var localState = _stateTransitions.GoDown(state, continuationNode);
+                GoDown(continuationNode, localState, depth - 1, continuationNode);
+                _currentGenerationCounter.Signal();
             }
         }
 
