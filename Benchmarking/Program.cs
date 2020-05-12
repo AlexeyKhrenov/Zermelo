@@ -16,22 +16,22 @@ namespace Benchmarking
         {
             //MeasureStructSizes.Measure();
 
-            var watch = new Stopwatch();
-            watch.Start();
-            for (var i = 0; i < 10; i++)
-            {
-                var s = new GameTreeSearchBenchmark();
-                s.GlobalSetup();
-                s.RunDynamicTreeSplittingBenchmark();
-            }
-            watch.Stop();
+            //var watch = new Stopwatch();
+            //watch.Start();
+            //for (var i = 0; i < 10; i++)
+            //{
+            //    var s = new GameTreeSearchBenchmark();
+            //    s.GlobalSetup();
+            //    s.RunDynamicTreeSplittingBenchmark();
+            //}
+            //watch.Stop();
 
-            var piece = new PieceMinified();
+            //var piece = new PieceMinified();
             //piece.X = 6;
             //piece.Y = 4;
             //piece.IsWhite = true;
 
-            //BenchmarkRunner.Run<GameTreeSearchBenchmark>();
+            BenchmarkRunner.Run<GameTreeSearchBenchmark>();
 
             //BenchmarkRunner.Run<ByteTreeSearchBenchmarks>();
             //var s = new ByteTreeSearchBenchmarks();
