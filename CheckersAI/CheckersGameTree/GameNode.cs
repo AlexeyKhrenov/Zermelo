@@ -19,7 +19,7 @@ namespace CheckersAI.CheckersGameTree
         public GameNode[] Children { get; set; }
 
         public GameNode BestChild { get; set; }
-        
+
         public HistoryItemMinified Move { get; set; }
 
         private volatile sbyte _alfa;
@@ -93,6 +93,10 @@ namespace CheckersAI.CheckersGameTree
         }
 
         private byte _state;
+        internal int _expectedFinalizedFlag;
+        internal int _cutoffChildrenFlag;
+        internal int _isFinalizedFlag;
+        internal int _childAddressBit;
 
         public GameNode()
         {
@@ -152,6 +156,8 @@ namespace CheckersAI.CheckersGameTree
             Beta = sbyte.MaxValue;
             IsFinalized = false;
             _isLocked = 0;
+            _isFinalizedFlag = 0;
+            _cutoffChildrenFlag = 0;
 
             if (IsMaxPlayer)
             {
@@ -203,6 +209,8 @@ namespace CheckersAI.CheckersGameTree
             {
                 if (!child.WasCutoff)
                 {
+                    _isFinalizedFlag |= child._childAddressBit;
+
                     if (IsMaxPlayer)
                     {
                         if (child.Result >= Result)
@@ -228,25 +236,21 @@ namespace CheckersAI.CheckersGameTree
                         IsFinalized = true;
                     }
                 }
-
-                var numberOfCutoffChildren = 0;
-                foreach (var c in Children)
+                else
                 {
-                    if (!c.IsFinalized)
+                    _isFinalizedFlag |= child._childAddressBit;
+                    _cutoffChildrenFlag |= child._childAddressBit;
+
+                    if (_cutoffChildrenFlag == _expectedFinalizedFlag)
                     {
+                        WasCutoff = true;
+                        IsFinalized = true;
                         return;
                     }
-                    if (c.WasCutoff)
-                    {
-                        numberOfCutoffChildren++;
-                    }
                 }
-
-                if (numberOfCutoffChildren == Children.Length)
-                {
-                    WasCutoff = true;
-                }
-
+            }
+            if (_isFinalizedFlag == _expectedFinalizedFlag)
+            {
                 IsFinalized = true;
             }
         }

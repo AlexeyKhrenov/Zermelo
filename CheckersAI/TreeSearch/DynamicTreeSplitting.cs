@@ -147,18 +147,18 @@ namespace CheckersAI.TreeSearch
                 return;
             }
 
-            //TNode continuationNode = null;
+            TNode continuationNode = null;
 
             foreach (var child in node.Children)
             {
                 if (child.TryLockNode() && _currentGenerationCounter.TryAddCount())
                 {
-                    //if (continuationNode == null)
-                    //{
-                    //    continuationNode = child;
-                    //}
-                    //else
-                    //{
+                    if (continuationNode == null)
+                    {
+                        continuationNode = child;
+                    }
+                    else
+                    {
                         // todo - rework closure
                         var stateCopy = _stateTransitions.Copy(state);
                         var localState = _stateTransitions.GoDown(stateCopy, child);
@@ -171,17 +171,17 @@ namespace CheckersAI.TreeSearch
                                 _currentGenerationCounter.Signal();
                             }
                         );
-                    //}
+                    }
                 }
             }
 
-            //if (continuationNode != null)
-            //{
-            //    continuationNode.UpdateAlfaBeta(node);
-            //    var localState = _stateTransitions.GoDown(state, continuationNode);
-            //    GoDown(continuationNode, localState, depth - 1, continuationNode);
-            //    _currentGenerationCounter.Signal();
-            //}
+            if (continuationNode != null)
+            {
+                continuationNode.UpdateAlfaBeta(node);
+                var localState = _stateTransitions.GoDown(state, continuationNode);
+                GoDown(continuationNode, localState, depth - 1, continuationNode);
+                _currentGenerationCounter.Signal();
+            }
         }
 
         private void CancelOperation()

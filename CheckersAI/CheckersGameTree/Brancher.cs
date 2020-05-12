@@ -21,12 +21,16 @@ namespace CheckersAI.CheckersGameTree
 
         public void Branch(GameNode node, BoardMinified practiceBoard)
         {
-            // remove list to speed up perfomance
-            var children = new List<GameNode>();
+            // todo - remove list to speed up perfomance
+            var children = new List<GameNode>() { Capacity = 16 };
+
+            node._expectedFinalizedFlag = 0;
 
             practiceBoard = _rules.FastForwardAvailableMoves(practiceBoard);
 
             int* activeSetPtr = practiceBoard.ActivePlayer ? practiceBoard.Player1Pieces : practiceBoard.Player2Pieces;
+
+            var childBitIndex = 0;
 
             for (var i = 0; i < BoardMinified.BufferSize; i++)
             {
@@ -46,6 +50,9 @@ namespace CheckersAI.CheckersGameTree
                         // todo - remove - duplicated information
                         child.Parent = node;
                         children.Add(child);
+                        child._childAddressBit = (1 << childBitIndex);
+                        node._expectedFinalizedFlag += child._childAddressBit;
+                        childBitIndex++;
                     }
                     else
                     {
