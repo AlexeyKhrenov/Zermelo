@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using CheckersAI.InternalInterfaces;
 
 namespace CheckersAI.TreeSearch
@@ -44,6 +45,7 @@ namespace CheckersAI.TreeSearch
             GoDown(node, localState, depth, node);
             _currentGenerationCounter.Signal();
 
+            _cancellationToken.ThrowIfCancellationRequested();
             _manualResetEvent.WaitOne();
 
             _cancellationToken.ThrowIfCancellationRequested();
@@ -142,7 +144,11 @@ namespace CheckersAI.TreeSearch
                                 child.UpdateAlfaBeta(node);
                                 GoDown(child, localState, depth - 1, node);
                                 _stateTransitions.DeallocateCopy(stateCopy);
-                                _currentGenerationCounter.Signal();
+                                try
+                                {
+                                    _currentGenerationCounter.Signal();
+                                }
+                                catch (InvalidOperationException) { }
                             }
                         );
                     }

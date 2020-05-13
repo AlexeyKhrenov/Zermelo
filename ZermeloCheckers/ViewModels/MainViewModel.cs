@@ -82,6 +82,7 @@ namespace ZermeloCheckers.ViewModels
 
             OnFiguresUpdated();
             RaisePropertyChanged("ActivePlayer");
+            RaisePropertyChanged("IsBlocked");
         }
 
         public override void ModelPropertyChanged(object sender, PropertyChangedEventArgs e)
